@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky init"
+    "prepare": "husky install"
   },
   "dependencies": {
     "lucide-react": "^0.424.0",
@@ -16,7 +16,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^15.5.3",
+    "@next/eslint-plugin-next": "^15.0.0",
     "@types/node": "^20.11.19",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -33,12 +33,7 @@
     "typescript": "^5.3.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,css,md}": [
-      "prettier --write"
-    ]
+    "*.{js,jsx,ts,tsx}": "eslint --fix",
+    "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   }
 }
