@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------
+   Global Brand Theme
+------------------------------------ */
+:root {
+  --brand-green: #064e3b; /* deep green */
+  --brand-gold: #d4af37; /* metallic gold */
+}
+
+/* ------------------------------------
+   Body defaults
+------------------------------------ */
+body {
+  @apply bg-gray-50 text-gray-900;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif;
+  line-height: 1.5;
+}
+
+/* ------------------------------------
+   Custom utilities
+------------------------------------ */
+.text-brand-green {
+  color: var(--brand-green);
+}
+.bg-brand-green {
+  background-color: var(--brand-green);
+}
+.border-brand-green {
+  border-color: var(--brand-green);
+}
+
+.text-brand-gold {
+  color: var(--brand-gold);
+}
+.bg-brand-gold {
+  background-color: var(--brand-gold);
+}
+.border-brand-gold {
+  border-color: var(--brand-gold);
+}
+
+/* Soft shadow utility */
+.shadow-soft {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.05);
+}
