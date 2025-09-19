@@ -1,40 +1,32 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import Link from "next/link";
+// app/blog/page.tsx
+import Link from 'next/link';
+import { getAllPosts } from '@/lib/blog';
 
-export default function BlogPage() {
-  const postsDir = path.join(process.cwd(), "content/blog");
-  const files = fs.readdirSync(postsDir).filter((f) => f.endsWith(".md"));
+export const dynamic = 'force-static';
 
-  const posts = files
-    .map((file) => {
-      const filePath = path.join(postsDir, file);
-      const src = fs.readFileSync(filePath, "utf-8");
-      const { data } = matter(src);
-      return {
-        slug: file.replace(".md", ""),
-        title: data.title,
-        date: data.date,
-        description: data.description,
-      };
-    })
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+export default function BlogIndex() {
+  const posts = getAllPosts();
+
+  if (!posts.length) {
+    return <p className="text-neutral-600">No posts yet.</p>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-10 space-y-6">
       <h1 className="text-3xl font-bold text-brand-green">Blog</h1>
-      {posts.map((p) => (
-        <div key={p.slug} className="border-b border-neutral-200 pb-4">
-          <h2 className="text-xl font-semibold">
-            <Link href={`/blog/${p.slug}`} className="text-brand-green hover:underline">
-              {p.title}
-            </Link>
-          </h2>
-          <p className="text-sm text-neutral-500">{p.date}</p>
-          <p className="text-neutral-700">{p.description}</p>
-        </div>
-      ))}
+      <ul className="space-y-4">
+        {posts.map((p) => (
+          <li key={p.slug} className="border-b border-neutral-200 pb-4">
+            <h2 className="text-xl font-semibold">
+              <Link href={`/blog/${p.slug}`} className="text-brand-green hover:underline">
+                {p.title ?? p.slug}
+              </Link>
+            </h2>
+            {p.date && <p className="text-sm text-neutral-500">{p.date}</p>}
+            {p.excerpt && <p className="text-neutral-700 mt-1">{p.excerpt}</p>}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -1,12 +1,16 @@
+/* eslint-env node */
 // next.config.js
 const isDev = process.env.NODE_ENV !== "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Fail builds on lint errors (keep CI honest)
+  eslint: { ignoreDuringBuilds: false },
+
   reactStrictMode: true,
 
-  // Avoid eval in dev so CSP doesn't need 'unsafe-eval'
-  webpack(config, { dev }) {
+  // Avoid eval in dev so your CSP doesn't need 'unsafe-eval'
+  webpack: (config, { dev }) => {
     if (dev) {
       config.devtool = "source-map"; // no eval in dev
     }
@@ -15,7 +19,7 @@ const nextConfig = {
 
   // Send CSP headers only in production
   async headers() {
-    if (isDev) return []; // no CSP in dev
+    if (isDev) return []; // no CSP in dev for easier DX
 
     const cspProd = [
       "default-src 'self'",
@@ -28,21 +32,27 @@ const nextConfig = {
       "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
       "media-src 'self' blob: data:",
       "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
+      "base-uri 'self'"
     ].join("; ");
 
-    const securityHeaders = [
-      { key: "Content-Security-Policy", value: cspProd },
-      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-      { key: "X-Content-Type-Options", value: "nosniff" },
-      { key: "X-Frame-Options", value: "SAMEORIGIN" },
-      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "Content-Security-Policy", value: cspProd }
+        ]
+      }
     ];
-
-    return [{ source: "/:path*", headers: securityHeaders }];
   },
+
+  // (optional) allow images from Google ad/analytics CDNs if you ever use next/image
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "pagead2.googlesyndication.com" },
+      { protocol: "https", hostname: "tpc.googlesyndication.com" },
+      { protocol: "https", hostname: "www.google-analytics.com" }
+    ]
+  }
 };
 
-module.exports = nextConfig;
+export default nextConfig;
