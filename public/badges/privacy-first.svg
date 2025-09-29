@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="36" viewBox="0 0 160 36">
+  <rect rx="8" width="160" height="36" fill="#0f5132"/>
+  <g transform="translate(12,7)">
+    <path d="M12 6c4.418 0 8 3.582 8 8 0 4.418-3.582 8-8 8S4 18.418 4 14c0-4.418 3.582-8 8-8zm0 3a5 5 0 0 0-5 5c2 3 4 4 5 4s3-1 5-4a5 5 0 0 0-5-5z" fill="#d4af37"/>
+  </g>
+  <text x="50" y="23" fill="#f9f9f9" font-size="14" font-family="Inter, system-ui, Arial">Privacy First</text>
+</svg>

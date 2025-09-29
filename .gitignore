@@ -17,3 +17,8 @@ yarn-error.log*
 
 # system files
 .DS_Store
+node_modules
+.next
+.env*
+.vercel
+.DS_Store

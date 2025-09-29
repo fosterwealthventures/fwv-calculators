@@ -1,54 +1,37 @@
- 
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import fs from "fs";
+import path from "path";
 
-const CONTENT_DIR = path.join(process.cwd(), 'content', 'blog');
+export type PostMeta = { title: string; slug: string; date: string; excerpt?: string };
 
-/**
- * Get all available slugs from markdown files
- * e.g. "hello-world.md" -> "hello-world"
- */
-export function getAllSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
-  return fs
-    .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith('.md'))
-    .map((f) => f.replace(/\.md$/, ''));
+const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+
+export function listPostFiles() {
+  if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
+  return fs.readdirSync(BLOG_DIR).filter(f => f.endsWith(".md") || f.endsWith(".mdx"));
 }
 
-/**
- * Load a post by slug and parse frontmatter + content
- */
-export function getPostBySlug(slug?: string) {
-  if (!slug) return null;
-
-  const filePath = path.join(CONTENT_DIR, `${slug}.md`);
-  if (!fs.existsSync(filePath)) return null;
-
-  const raw = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(raw);
-
-  return {
-    slug,
-    title: (data as any)?.title as string | undefined,
-    date: (data as any)?.date as string | undefined,
-    excerpt: (data as any)?.excerpt as string | undefined,
-    content,
-  };
+export function getAllPosts(): PostMeta[] {
+  return listPostFiles()
+    .map((file) => {
+      const slug = file.replace(/\.mdx?$/, "");
+      const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
+      const title = (raw.match(/title:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? slug).trim();
+      const date = (raw.match(/date:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? new Date().toISOString()).trim();
+      const excerpt = (raw.match(/excerpt:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? "").trim();
+      return { title, slug, date, excerpt };
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-/**
- * Return all posts with metadata (without crashing if empty)
- */
-export function getAllPosts() {
-  return getAllSlugs()
-    .map((slug) => getPostBySlug(slug))
-    .filter(Boolean) as {
-    slug: string;
-    title?: string;
-    date?: string;
-    excerpt?: string;
-    content: string;
-  }[];
+export function getPost(slug: string) {
+  const file = listPostFiles().find(f => f.startsWith(slug + "."));
+  if (!file) return null;
+  return fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
+}
+
+export function savePost(slug: string, content: string) {
+  if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
+  const file = path.join(BLOG_DIR, `${slug}.mdx`);
+  fs.writeFileSync(file, content, "utf8");
+  return file;
 }

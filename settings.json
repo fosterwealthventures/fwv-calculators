@@ -11,15 +11,18 @@
     "typescriptreact"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Parse CSS with Tailwind grammar (better syntax & hovers)
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "tailwindCSS.includeLanguages": {
-    "plaintext": "html",
-    "typescript": "javascript",
-    "typescriptreact": "javascript"
-  },
-  "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^'\"`]*)"]
-  ]
+
+  // Silence VS Code's CSS validator (it doesn't understand Tailwind at-rules)
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+
+  // Tailwind UX boosts
+  "tailwindCSS.emmetCompletions": true,
+  "editor.quickSuggestions": { "strings": true }
 }
