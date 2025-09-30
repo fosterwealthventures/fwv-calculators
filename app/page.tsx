@@ -1,6 +1,6 @@
 // app/page.tsx
 "use client";
-
+// test lint-staged
 import React from "react";
 import Link from "next/link";
 import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
@@ -46,3 +46,4 @@ export default function Home() {
     </main>
   );
 }
+// test husky
