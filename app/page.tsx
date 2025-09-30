@@ -47,3 +47,4 @@ export default function Home() {
   );
 }
 // test husky
+// husky-hook-test
