@@ -1,53 +1,65 @@
 // middleware.ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 const PLAN_COOKIE = "fwv_plan";
-const VALID = new Set(["free", "plus", "pro", "premium"]);
+const VALID = new Set(["free", "plus", "pro", "premium"] as const);
+
+function normalizePlan(value: string | undefined): "free" | "plus" | "pro" | "premium" {
+  if (!value) return "free";
+  const v = value.toLowerCase();
+  return (VALID.has(v as any) ? (v as any) : "free");
+}
 
 export function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
+  const current = normalizePlan(req.cookies.get(PLAN_COOKIE)?.value);
 
-  // Dev helper: http://localhost:3000/?reset=1  => force free
+  // ?reset=1 => force free
   if (searchParams.get("reset") === "1") {
     const url = req.nextUrl.clone();
     url.searchParams.delete("reset");
-    const r = NextResponse.redirect(url);
-    r.cookies.set(PLAN_COOKIE, "free", {
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 365,
-    });
-    return r;
+    const res = NextResponse.redirect(url);
+    res.cookies.set(PLAN_COOKIE, "free", { path: "/", httpOnly: false, sameSite: "lax" });
+    return res;
   }
 
-  // Strip ?plan= overrides unless you explicitly allow in dev
-  if (searchParams.has("plan")) {
+  // ?plan=free|plus|pro|premium => preview a plan
+  const planParam = searchParams.get("plan");
+  if (planParam && VALID.has(planParam.toLowerCase() as any)) {
     const url = req.nextUrl.clone();
     url.searchParams.delete("plan");
-    return NextResponse.redirect(url);
+    const res = NextResponse.redirect(url);
+    res.cookies.set(PLAN_COOKIE, planParam.toLowerCase(), { path: "/", httpOnly: false, sameSite: "lax" });
+    return res;
   }
 
-  // Ensure valid cookie; default to free
-  const current = req.cookies.get(PLAN_COOKIE)?.value ?? "";
-  const hasValid = VALID.has(current);
+  // Passthrough (and normalize cookie)
   const res = NextResponse.next();
-  if (!hasValid) {
-    res.cookies.set(PLAN_COOKIE, "free", {
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 365,
-    });
+  if (current !== req.cookies.get(PLAN_COOKIE)?.value) {
+    res.cookies.set(PLAN_COOKIE, current, { path: "/", httpOnly: false, sameSite: "lax" });
   }
 
-  // (Optional) gate /pro routes: only pro/premium allowed
+  // Gating
+  if (pathname.startsWith("/plus")) {
+    if (!(current === "plus" || current === "pro" || current === "premium")) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/upgrade";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+  }
+
   if (pathname.startsWith("/pro")) {
-    const plan = hasValid ? current : "free";
-    if (plan !== "pro" && plan !== "premium") {
+    if (!(current === "pro" || current === "premium")) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/upgrade";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  if (pathname.startsWith("/premium")) {
+    if (current !== "premium") {
       const url = req.nextUrl.clone();
       url.pathname = "/upgrade";
       url.searchParams.set("redirect", pathname);
@@ -58,4 +70,6 @@ export function middleware(req: NextRequest) {
   return res;
 }
 
-export const config = { matcher: ["/:path*"] };
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
+};

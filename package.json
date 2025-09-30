@@ -1,22 +1,31 @@
 {
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^0.453.0",
+    "marked": "^16.3.0",
+    "next": "latest",
+    "openai": "^5.23.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.11.1",
+    "eslint-config-next": "latest",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.10",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen:post": "tsx scripts/generatePost.ts",
-    "gen:bulk": "tsx scripts/generateBulk.ts",
-    "gen:sitemap": "tsx scripts/updateSitemap.ts",
-    "prepare": "husky",
-    "pre-commit": "lint-staged",
-    "test": "echo \"No tests yet\" && exit 0"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ],
-    "*.{js,jsx,ts,tsx,css,md,json}": [
-      "prettier --write"
-    ]
+    "gen:post": "tsx scripts/generatePost.ts"
   }
 }

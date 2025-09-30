@@ -1,6 +1,8 @@
 // app/page.tsx
-"use client";
+// redeploy test
 // test lint-staged
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";

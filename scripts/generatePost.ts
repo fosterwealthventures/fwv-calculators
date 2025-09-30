@@ -1,241 +1,179 @@
 // scripts/generatePost.ts
-// Production-ready auto-blog generator for Next.js content repos.
-// Run with: npx tsx scripts/generatePost.ts "Your Post Title" --serp="https://a.com,https://b.com" --tags="seo,finance" --model=gpt-4o-mini
+// Auto-blog generator without external CLI deps (no yargs).
+// Usage:
+//   npx tsx scripts/generatePost.ts "Your Post Title" --serp="https://a.com,https://b.com" --tags="seo,finance" --model=gpt-4o-mini --out=content/blog
+// Add --dry to preview without writing a file.
 
-import dotenv from "dotenv";
-dotenv.config();
-
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import OpenAI from "openai";
 
-// ---------- Config ----------
+// ---------- Defaults ----------
 const DEFAULT_OUT_DIR = "content/blog";
-const DEFAULT_MODEL = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
-const MAX_RETRIES = 4;
-const RETRY_BASE_MS = 800;
+const DEFAULT_MODEL = (process.env.OPENAI_MODEL || "").trim() || "gpt-4o-mini";
+const MAX_RETRIES = 3;
 
 // ---------- Helpers ----------
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-function log(step: string, ...args: any[]) {
-  const ts = new Date().toISOString();
-  // eslint-disable-next-line no-console
-  console.log(`[generatePost][${ts}] ${step}`, ...args);
-}
-
-function fail(msg: string): never {
-  // eslint-disable-next-line no-console
-  console.error(`\n❌ ${msg}\n`);
-  process.exit(1);
-}
-
-function toLF(s: string) {
-  // normalize CRLF -> LF to avoid hidden \r problems on Windows
-  return s.replace(/\r\n/g, "\n");
+function assertOpenAIKey(): string {
+  const key = process.env.OPENAI_API_KEY?.trim();
+  if (!key) {
+    throw new Error("OPENAI_API_KEY is missing. Add it to your environment or .env file.");
+  }
+  return key;
 }
 
 function slugify(input: string): string {
   return input
     .toLowerCase()
-    .replace(/['"’`]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 }
 
-function parseFlags(argv: string[]) {
-  const flags: Record<string, string | boolean> = {};
-  for (const raw of argv) {
-    if (!raw.startsWith("--")) continue;
-    const eq = raw.indexOf("=");
-    if (eq === -1) {
-      flags[raw.slice(2)] = true;
-    } else {
-      const k = raw.slice(2, eq);
-      const v = raw.slice(eq + 1);
-      flags[k] = v;
+function splitCsv(v?: string): string[] {
+  if (!v) return [];
+  return v.split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+type FlagMap = Record<string, string | boolean | undefined>;
+
+function parseFlags(argv: string[]): { title: string; flags: FlagMap } {
+  if (!argv.length) {
+    throw new Error('Missing title. Example: npx tsx scripts/generatePost.ts "My Post" --tags="seo,finance"');
+  }
+  const parts = [...argv];
+  const titleParts: string[] = [];
+  while (parts.length && !/^--/.test(parts[0])) titleParts.push(parts.shift() as string);
+  const title = titleParts.join(" ").trim();
+  if (!title) throw new Error("Title is required as the first argument.");
+
+  const flags: FlagMap = {};
+  while (parts.length) {
+    const token = parts.shift() as string;
+    if (!token.startsWith("--")) continue;
+    const eq = token.indexOf("=");
+    let key = token.replace(/^--/, "");
+    let value: string | boolean | undefined = true;
+    if (eq >= 0) {
+      key = token.slice(2, eq);
+      value = token.slice(eq + 1);
+    } else if (parts.length && !parts[0].startsWith("--")) {
+      value = parts.shift();
     }
+    flags[key] = value;
   }
-  return flags;
+  return { title, flags };
 }
 
-function splitCsv(val?: string): string[] {
-  if (!val) return [];
-  return val
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+function fm(dateISO: string, title: string, slug: string, excerpt: string, tags: string[]) {
+  const fmObj = { title, date: dateISO, slug, excerpt, tags };
+  const yaml = Object.entries(fmObj)
+    .map(([k, v]) => (Array.isArray(v) ? `${k}: [${v.map((x) => JSON.stringify(x)).join(", ")}]` : `${k}: ${JSON.stringify(v)}`))
+    .join("\n");
+  return `---\n${yaml}\n---\n\n`;
 }
 
-function assertOpenAIKey(): string {
-  const raw = (process.env.OPENAI_API_KEY ?? "").trim();
-  if (!raw)
-    fail("OPENAI_API_KEY is missing. Add it to your .env as a single line.");
-  if (/\r|\n/.test(raw)) {
-    fail(
-      "OPENAI_API_KEY contains a newline. Ensure it's one line with no quotes or trailing spaces.",
-    );
-  }
-  // Basic format sanity check (project keys often start with sk-proj-)
-  if (!/^sk-[A-Za-z0-9_-]+$/.test(raw)) {
-    log("warn", "OPENAI_API_KEY has an unexpected format, continuing anyway…");
-  }
-  return raw;
+function ensureDir(dir: string) {
+  fs.mkdirSync(dir, { recursive: true });
 }
 
-async function withRetries<T>(fn: () => Promise<T>): Promise<T> {
-  let lastErr: unknown;
-  for (let i = 0; i < MAX_RETRIES; i++) {
-    try {
-      return await fn();
-    } catch (err: any) {
-      lastErr = err;
-      const code = err?.status ?? err?.code ?? err?.response?.status;
-      const retryable =
-        code === 429 || (typeof code === "number" && code >= 500 && code < 600);
-      const delay = Math.round(
-        RETRY_BASE_MS * Math.pow(1.8, i) + Math.random() * 250,
-      );
-      log(
-        "error",
-        `Attempt ${i + 1} failed${code ? ` (code ${code})` : ""}: ${err?.message || err}`,
-      );
-      if (i < MAX_RETRIES - 1 && retryable) {
-        log("info", `Retrying in ${delay}ms…`);
-        await new Promise((r) => setTimeout(r, delay));
-        continue;
-      }
-      break;
-    }
-  }
-  throw lastErr;
+function log(level: "info" | "warn" | "error", msg: string) {
+  // eslint-disable-next-line no-console
+  console[level](`[${level.toUpperCase()}] ${msg}`);
 }
 
 // ---------- Main ----------
-(async () => {
-  const [, , ...rest] = process.argv;
-
-  // Title (positional)
-  const title = rest.find((a) => !a.startsWith("--"));
-  if (!title) {
-    fail(
-      'Usage: npx tsx scripts/generatePost.ts "Post Title" --serp="https://a.com,https://b.com" --tags="finance,roi"',
-    );
-  }
-
-  const flags = parseFlags(rest);
+async function main() {
+  const { title, flags } = parseFlags(process.argv.slice(2));
   const model = (flags.model as string) || DEFAULT_MODEL;
   const outDir = (flags.out as string) || DEFAULT_OUT_DIR;
   const dryRun = Boolean(flags.dry);
 
   const serpUrls = splitCsv(flags.serp as string);
-  const tags = splitCsv(flags.tags as string);
+  const tagList = splitCsv(flags.tags as string);
 
-  // Ensure env OK
   const apiKey = assertOpenAIKey();
   const openai = new OpenAI({ apiKey });
 
-  // Ensure output folder
-  const absOutDir = path.isAbsolute(outDir)
-    ? outDir
-    : path.join(process.cwd(), outDir);
-  fs.mkdirSync(absOutDir, { recursive: true });
+  const today = new Date();
+  const dateISO = today.toISOString();
+  const fileSlug = `${today.toISOString().slice(0, 10)}-${slugify(title)}`;
+  const filePath = path.join(outDir, `${fileSlug}.md`);
 
-  // Build prompt
-  const today = new Date().toISOString().slice(0, 10);
-  const slug = slugify(title);
-  const fmTags = tags.length ? tags : ["finance", "analytics", "calculators"];
+  const sysPrompt = [
+    "You are a senior SEO/content strategist who writes authoritative, readable, well-structured blog posts in Markdown.",
+    "Tone: helpful, concise, practical. Audience: entrepreneurs & small-business owners.",
+    "Include an opening hook, scannable subheadings (H2/H3), short paragraphs, and a clear takeaway section.",
+    "Include a brief meta excerpt (<= 160 chars) at the very top in a comment line like: <!-- EXCERPT: ... -->",
+    "If useful, include a small FAQ section at the end.",
+  ].join("\n");
 
-  const systemPrompt =
-    toLF(`You are a precise, engaging financial/operations content writer.
-Write SEO-friendly, accurate, skimmable articles for a calculators site.
-Audience: small-business owners, founders, freelancers, and consumers.
-Tone: helpful, credible, plain-language; no fluff; short paragraphs; useful examples.
-ALWAYS include a short TL;DR, a clear step-by-step "How to use the calculator" section,
-and a "Common mistakes & how to avoid them" section. Keep headings concise.
-When useful, include very small code examples or formulas in fenced blocks.
-Do NOT invent quotes. If URLs are provided, cite them in a "Sources" list at the end.`);
+  const serpBlock = serpUrls.length
+    ? `Here are top reference URLs to consider for context (do NOT copy):\n${serpUrls.map((u) => `- ${u}`).join("\n")}`
+    : "No reference URLs provided.";
 
-  const userPrompt = toLF(`TITLE: ${title}
+  const userPrompt = `Title: ${title}
+${serpBlock}
+Tags: ${tagList.join(", ") || "general"}
 
-CONTEXT:
-- Site focus: Professional Business & Financial Calculator Suites.
-- Topic: ${title}
-- Tags: ${fmTags.join(", ")}
-- Date: ${today}
-- Provided reference URLs (optional): ${serpUrls.length ? serpUrls.join(", ") : "none"}
+Please produce a complete Markdown blog post. Do not include YAML frontmatter; I'll add it myself.
+Return only Markdown body content (H1 included).
+`;
 
-REQUIREMENTS:
-- Return valid Markdown only.
-- Start with an H1 of the exact title.
-- Then a 2–3 sentence intro.
-- Provide a short TL;DR list.
-- Include: Key concepts, Step-by-step usage, Worked example, Formula(s) (with variables explained),
-  Common mistakes & fixes, FAQ (3–5 Qs), and a short Conclusion.
-- Add "Sources" as a bullet list using the provided URLs (if any).
-- Keep it 900–1400 words.
-`);
-
-  log("info", `Generating post with model "${model}"…`);
-
-  const completion = await withRetries(() =>
-    openai.chat.completions.create({
-      model,
-      temperature: 0.6,
-      max_tokens: 1600,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-    }),
-  );
-
-  const md = completion.choices?.[0]?.message?.content?.trim();
-  if (!md) fail("OpenAI returned no content.");
-
-  // Compose front matter + content
-  const frontmatter = [
-    "---",
-    `title: "${title.replace(/"/g, '\\"')}"`,
-    `date: "${today}"`,
-    `tags: [${fmTags.map((t) => `"${t}"`).join(", ")}]`,
-    `slug: "${slug}"`,
-    serpUrls.length
-      ? `sources:\n${serpUrls.map((u) => `  - "${u}"`).join("\n")}`
-      : undefined,
-    "---",
-    "",
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const finalContent = toLF(`${frontmatter}${md}\n`);
-
-  // Write file
-  const outPath = path.join(absOutDir, `${slug}.md`);
-  if (dryRun) {
-    log("info", "(dry run) Would write:", outPath);
-    // eslint-disable-next-line no-console
-    console.log("\n----- PREVIEW -----\n");
-    // eslint-disable-next-line no-console
-    console.log(finalContent.slice(0, 2000));
-  } else {
-    fs.writeFileSync(outPath, finalContent, { encoding: "utf8" });
-    log("success", `Wrote ${outPath}`);
+  let content = "";
+  let attempt = 0;
+  while (attempt < MAX_RETRIES) {
+    attempt++;
+    try {
+      const resp = await openai.responses.create({
+        model,
+        input: [
+          { role: "system", content: sysPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      } as any);
+      
+      content = resp.output_text?.trim() || "";
+      if (content) break;
+      throw new Error("Empty content from model.");
+    } catch (err) {
+      log("warn", `OpenAI attempt ${attempt} failed: ${(err as any)?.message || err}`);
+      if (attempt >= MAX_RETRIES) throw err;
+      await new Promise((r) => setTimeout(r, 800 * attempt));
+    }
   }
 
-  log(
-    "info",
-    "If you maintain a sitemap, run: npx tsx scripts/updateSitemap.ts",
-  );
-})().catch((err) => {
+  // Extract excerpt comment if present
+  let excerpt = "";
+  const m = content.match(/<!--\s*EXCERPT:\s*(.*?)\s*-->/i);
+  if (m) {
+    excerpt = m[1].trim();
+    content = content.replace(m[0], "").trim();
+  } else {
+    excerpt = content.split("\n").slice(0, 3).join(" ").slice(0, 158) + "...";
+  }
+
+  // Compose final with frontmatter
+  const frontmatter = fm(dateISO, title, fileSlug, excerpt, tagList);
+  const final = frontmatter + content + "\n";
+
+  if (dryRun) {
+    log("info", "DRY RUN — not writing file. Preview below:\n");
+    // eslint-disable-next-line no-console
+    console.log(final);
+    return;
+  }
+
+  ensureDir(outDir);
+  fs.writeFileSync(filePath, final, "utf-8");
+  log("info", `✅ Wrote ${filePath}`);
+  log("info", "If you maintain a sitemap, run your sitemap update script next.");
+}
+
+main().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error(
-    "\n💥 Unhandled error in generatePost:",
-    err?.response?.data || err,
-  );
+  console.error("\n💥 Unhandled error in generatePost:", (err as any)?.response?.data || err);
   process.exit(1);
 });

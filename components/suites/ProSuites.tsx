@@ -6,11 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 // Lazy-load the two calculators so we don't SSR them and risk hydration issues
 const EmployeeCost = dynamic(
-  () => import("@/components/calculators/EmployeeCost"),
+  () => import("@/components/EmployeeCostPro"),
   { ssr: false },
 );
+
 const ExpenseSplitDeluxe = dynamic(
-  () => import("@/components/calculators/ExpenseSplitDeluxe"),
+  () => import("@/components/ExpenseSplitDeluxe"),
   { ssr: false },
 );
 

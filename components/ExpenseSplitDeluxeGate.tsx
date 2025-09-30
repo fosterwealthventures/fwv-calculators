@@ -29,12 +29,7 @@ export default function ExpenseSplitDeluxeGate({
       </div>
 
       {/* Pro-choice gate: Pro must pick "deluxe"; Premium bypasses choice */}
-      <ProChoiceGate
-        userPlan={userPlan}
-        proChoice={proChoice}
-        want="deluxe"
-        redirect="/pro"
-      >
+      <ProChoiceGate want="expense_split" redirect="/pro?calc=expense-split-deluxe">
         {/* Everything inside here is the Deluxe (Pro-choice) content */}
         <div className="rounded-2xl border bg-white p-4 shadow-sm">
           <h3 className="text-lg font-semibold">

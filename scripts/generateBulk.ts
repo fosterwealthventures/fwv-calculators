@@ -1,244 +1,185 @@
 // scripts/generateBulk.ts
-import fs from "fs";
+// Bulk content generator (CSV -> Markdown files)
+
+import { promises as fs } from "fs";
 import path from "path";
-import yargs from "yargs";
+import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 import { parse as parseCsv } from "csv-parse/sync";
 import OpenAI from "openai";
-import matter from "gray-matter";
-import { slugify, CONTENT_DIR } from "../lib/blog.ts";
-import "dotenv/config";
 
 type Row = {
-  topic: string;
-  serp?: string;
-  tags?: string;
-  prependDate?: boolean | string;
-  ext?: "md" | "mdx" | string;
-  longform?: boolean | string;
+  title?: string;
+  slug?: string;
+  tags?: string;    // comma-separated in CSV
+  prompt?: string;
+  summary?: string;
 };
 
-type Out = {
-  title: string;
-  description: string;
-  slug: string;
-  excerpt: string;
-  tags: string[];
-  body: string;
+type Args = {
+  input: string;
+  out: string;
+  limit: number;
+  dryRun: boolean;
+  force: boolean;
+  section: "blog" | "guide" | "auto";
 };
 
-function parseArgs() {
+const argv = ((): Args => {
   return yargs(hideBin(process.argv))
-    .option("file", {
+    .option("input", {
       type: "string",
-      describe: "Path to CSV, JSON array, or NDJSON of topics",
+      alias: "i",
+      default: "scripts/bulk.csv",
+      describe: "Path to the CSV file (with headers).",
     })
-    .option("topics", {
+    .option("out", {
       type: "string",
-      describe: "Comma-separated topic list",
+      alias: "o",
+      default: "content/auto",
+      describe: "Output folder for generated Markdown files.",
     })
-    .option("serp", {
+    .option("limit", {
+      type: "number",
+      alias: "n",
+      default: 50,
+      describe: "Maximum number of rows to process.",
+    })
+    .option("dryRun", {
+      type: "boolean",
+      default: false,
+      describe: "Preview output without writing files.",
+    })
+    .option("force", {
+      type: "boolean",
+      default: false,
+      describe: "Overwrite existing files if present.",
+    })
+    .option("section", {
       type: "string",
-      describe: "Default SERP URLs (comma-separated)",
+      choices: ["blog", "guide", "auto"] as const,
+      default: "auto",
+      describe: "Frontmatter section.",
     })
-    .option("tags", {
-      type: "string",
-      describe: "Default tags (comma-separated)",
-    })
-    .option("prepend-date", { type: "boolean", default: false })
-    .option("ext", { type: "string", default: "mdx", choices: ["md", "mdx"] })
-    .option("longform", { type: "boolean", default: false })
-    .option("delay-ms", { type: "number", default: 1200 })
-    .parseSync();
+    .strict()
+    .parseSync() as Args;
+})();
+
+const openaiKey = process.env.OPENAI_API_KEY ?? "";
+const openai = openaiKey ? new OpenAI({ apiKey: openaiKey }) : null;
+
+function toSlug(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
 }
 
-function coerceBool(v: unknown, fallback = false) {
-  if (typeof v === "boolean") return v;
-  if (typeof v === "string")
-    return ["1", "true", "yes", "y"].includes(v.toLowerCase());
-  return fallback;
+function frontmatter(obj: Record<string, unknown>): string {
+  const yaml = Object.entries(obj)
+    .map(([k, v]) => {
+      if (Array.isArray(v)) return `${k}: [${v.map(x => JSON.stringify(x)).join(", ")}]`;
+      if (typeof v === "string") return `${k}: ${JSON.stringify(v)}`;
+      return `${k}: ${String(v)}`;
+    })
+    .join("\n");
+  return `---\n${yaml}\n---\n`;
 }
 
-function rowsFromTopicsString(s?: string): Row[] {
-  return s
-    ? String(s)
-        .split(",")
-        .map((t) => ({ topic: t.trim() }))
-    : [];
+async function ensureDir(dir: string) {
+  await fs.mkdir(dir, { recursive: true });
 }
 
-function readRows(file?: string, topicsArg?: string): Row[] {
-  if (!file) return rowsFromTopicsString(topicsArg);
-  const raw = fs.readFileSync(path.resolve(file), "utf8").trim();
-  if (raw.startsWith("[")) return JSON.parse(raw) as Row[]; // JSON array
-  if (raw.split("\n").some((l) => l.trim().startsWith("{"))) {
-    return raw
-      .split("\n")
-      .filter(Boolean)
-      .map((l) => JSON.parse(l) as Row); // NDJSON
-  }
-  const recs = parseCsv(raw, {
-    columns: true,
-    skip_empty_lines: true,
-  }) as Row[];
-  return recs.map((r) => {
-    if (!("topic" in r)) {
-      const keys = Object.keys(r);
-      return { topic: (r as any)[keys[0]] } as Row;
-    }
-    return r;
-  });
+async function readCsv(filePath: string): Promise<Row[]> {
+  const raw = await fs.readFile(filePath, "utf8");
+  return parseCsv(raw, { columns: true, skip_empty_lines: true, trim: true }) as Row[];
 }
 
-async function generateOne(
-  openai: OpenAI,
-  row: Row,
-  defaults: {
-    serp?: string;
-    tags?: string;
-    prependDate: boolean;
-    ext: "md" | "mdx";
-    longform: boolean;
-  },
-) {
-  const topic = row.topic?.trim();
-  if (!topic) return { skipped: true, reason: "Missing topic" };
+async function generateBody(row: Row): Promise<string> {
+  const prompt =
+    row.prompt ||
+    `Write a concise article titled "${row.title ?? "Untitled"}" for a financial calculators site.
+Include practical tips and one simple example. Friendly, plain language.`;
 
-  const serp = (row.serp ?? defaults.serp ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const tags = (row.tags ?? defaults.tags ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const prependDate = coerceBool(
-    row.prependDate ?? defaults.prependDate,
-    false,
-  );
-  const ext = (row.ext ?? defaults.ext) as "md" | "mdx";
-  const longform = coerceBool(row.longform ?? defaults.longform, false);
-
-  const prompt = `You are a senior SEO editor.
-Goal: Produce a blog post that ANSWERS THE QUESTION IN THE FIRST PARAGRAPH and matches current search intent and page format.
-Topic/Keyword: "${topic}"
-Top ranking references (do NOT copy; mirror headings/order/coverage): ${serp.length ? serp.join(", ") : "N/A"}
-
-Return strict JSON with keys: title, description, slug, excerpt, tags, body.
-
-Rules:
-- Title: clear, keyword-focused, <= 60 chars where possible.
-- H1 must match Title (we will inject H1 from your title; do NOT include H1 in body).
-- First paragraph MUST directly answer the query (one crisp paragraph).
-- Use logical H2s that reflect what’s ranking (definitions, steps, examples, calculator CTA, FAQs).
-- Scannable structure: short paragraphs, bullet lists, numbered workflows.
-- Include a short FAQ (2–3 Q/A) at the end with H2 "FAQs".
-- Tone: professional, approachable, precise. American English.
-${longform ? "- Target length: about 1200–1600 words if intent is informational.\n" : ""}`;
-
-  const resp = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    temperature: 0.4,
-    response_format: { type: "json_object" },
-    messages: [
-      { role: "system", content: "You return strict JSON for a blog CMS." },
-      { role: "user", content: prompt },
-    ],
-  });
-
-  const raw = resp.choices?.[0]?.message?.content;
-  if (!raw) return { skipped: true, reason: "Empty model response" };
-
-  let out: Out;
-  try {
-    out = JSON.parse(raw) as Out;
-  } catch {
-    return { skipped: true, reason: "Bad JSON from model" };
+  if (!openai) {
+    return [
+      "## Overview",
+      "",
+      "This is placeholder content (no OpenAI key).",
+      "",
+      "## Key Takeaways",
+      "- Tip 1",
+      "- Tip 2",
+      "- Tip 3",
+      "",
+      "## Example",
+      "Walk through a simple example here.",
+    ].join("\n");
   }
 
-  const dt = new Date();
-  const isoDate = dt.toISOString().slice(0, 10);
-
-  let finalSlug = slugify(out.slug || out.title);
-  if (prependDate) finalSlug = `${isoDate}-${finalSlug}`;
-
-  fs.mkdirSync(CONTENT_DIR, { recursive: true });
-  const filePath = path.join(CONTENT_DIR, `${finalSlug}.${ext}`);
-
-  if (fs.existsSync(filePath))
-    return { skipped: true, reason: "Exists", filePath };
-
-  const front = matter
-    .stringify("", {
-      title: out.title,
-      description: out.description,
-      slug: finalSlug,
-      date: new Date().toISOString(),
-      tags: out.tags?.length ? out.tags : tags,
-      excerpt: out.excerpt,
-    })
-    .trim()
-    .replace(/^---\n|\n---$/g, "");
-
-  const doc = `---
-${front}
----
-
-# ${out.title}
-
-${out.body.trim()}
-`;
-
-  fs.writeFileSync(filePath, doc, "utf8");
-  return { ok: true, filePath };
-}
-
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
+  const res = await openai.responses.create({
+    model: "gpt-4.1-mini",
+    input: prompt,
+  });
+  return res.output_text?.trim() || "Content generation returned empty text.";
 }
 
 async function main() {
-  const argv = parseArgs();
-  const rows = readRows(
-    argv.file as string | undefined,
-    argv.topics as string | undefined,
-  );
-  if (!rows.length) {
-    console.error("No topics found. Use --file=... or --topics=...");
-    process.exit(1);
-  }
+  const inputPath = path.resolve(argv.input);
+  const outDir = path.resolve(argv.out);
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const rows = await readCsv(inputPath);
+  const list = rows.slice(0, Math.max(0, argv.limit));
 
-  const results: {
-    ok?: true;
-    skipped?: true;
-    filePath?: string;
-    reason?: string;
-  }[] = [];
-  for (const row of rows) {
-    const res = await generateOne(openai, row, {
-      serp: argv.serp as string | undefined,
-      tags: argv.tags as string | undefined,
-      prependDate: Boolean(argv.prependDate),
-      ext: (argv.ext as "md" | "mdx") ?? "mdx",
-      longform: Boolean(argv.longform),
+  if (!argv.dryRun) await ensureDir(outDir);
+
+  let written = 0;
+
+  for (let i = 0; i < list.length; i++) {
+    const row = list[i];
+    const title = (row.title ?? "").trim() || `Untitled ${i + 1}`;
+    const slug = (row.slug ?? toSlug(title)) || `item-${i + 1}`;
+    const tags = (row.tags ?? "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+    const summary = (row.summary ?? "").trim();
+
+    const fm = frontmatter({
+      title,
+      date: new Date().toISOString(),
+      draft: false,
+      section: argv.section,
+      tags,
+      summary,
     });
-    if (res.ok) console.log("✅ Created:", res.filePath);
-    else
-      console.log(
-        `⏭️  Skipped: ${row.topic} — ${res.reason}${res.filePath ? " (" + res.filePath + ")" : ""}`,
-      );
-    results.push(res);
-    await sleep(Number(argv.delayMs));
+
+    const body = await generateBody(row);
+    const md = `${fm}\n# ${title}\n\n${body}\n`;
+    const outFile = path.join(outDir, `${slug}.md`);
+
+    if (argv.dryRun) {
+      console.log(`[preview] ${outFile}`);
+      console.log(md.slice(0, 200) + (md.length > 200 ? " …" : ""));
+      continue;
+    }
+
+    try {
+      if (!argv.force) {
+        await fs.access(outFile);
+        console.log(`[skip] exists: ${outFile}`);
+        continue;
+      }
+    } catch {
+      // file doesn't exist: proceed
+    }
+
+    await fs.writeFile(outFile, md, "utf8");
+    written++;
+    console.log(`[write] ${outFile}`);
   }
 
-  const created = results.filter((r) => r.ok).length;
-  const skipped = results.filter((r) => r.skipped).length;
-  console.log(`\nDone. Created ${created}, Skipped ${skipped}.`);
+  console.log(`\nDone. Wrote ${written} file(s) to ${outDir}${argv.dryRun ? " (dry-run)" : ""}.\n`);
 }
 
-main().catch((err) => {
-  console.error("Bulk generation failed:", err);
+main().catch(err => {
+  console.error("[bulk] error:", err);
   process.exit(1);
 });
