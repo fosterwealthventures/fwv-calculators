@@ -1,6 +1,8 @@
-"use client"
+/* eslint-disable react/no-unescaped-entities */
 
-import React, { useState, useMemo } from 'react';
+"use client";
+
+import React, { useState, useMemo, useCallback } from "react";
 
 // Types
 type Person = {
@@ -18,7 +20,7 @@ type Expense = {
   currency: string;
   category: string;
   payerId: string;
-  method: 'even' | 'weight' | 'usage' | 'agreement' | 'custody';
+  method: "even" | "weight" | "usage" | "agreement" | "custody";
   participants: { personId: string; usage?: number }[];
   childId?: string;
   reimbursable?: boolean;
@@ -30,23 +32,33 @@ type Expense = {
   notes?: string;
 };
 
-type Mode = 'standard' | 'travel' | 'family';
+type Mode = "standard" | "travel" | "family";
+type CategoryGroups = Record<string, string[]>;
 
-const DEFAULT_CATEGORY_GROUPS = {
-  Housing: ['Rent'],
-  Utilities: ['Utilities', 'Internet'],
-  Household: ['Groceries', 'Misc'],
-  Travel: ['Lodging', 'Transport', 'Activities', 'Food', 'Fees'],
-  Family: ['Medical', 'Dental', 'Vision', 'School', 'Extracurricular', 'Childcare', 'Clothing'],
+const DEFAULT_CATEGORY_GROUPS: CategoryGroups = {
+  Housing: ["Rent"],
+  Utilities: ["Utilities", "Internet"],
+  Household: ["Groceries", "Misc"],
+  Travel: ["Lodging", "Transport", "Activities", "Food", "Fees"],
+  Family: [
+    "Medical",
+    "Dental",
+    "Vision",
+    "School",
+    "Extracurricular",
+    "Childcare",
+    "Clothing",
+  ],
 };
 
 // CSV Download function
 function downloadCSV(filename: string, rows: string[][]) {
-  const csv = rows.map(r => 
-    r.map(cell => `"${String(cell ?? "").replace(/"/g, '""')}"`)
-     .join(",")
-  ).join("\n");
-  
+  const csv = rows
+    .map((r) =>
+      r.map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(","),
+    )
+    .join("\n");
+
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -60,25 +72,26 @@ function downloadCSV(filename: string, rows: string[][]) {
 function settle(balances: Record<string, number>) {
   const debtors: { id: string; amt: number }[] = [];
   const creditors: { id: string; amt: number }[] = [];
-  
+
   for (const [id, v] of Object.entries(balances)) {
     const r = Math.round(v * 100) / 100;
     if (r < -0.005) debtors.push({ id, amt: -r });
     if (r > 0.005) creditors.push({ id, amt: r });
   }
-  
+
   debtors.sort((a, b) => b.amt - a.amt);
   creditors.sort((a, b) => b.amt - a.amt);
 
   const transfers: { from: string; to: string; amount: number }[] = [];
-  let i = 0, j = 0;
-  
+  let i = 0,
+    j = 0;
+
   while (i < debtors.length && j < creditors.length) {
     const pay = Math.min(debtors[i].amt, creditors[j].amt);
-    transfers.push({ 
-      from: debtors[i].id, 
-      to: creditors[j].id, 
-      amount: Math.round(pay * 100) / 100 
+    transfers.push({
+      from: debtors[i].id,
+      to: creditors[j].id,
+      amount: Math.round(pay * 100) / 100,
     });
     debtors[i].amt -= pay;
     creditors[j].amt -= pay;
@@ -96,7 +109,7 @@ function ScriptureBanner({ mode }: { mode: Mode }) {
       text: "The plans of the diligent lead surely to abundance…",
     },
     family: {
-      ref: "Proverbs 22:6", 
+      ref: "Proverbs 22:6",
       text: "Train up a child in the way he should go; even when he is old he will not depart from it.",
     },
     travel: {
@@ -108,46 +121,50 @@ function ScriptureBanner({ mode }: { mode: Mode }) {
   return (
     <div className="mb-4 rounded-xl border bg-blue-50 p-3">
       <div className="text-xs font-semibold text-blue-600">{v.ref}</div>
-      <blockquote className="mt-1 text-sm text-gray-700 italic">"{v.text}"</blockquote>
+      <blockquote className="mt-1 text-sm text-gray-700 italic">
+        "{v.text}"
+      </blockquote>
     </div>
   );
 }
 
 export default function ExpenseSplitDeluxeSuites() {
   // State
-  const [mode, setMode] = useState<Mode>('family');
-  const [baseCurrency, setBaseCurrency] = useState('USD');
+  const [mode, setMode] = useState<Mode>("family");
+  const [baseCurrency, setBaseCurrency] = useState("USD");
   const [roundTo, setRoundTo] = useState<0.01 | 0.05 | 1>(0.01);
-  const [categoryGroups, setCategoryGroups] = useState(DEFAULT_CATEGORY_GROUPS);
-  
+  const [categoryGroups, setCategoryGroups] = useState<CategoryGroups>(
+    DEFAULT_CATEGORY_GROUPS,
+  );
+
   const [people, setPeople] = useState<Person[]>([
-    { id: 'p1', name: 'Parent A', weight: 1, tripDays: 5, isParent: true },
-    { id: 'p2', name: 'Parent B', weight: 1, tripDays: 5, isParent: true },
+    { id: "p1", name: "Parent A", weight: 1, tripDays: 5, isParent: true },
+    { id: "p2", name: "Parent B", weight: 1, tripDays: 5, isParent: true },
   ]);
-  
+
   const [expenses, setExpenses] = useState<Expense[]>([
     {
-      id: 'e1',
-      label: 'School supplies',
+      id: "e1",
+      label: "School supplies",
       amount: 120,
-      currency: 'USD',
-      category: 'School',
-      payerId: 'p1',
-      method: 'agreement',
-      participants: [{ personId: 'p1' }, { personId: 'p2' }],
+      currency: "USD",
+      category: "School",
+      payerId: "p1",
+      method: "agreement",
+      participants: [{ personId: "p1" }, { personId: "p2" }],
       reimbursable: true,
-      dueDate: '2025-10-15',
+      dueDate: "2025-10-15",
     },
     {
-      id: 'e2',
-      label: 'Groceries',
-      amount: 85.50,
-      currency: 'USD', 
-      category: 'Groceries',
-      payerId: 'p2',
-      method: 'even',
-      participants: [{ personId: 'p1' }, { personId: 'p2' }],
-    }
+      id: "e2",
+      label: "Groceries",
+      amount: 85.5,
+      currency: "USD",
+      category: "Groceries",
+      payerId: "p2",
+      method: "even",
+      participants: [{ personId: "p1" }, { personId: "p2" }],
+    },
   ]);
 
   const [agreementSplit, setAgreementSplit] = useState<Record<string, number>>({
@@ -165,28 +182,36 @@ export default function ExpenseSplitDeluxeSuites() {
   const [perDiemRate, setPerDiemRate] = useState(0);
 
   // Helpers
-  const currencyList = ['USD', 'EUR', 'GBP', 'JPY', 'CAD'];
-  const parents = people.filter(p => p.isParent);
-  
-  const toBase = (amount: number, currency: string) => {
-    const rate = fxRates[currency] ?? 1;
-    return rate * amount;
-  };
+  const currencyList = ["USD", "EUR", "GBP", "JPY", "CAD"];
+  const parents = people.filter((p) => p.isParent);
+
+  const toBase = useCallback(
+    (amount: number, currency: string) => {
+      const rate = fxRates[currency] ?? 1;
+      return rate * amount;
+    },
+    [fxRates], // dependencies
+  );
 
   // Core calculation logic
   const result = useMemo(() => {
     const perPersonTotal: Record<string, number> = {};
     const paidBy: Record<string, number> = {};
-    people.forEach((p) => { 
-      perPersonTotal[p.id] = 0; 
-      paidBy[p.id] = 0; 
-    });
+    people.forEach(
+      (p) => {
+        perPersonTotal[p.id] = 0;
+        paidBy[p.id] = 0;
+        // ...all your loops and math...
+        return result;
+      },
+      [people, expenses, parents, toBase],
+    );
 
     for (const e of expenses) {
       if (!e.amount || e.amount <= 0) continue;
-      
-      const participants = e.participants.filter((pp) => 
-        people.some((p) => p.id === pp.personId)
+
+      const participants = e.participants.filter((pp) =>
+        people.some((p) => p.id === pp.personId),
       );
       const ids = participants.map((pp) => pp.personId);
       if (ids.length === 0) continue;
@@ -194,20 +219,30 @@ export default function ExpenseSplitDeluxeSuites() {
       const base = toBase(e.amount, e.currency);
       let shares: Record<string, number> = {};
 
-      if (e.method === 'even') {
+      if (e.method === "even") {
         const share = base / ids.length;
         ids.forEach((id) => (shares[id] = share));
-      } else if (e.method === 'weight') {
-        const weights = ids.map((id) => people.find((p) => p.id === id)?.weight || 1);
+      } else if (e.method === "weight") {
+        const weights = ids.map(
+          (id) => people.find((p) => p.id === id)?.weight || 1,
+        );
         const sumW = weights.reduce((a, b) => a + b, 0) || 1;
         ids.forEach((id, idx) => (shares[id] = base * (weights[idx] / sumW)));
-      } else if (e.method === 'usage') {
+      } else if (e.method === "usage") {
         const sumU = participants.reduce((a, b) => a + (b.usage || 0), 0) || 1;
-        participants.forEach((pp) => (shares[pp.personId] = base * ((pp.usage || 0) / sumU)));
-      } else if (e.method === 'agreement' && mode === 'family') {
-        const parentsHere = ids.filter((id) => parents.some(p => p.id === id));
-        const sumPct = parentsHere.reduce((a, id) => a + (agreementSplit[id] ?? 0), 0) || 100;
-        parentsHere.forEach((id) => (shares[id] = base * ((agreementSplit[id] ?? 0) / sumPct)));
+        participants.forEach(
+          (pp) => (shares[pp.personId] = base * ((pp.usage || 0) / sumU)),
+        );
+      } else if (e.method === "agreement" && mode === "family") {
+        const parentsHere = ids.filter((id) =>
+          parents.some((p) => p.id === id),
+        );
+        const sumPct =
+          parentsHere.reduce((a, id) => a + (agreementSplit[id] ?? 0), 0) ||
+          100;
+        parentsHere.forEach(
+          (id) => (shares[id] = base * ((agreementSplit[id] ?? 0) / sumPct)),
+        );
       } else {
         const share = base / ids.length;
         ids.forEach((id) => (shares[id] = share));
@@ -222,7 +257,7 @@ export default function ExpenseSplitDeluxeSuites() {
     }
 
     // Travel per-diem
-    if (mode === 'travel' && perDiemRate > 0) {
+    if (mode === "travel" && perDiemRate > 0) {
       for (const p of people) {
         perPersonTotal[p.id] += perDiemRate * Math.max(0, p.tripDays ?? 0);
       }
@@ -241,22 +276,34 @@ export default function ExpenseSplitDeluxeSuites() {
       const m = 1 / roundTo;
       return Math.round(v * m) / m;
     };
-    
+
     const roundedTotals: Record<string, number> = {};
     for (const p of people) {
       roundedTotals[p.id] = round(perPersonTotal[p.id]);
     }
 
     return { perPersonTotal: roundedTotals, balances, transfers };
-  }, [people, expenses, agreementSplit, mode, perDiemRate, roundTo, fxRates, baseCurrency]);
+  }, [
+    people,
+    toBase,
+    expenses,
+    parents,
+    agreementSplit,
+    mode,
+    perDiemRate,
+    roundTo,
+  ]);
 
   // Add functions
   const addCustomCategory = () => {
-    const groupName = prompt('Which group should this category belong to? (Housing, Utilities, Household, Travel, Family)') || 'Misc';
-    const categoryName = prompt('New category name?');
+    const groupName =
+      prompt(
+        "Which group should this category belong to? (Housing, Utilities, Household, Travel, Family)",
+      ) || "Misc";
+    const categoryName = prompt("New category name?");
     if (!categoryName) return;
-    
-    setCategoryGroups(prev => {
+
+    setCategoryGroups((prev) => {
       const newGroups = { ...prev };
       if (!newGroups[groupName]) {
         newGroups[groupName] = [];
@@ -269,45 +316,58 @@ export default function ExpenseSplitDeluxeSuites() {
   };
 
   const addPerson = () => {
-    const name = prompt('Name?');
+    const name = prompt("Name?");
     if (!name) return;
-    const id = 'p' + (people.length + 1);
-    const isParent = mode === 'family' ? confirm('Is this person a Parent/Guardian?') : false;
-    const tripDays = mode === 'travel' ? Number(prompt('Trip days? (e.g., 5)') || '5') : undefined;
-    
+    const id = "p" + (people.length + 1);
+    const isParent =
+      mode === "family" ? confirm("Is this person a Parent/Guardian?") : false;
+    const tripDays =
+      mode === "travel"
+        ? Number(prompt("Trip days? (e.g., 5)") || "5")
+        : undefined;
+
     const newPerson: Person = { id, name, weight: 1, tripDays, isParent };
     setPeople([...people, newPerson]);
-    
+
     // Add to all expenses
-    setExpenses(expenses.map(e => ({
-      ...e,
-      participants: [...e.participants, { personId: id }]
-    })));
-    
+    setExpenses(
+      expenses.map((e) => ({
+        ...e,
+        participants: [...e.participants, { personId: id }],
+      })),
+    );
+
     if (isParent) {
       setAgreementSplit({ ...agreementSplit, [id]: 0 });
     }
   };
 
   const addExpense = () => {
-    const label = prompt('Expense label?');
+    const label = prompt("Expense label?");
     if (!label) return;
-    const amount = Number(prompt('Amount?') || '0');
+    const amount = Number(prompt("Amount?") || "0");
     if (!amount) return;
-    
-    const id = 'e' + (expenses.length + 1);
+
+    const id = "e" + (expenses.length + 1);
     const newExpense: Expense = {
       id,
       label,
       amount,
       currency: baseCurrency,
-      category: mode === 'family' ? 'Childcare' : (mode === 'travel' ? 'Activities' : 'Misc'),
-      payerId: people[0]?.id || '',
-      method: mode === 'family' ? 'agreement' : 'even',
-      participants: (mode === 'family' ? parents : people).map(p => ({ personId: p.id })),
-      reimbursable: mode === 'family',
+      category:
+        mode === "family"
+          ? "Childcare"
+          : mode === "travel"
+            ? "Activities"
+            : "Misc",
+      payerId: people[0]?.id || "",
+      method: mode === "family" ? "agreement" : "even",
+      participants: (mode === "family" ? parents : people).map((p) => ({
+        personId: p.id,
+      })),
+      reimbursable: mode === "family",
     };
-    
+
     setExpenses([...expenses, newExpense]);
   };
 
@@ -315,56 +375,66 @@ export default function ExpenseSplitDeluxeSuites() {
   const downloadReport = () => {
     const rows: string[][] = [];
     const today = new Date().toLocaleDateString();
-    
+
     // Header
     rows.push([`Expense Split Report - ${today}`]);
-    rows.push([`Mode: ${mode.toUpperCase()}`, `Base Currency: ${baseCurrency}`]);
+    rows.push([
+      `Mode: ${mode.toUpperCase()}`,
+      `Base Currency: ${baseCurrency}`,
+    ]);
     rows.push([]);
 
     // People section
-    rows.push(['PEOPLE']);
-    rows.push(['Name', 'Parent', 'Weight', 'Trip Days']);
-    people.forEach(p => {
+    rows.push(["PEOPLE"]);
+    rows.push(["Name", "Parent", "Weight", "Trip Days"]);
+    people.forEach((p) => {
       rows.push([
         p.name,
-        p.isParent ? 'Yes' : 'No',
+        p.isParent ? "Yes" : "No",
         String(p.weight),
-        String(p.tripDays ?? '')
+        String(p.tripDays ?? ""),
       ]);
     });
     rows.push([]);
 
     // Agreement split (family mode)
-    if (mode === 'family') {
-      rows.push(['AGREEMENT SPLIT (Parents)']);
-      rows.push(['Parent', 'Percentage']);
-      parents.forEach(p => {
+    if (mode === "family") {
+      rows.push(["AGREEMENT SPLIT (Parents)"]);
+      rows.push(["Parent", "Percentage"]);
+      parents.forEach((p) => {
         rows.push([p.name, `${agreementSplit[p.id] ?? 0}%`]);
       });
       rows.push([]);
     }
 
     // Travel settings
-    if (mode === 'travel' && perDiemRate > 0) {
-      rows.push(['TRAVEL SETTINGS']);
-      rows.push(['Per-diem Rate', `${baseCurrency} ${perDiemRate.toFixed(2)}`]);
+    if (mode === "travel" && perDiemRate > 0) {
+      rows.push(["TRAVEL SETTINGS"]);
+      rows.push(["Per-diem Rate", `${baseCurrency} ${perDiemRate.toFixed(2)}`]);
       rows.push([]);
     }
 
     // Expenses section
-    rows.push(['EXPENSES']);
+    rows.push(["EXPENSES"]);
     rows.push([
-      'Description', 'Amount', 'Currency', 'Category', 'Paid By', 
-      'Split Method', 'Participants', 'Reimbursable', 'Due Date'
+      "Description",
+      "Amount",
+      "Currency",
+      "Category",
+      "Paid By",
+      "Split Method",
+      "Participants",
+      "Reimbursable",
+      "Due Date",
     ]);
-    
-    expenses.forEach(e => {
-      const payer = people.find(p => p.id === e.payerId)?.name || 'Unknown';
+
+    expenses.forEach((e) => {
+      const payer = people.find((p) => p.id === e.payerId)?.name || "Unknown";
       const participantNames = e.participants
-        .map(p => people.find(person => person.id === p.personId)?.name)
+        .map((p) => people.find((person) => person.id === p.personId)?.name)
         .filter(Boolean)
-        .join('; ');
-      
+        .join("; ");
+
       rows.push([
         e.label,
         String(e.amount),
@@ -373,72 +443,85 @@ export default function ExpenseSplitDeluxeSuites() {
         payer,
         e.method,
         participantNames,
-        e.reimbursable ? 'Yes' : 'No',
-        e.dueDate || ''
+        e.reimbursable ? "Yes" : "No",
+        e.dueDate || "",
       ]);
     });
     rows.push([]);
 
     // Calculations section
-    rows.push(['CALCULATIONS']);
-    rows.push(['Person', `Total Owed (${baseCurrency})`, `Amount Paid (${baseCurrency})`, `Balance (${baseCurrency})`]);
-    
-    people.forEach(p => {
+    rows.push(["CALCULATIONS"]);
+    rows.push([
+      "Person",
+      `Total Owed (${baseCurrency})`,
+      `Amount Paid (${baseCurrency})`,
+      `Balance (${baseCurrency})`,
+    ]);
+
+    people.forEach((p) => {
       const totalOwed = result.perPersonTotal[p.id] || 0;
       const totalPaid = expenses
-        .filter(e => e.payerId === p.id)
+        .filter((e) => e.payerId === p.id)
         .reduce((sum, e) => sum + toBase(e.amount, e.currency), 0);
       const balance = result.balances[p.id] || 0;
-      
+
       rows.push([
         p.name,
         totalOwed.toFixed(2),
         totalPaid.toFixed(2),
-        balance.toFixed(2)
+        balance.toFixed(2),
       ]);
     });
     rows.push([]);
 
     // Settlement section
-    rows.push(['SETTLEMENT']);
+    rows.push(["SETTLEMENT"]);
     if (result.transfers.length === 0) {
-      rows.push(['Status', 'All settled up!']);
+      rows.push(["Status", "All settled up!"]);
     } else {
-      rows.push(['From', 'To', `Amount (${baseCurrency})`]);
-      result.transfers.forEach(t => {
-        const fromName = people.find(p => p.id === t.from)?.name || 'Unknown';
-        const toName = people.find(p => p.id === t.to)?.name || 'Unknown';
+      rows.push(["From", "To", `Amount (${baseCurrency})`]);
+      result.transfers.forEach((t) => {
+        const fromName = people.find((p) => p.id === t.from)?.name || "Unknown";
+        const toName = people.find((p) => p.id === t.to)?.name || "Unknown";
         rows.push([fromName, toName, t.amount.toFixed(2)]);
       });
     }
     rows.push([]);
 
     // Summary
-    const totalExpenses = expenses.reduce((sum, e) => sum + toBase(e.amount, e.currency), 0);
-    rows.push(['SUMMARY']);
-    rows.push(['Total Expenses', `${baseCurrency} ${totalExpenses.toFixed(2)}`]);
-    rows.push(['Number of People', String(people.length)]);
-    rows.push(['Number of Expenses', String(expenses.length)]);
-    rows.push(['Report Generated', today]);
+    const totalExpenses = expenses.reduce(
+      (sum, e) => sum + toBase(e.amount, e.currency),
+      0,
+    );
+    rows.push(["SUMMARY"]);
+    rows.push([
+      "Total Expenses",
+      `${baseCurrency} ${totalExpenses.toFixed(2)}`,
+    ]);
+    rows.push(["Number of People", String(people.length)]);
+    rows.push(["Number of Expenses", String(expenses.length)]);
+    rows.push(["Report Generated", today]);
 
     // Generate filename
     const filename = `expense-split-${mode}-${new Date().toISOString().slice(0, 10)}.csv`;
-    
+
     downloadCSV(filename, rows);
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-6">
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
       <ScriptureBanner mode={mode} />
-      
+
       {/* Header Controls */}
       <div className="bg-white rounded-xl border p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-xl font-bold text-blue-600">Expense Split Calculator</h1>
-          
+          <h1 className="text-xl font-bold text-blue-600">
+            Expense Split Calculator
+          </h1>
+
           <div className="flex flex-wrap items-center gap-3">
             <label className="text-sm font-medium">Mode:</label>
-            <select 
+            <select
               className="rounded-md border px-3 py-1"
               value={mode}
               onChange={(e) => setMode(e.target.value as Mode)}
@@ -447,33 +530,35 @@ export default function ExpenseSplitDeluxeSuites() {
               <option value="standard">Standard</option>
               <option value="travel">Travel</option>
             </select>
-            
+
             <label className="text-sm font-medium">Base Currency:</label>
-            <select 
+            <select
               className="rounded-md border px-3 py-1"
               value={baseCurrency}
               onChange={(e) => setBaseCurrency(e.target.value)}
             >
-              {currencyList.map(c => (
-                <option key={c} value={c}>{c}</option>
+              {currencyList.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </select>
-            
-            <button 
+
+            <button
               onClick={addPerson}
               className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600"
             >
               + Person
             </button>
-            
-            <button 
+
+            <button
               onClick={addCustomCategory}
               className="px-3 py-1 bg-purple-500 text-white rounded-md text-sm hover:bg-purple-600"
             >
               + Category
             </button>
-            
-            <button 
+
+            <button
               onClick={addExpense}
               className="px-3 py-1 bg-green-500 text-white rounded-md text-sm hover:bg-green-600"
             >
@@ -484,11 +569,13 @@ export default function ExpenseSplitDeluxeSuites() {
       </div>
 
       {/* Family Mode: Agreement Split */}
-      {mode === 'family' && (
+      {mode === "family" && (
         <div className="bg-white rounded-xl border p-4">
-          <h3 className="text-lg font-semibold text-blue-600 mb-3">Agreement Split (Parents)</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-3">
+            Agreement Split (Parents)
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {parents.map(p => (
+            {parents.map((p) => (
               <label key={p.id} className="flex items-center gap-2">
                 <span className="min-w-20">{p.name}:</span>
                 <input
@@ -497,10 +584,12 @@ export default function ExpenseSplitDeluxeSuites() {
                   max="100"
                   className="w-20 px-2 py-1 border rounded-md"
                   value={agreementSplit[p.id] || 0}
-                  onChange={(e) => setAgreementSplit({
-                    ...agreementSplit,
-                    [p.id]: Number(e.target.value) || 0
-                  })}
+                  onChange={(e) =>
+                    setAgreementSplit({
+                      ...agreementSplit,
+                      [p.id]: Number(e.target.value) || 0,
+                    })
+                  }
                 />
                 <span>%</span>
               </label>
@@ -510,9 +599,11 @@ export default function ExpenseSplitDeluxeSuites() {
       )}
 
       {/* Travel Mode: Per-diem */}
-      {mode === 'travel' && (
+      {mode === "travel" && (
         <div className="bg-white rounded-xl border p-4">
-          <h3 className="text-lg font-semibold text-blue-600 mb-3">Travel Settings</h3>
+          <h3 className="text-lg font-semibold text-blue-600 mb-3">
+            Travel Settings
+          </h3>
           <label className="flex items-center gap-2">
             <span>Per-diem rate ({baseCurrency}):</span>
             <input
@@ -536,7 +627,9 @@ export default function ExpenseSplitDeluxeSuites() {
                 <th className="text-left py-2">Name</th>
                 <th className="text-left py-2">Parent?</th>
                 <th className="text-left py-2">Weight</th>
-                {mode === 'travel' && <th className="text-left py-2">Trip Days</th>}
+                {mode === "travel" && (
+                  <th className="text-left py-2">Trip Days</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -578,7 +671,7 @@ export default function ExpenseSplitDeluxeSuites() {
                       }}
                     />
                   </td>
-                  {mode === 'travel' && (
+                  {mode === "travel" && (
                     <td className="py-2">
                       <input
                         type="number"
@@ -617,7 +710,7 @@ export default function ExpenseSplitDeluxeSuites() {
                     setExpenses(updated);
                   }}
                 />
-                
+
                 <div className="flex gap-1">
                   <input
                     type="number"
@@ -640,8 +733,10 @@ export default function ExpenseSplitDeluxeSuites() {
                       setExpenses(updated);
                     }}
                   >
-                    {currencyList.map(c => (
-                      <option key={c} value={c}>{c}</option>
+                    {currencyList.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -656,13 +751,17 @@ export default function ExpenseSplitDeluxeSuites() {
                       setExpenses(updated);
                     }}
                   >
-                    {Object.entries(categoryGroups).map(([group, categories]) => (
-                      <optgroup key={group} label={group}>
-                        {categories.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </optgroup>
-                    ))}
+                    {Object.entries(categoryGroups).map(
+                      ([group, categories]) => (
+                        <optgroup key={group} label={group}>
+                          {categories.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ),
+                    )}
                   </select>
                   <button
                     onClick={addCustomCategory}
@@ -682,8 +781,10 @@ export default function ExpenseSplitDeluxeSuites() {
                     setExpenses(updated);
                   }}
                 >
-                  {people.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
+                  {people.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
                   ))}
                 </select>
 
@@ -699,12 +800,16 @@ export default function ExpenseSplitDeluxeSuites() {
                   <option value="even">Even Split</option>
                   <option value="weight">By Weight</option>
                   <option value="usage">By Usage</option>
-                  {mode === 'family' && <option value="agreement">By Agreement %</option>}
-                  {mode === 'family' && <option value="custody">By Custody Days</option>}
+                  {mode === "family" && (
+                    <option value="agreement">By Agreement %</option>
+                  )}
+                  {mode === "family" && (
+                    <option value="custody">By Custody Days</option>
+                  )}
                 </select>
               </div>
 
-              {mode === 'family' && (
+              {mode === "family" && (
                 <div className="mt-2 flex gap-3 items-center text-sm">
                   <label className="flex items-center gap-1">
                     <input
@@ -721,7 +826,7 @@ export default function ExpenseSplitDeluxeSuites() {
                   <input
                     type="date"
                     className="px-2 py-1 border rounded-md text-xs"
-                    value={expense.dueDate || ''}
+                    value={expense.dueDate || ""}
                     onChange={(e) => {
                       const updated = [...expenses];
                       updated[idx].dueDate = e.target.value;
@@ -733,34 +838,46 @@ export default function ExpenseSplitDeluxeSuites() {
 
               {/* Participants Selection */}
               <div className="mt-2">
-                <div className="text-xs font-medium text-gray-600 mb-1">Participants:</div>
+                <div className="text-xs font-medium text-gray-600 mb-1">
+                  Participants:
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {people.map(person => {
-                    const isParticipant = expense.participants.some(p => p.personId === person.id);
-                    const participant = expense.participants.find(p => p.personId === person.id);
-                    
+                  {people.map((person) => {
+                    const isParticipant = expense.participants.some(
+                      (p) => p.personId === person.id,
+                    );
+                    const participant = expense.participants.find(
+                      (p) => p.personId === person.id,
+                    );
+
                     return (
-                      <label key={person.id} className="flex items-center gap-1 text-xs bg-gray-100 rounded px-2 py-1">
+                      <label
+                        key={person.id}
+                        className="flex items-center gap-1 text-xs bg-gray-100 rounded px-2 py-1"
+                      >
                         <input
                           type="checkbox"
                           checked={isParticipant}
                           onChange={(e) => {
                             const updated = [...expenses];
                             if (e.target.checked) {
-                              updated[idx].participants.push({ 
-                                personId: person.id, 
-                                usage: expense.method === 'usage' ? 1 : undefined 
+                              updated[idx].participants.push({
+                                personId: person.id,
+                                usage:
+                                  expense.method === "usage" ? 1 : undefined,
                               });
                             } else {
-                              updated[idx].participants = updated[idx].participants.filter(
-                                p => p.personId !== person.id
+                              updated[idx].participants = updated[
+                                idx
+                              ].participants.filter(
+                                (p) => p.personId !== person.id,
                               );
                             }
                             setExpenses(updated);
                           }}
                         />
                         <span>{person.name}</span>
-                        {expense.method === 'usage' && isParticipant && (
+                        {expense.method === "usage" && isParticipant && (
                           <input
                             type="number"
                             step="0.01"
@@ -769,9 +886,14 @@ export default function ExpenseSplitDeluxeSuites() {
                             value={participant?.usage || 0}
                             onChange={(e) => {
                               const updated = [...expenses];
-                              const partIdx = updated[idx].participants.findIndex(p => p.personId === person.id);
+                              const partIdx = updated[
+                                idx
+                              ].participants.findIndex(
+                                (p) => p.personId === person.id,
+                              );
                               if (partIdx >= 0) {
-                                updated[idx].participants[partIdx].usage = Number(e.target.value) || 0;
+                                updated[idx].participants[partIdx].usage =
+                                  Number(e.target.value) || 0;
                                 setExpenses(updated);
                               }
                             }}
@@ -797,11 +919,13 @@ export default function ExpenseSplitDeluxeSuites() {
           </h3>
           <div className="space-y-2">
             {Object.entries(result.perPersonTotal).map(([id, amount]) => {
-              const person = people.find(p => p.id === id);
+              const person = people.find((p) => p.id === id);
               return (
                 <div key={id} className="flex justify-between items-center">
                   <span>{person?.name || id}</span>
-                  <span className="font-mono">{baseCurrency} {amount.toFixed(2)}</span>
+                  <span className="font-mono">
+                    {baseCurrency} {amount.toFixed(2)}
+                  </span>
                 </div>
               );
             })}
@@ -818,8 +942,8 @@ export default function ExpenseSplitDeluxeSuites() {
           ) : (
             <div className="space-y-2">
               {result.transfers.map((transfer, idx) => {
-                const fromPerson = people.find(p => p.id === transfer.from);
-                const toPerson = people.find(p => p.id === transfer.to);
+                const fromPerson = people.find((p) => p.id === transfer.from);
+                const toPerson = people.find((p) => p.id === transfer.to);
                 return (
                   <div key={idx} className="flex justify-between items-center">
                     <span>
@@ -838,3 +962,4 @@ export default function ExpenseSplitDeluxeSuites() {
     </div>
   );
 }
+/* eslint-enable react/no-unescaped-entities */

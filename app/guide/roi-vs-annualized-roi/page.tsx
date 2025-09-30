@@ -13,9 +13,13 @@ export const metadata: Metadata = {
 function Breadcrumb() {
   return (
     <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">Home</Link>{" "}
+      <Link href="/" className="text-brand-green hover:underline">
+        Home
+      </Link>{" "}
       &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link>{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">
+        Guides
+      </Link>{" "}
       &rsaquo; <span>ROI vs Annualized ROI</span>
     </nav>
   );
@@ -86,7 +90,9 @@ export default function GuidePage() {
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
+      <p className="mt-3 text-sm text-gray-600">
+        Estimated reading time: 3–4 minutes
+      </p>
 
       <section>
         <CTAButton href="/?calc=roi">👉 Try the matching calculator</CTAButton>
@@ -95,8 +101,16 @@ export default function GuidePage() {
       <section>
         <h2>Related Guides</h2>
         <ul>
-          <li><Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link></li>
-          <li><Link href="/guide/mortgage-payment-breakdown">Mortgage Payment Breakdown</Link></li>
+          <li>
+            <Link href="/guide/break-even-made-simple">
+              Break-Even Made Simple
+            </Link>
+          </li>
+          <li>
+            <Link href="/guide/mortgage-payment-breakdown">
+              Mortgage Payment Breakdown
+            </Link>
+          </li>
         </ul>
       </section>
 
@@ -105,7 +119,10 @@ export default function GuidePage() {
       </div>
 
       <GuideNav
-        next={{ href: "/guide/break-even-made-simple", title: "Break-Even Made Simple" }}
+        next={{
+          href: "/guide/break-even-made-simple",
+          title: "Break-Even Made Simple",
+        }}
       />
 
       <script

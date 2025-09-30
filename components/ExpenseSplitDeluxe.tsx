@@ -14,6 +14,7 @@ import {
   Info,
 } from "lucide-react";
 import { useDownloadPermission } from "@/hooks/useDownloadPermission";
+import { useCallback } from "react";
 
 type Person = {
   id: string;
@@ -53,7 +54,13 @@ type Props = {
 export default function ExpenseSplitDeluxe({
   initialPeople = [
     { id: "p1", name: "You", weight: 1, tripDays: 5, isParent: true },
-    { id: "p2", name: "Co-Parent / Roommate", weight: 1, tripDays: 5, isParent: true },
+    {
+      id: "p2",
+      name: "Co-Parent / Roommate",
+      weight: 1,
+      tripDays: 5,
+      isParent: true,
+    },
   ],
   initialChildren = [{ id: "c1", name: "Child", custodyDays: 15 }],
   initialExpenses = [
@@ -64,7 +71,9 @@ export default function ExpenseSplitDeluxe({
   onUpgrade,
 }: Props) {
   // === PERMISSIONS: app-wide gate for Expense Split Deluxe ===
-  const { canDownload: hasDownloadPermission = false } = useDownloadPermission("expense-split-deluxe");
+  const { canDownload: hasDownloadPermission = false } = useDownloadPermission(
+    "expense-split-deluxe",
+  );
 
   // === STATE ===
   const [people, setPeople] = useState<Person[]>(initialPeople);
@@ -72,30 +81,49 @@ export default function ExpenseSplitDeluxe({
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   // Split modes
-  const [generalMode, setGeneralMode] = useState<"equal" | "weighted">("weighted");
-  const [childMode, setChildMode] = useState<"equalParents" | "weightedParents">("equalParents");
-  const [tripMode, setTripMode] = useState<"byDaysWeighted" | "equal">("byDaysWeighted");
+  const [generalMode, setGeneralMode] = useState<"equal" | "weighted">(
+    "weighted",
+  );
+  const [childMode, setChildMode] = useState<
+    "equalParents" | "weightedParents"
+  >("equalParents");
+  const [tripMode, setTripMode] = useState<"byDaysWeighted" | "equal">(
+    "byDaysWeighted",
+  );
 
   // New rows
-  const [newPerson, setNewPerson] = useState({ name: "", weight: "1", tripDays: "0", isParent: false });
+  const [newPerson, setNewPerson] = useState({
+    name: "",
+    weight: "1",
+    tripDays: "0",
+    isParent: false,
+  });
   const [newChild, setNewChild] = useState({ name: "", custodyDays: "0" });
-  const [newExpense, setNewExpense] = useState({ name: "", amount: "", category: "general" as ExpenseCategory });
+  const [newExpense, setNewExpense] = useState({
+    name: "",
+    amount: "",
+    category: "general" as ExpenseCategory,
+  });
 
   // === HELPERS ===
   const currency = (n: number, min = 2) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: min }).format(n);
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: min,
+    }).format(n);
 
   const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
   // Normalize safe weights
-  const safeWeights = (arr: number[]) => {
+  const safeWeights = useCallback((arr: number[]) => {
     const total = sum(arr);
     if (total <= 0) {
       // If weights are all zero/negative, default to equal distribution
       return arr.map(() => 1 / arr.length);
     }
     return arr.map((v) => v / total);
-  };
+  }, []); // no external deps used
 
   // Compute allocations per expense per person
   const allocations = useMemo(() => {
@@ -106,19 +134,27 @@ export default function ExpenseSplitDeluxe({
     const nonParents = people.filter((p) => !p.isParent);
 
     const peopleWeights = people.map((p) => Math.max(0, p.weight));
-    const peopleWeightShares = generalMode === "equal" ? people.map(() => 1 / people.length) : safeWeights(peopleWeights);
+    const peopleWeightShares =
+      generalMode === "equal"
+        ? people.map(() => 1 / people.length)
+        : safeWeights(peopleWeights);
 
     // Trip weights (weight * tripDays)
-    const tripWeights = people.map((p) => Math.max(0, (p.tripDays ?? 0) * Math.max(0, p.weight)));
-    const tripWeightShares = tripMode === "equal" ? people.map(() => 1 / people.length) : safeWeights(tripWeights);
+    const tripWeights = people.map((p) =>
+      Math.max(0, (p.tripDays ?? 0) * Math.max(0, p.weight)),
+    );
+    const tripWeightShares =
+      tripMode === "equal"
+        ? people.map(() => 1 / people.length)
+        : safeWeights(tripWeights);
 
     const parentWeights = parents.map((p) => Math.max(0, p.weight || 0));
     const parentShares =
       childMode === "equalParents"
         ? parents.map(() => (parents.length ? 1 / parents.length : 0))
         : parents.length
-        ? safeWeights(parentWeights)
-        : [];
+          ? safeWeights(parentWeights)
+          : [];
 
     const pushAllocation = (personId: string, amount: number) => {
       result[personId] += amount;
@@ -130,9 +166,13 @@ export default function ExpenseSplitDeluxe({
 
       if (exp.category === "general") {
         // Split across everyone by mode
-        people.forEach((p, idx) => pushAllocation(p.id, exp.amount * peopleWeightShares[idx]));
+        people.forEach((p, idx) =>
+          pushAllocation(p.id, exp.amount * peopleWeightShares[idx]),
+        );
       } else if (exp.category === "trip") {
-        people.forEach((p, idx) => pushAllocation(p.id, exp.amount * tripWeightShares[idx]));
+        people.forEach((p, idx) =>
+          pushAllocation(p.id, exp.amount * tripWeightShares[idx]),
+        );
       } else if (exp.category === "child") {
         if (parents.length === 0) {
           // No parents flagged; fall back to everyone equal.
@@ -140,27 +180,31 @@ export default function ExpenseSplitDeluxe({
           people.forEach((p) => pushAllocation(p.id, share));
         } else {
           // Parents only, by chosen mode
-          parents.forEach((p, idx) => pushAllocation(p.id, exp.amount * parentShares[idx]));
+          parents.forEach((p, idx) =>
+            pushAllocation(p.id, exp.amount * parentShares[idx]),
+          );
           // Non-parents receive none of the child-related expense
           nonParents.forEach(() => null);
         }
       }
     }
-
     return result;
-  }, [people, expenses, generalMode, tripMode, childMode]);
+  }, [people, expenses, generalMode, tripMode, childMode, safeWeights]);
 
   const totals = useMemo(() => {
     const totalsArr = people.map((p) => ({
       person: p,
       owed: allocations[p.id] ?? 0,
     }));
+
     return {
       byPerson: totalsArr,
       grandTotal: sum(totalsArr.map((t) => t.owed)),
-      averagePerPerson: totalsArr.length ? sum(totalsArr.map((t) => t.owed)) / totalsArr.length : 0,
+      averagePerPerson: totalsArr.length
+        ? sum(totalsArr.map((t) => t.owed)) / totalsArr.length
+        : 0,
     };
-  }, [people, allocations]);
+  }, [people, allocations]); // ✅ close the memo correctly
 
   // === MUTATIONS ===
   const addPerson = () => {
@@ -184,7 +228,9 @@ export default function ExpenseSplitDeluxe({
   };
 
   const updatePerson = (id: string, patch: Partial<Person>) => {
-    setPeople((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    setPeople((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+    );
   };
 
   const addChild = () => {
@@ -192,7 +238,11 @@ export default function ExpenseSplitDeluxe({
     const id = "c" + Date.now().toString(36);
     setChildren((prev) => [
       ...prev,
-      { id, name: newChild.name.trim(), custodyDays: Number(newChild.custodyDays) || 0 },
+      {
+        id,
+        name: newChild.name.trim(),
+        custodyDays: Number(newChild.custodyDays) || 0,
+      },
     ]);
     setNewChild({ name: "", custodyDays: "0" });
   };
@@ -221,7 +271,9 @@ export default function ExpenseSplitDeluxe({
   };
 
   const updateExpense = (id: string, patch: Partial<Expense>) => {
-    setExpenses((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
+    setExpenses((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, ...patch } : e)),
+    );
   };
 
   // === DOWNLOAD (GATED) ===
@@ -229,16 +281,24 @@ export default function ExpenseSplitDeluxe({
     if (!hasDownloadPermission) {
       // Trigger the upgrade flow if provided; else show an alert fallback
       if (onUpgrade) return onUpgrade();
-      alert("Download capability requires Pro or Premium plan for this calculator");
+      alert(
+        "Download capability requires Pro or Premium plan for this calculator",
+      );
       return;
     }
 
     // Build CSV
     const header = ["Person", "Owed"];
     const rows = totals.byPerson.map((t) => [t.person.name, t.owed.toFixed(2)]);
-    const body = [header, ...rows, ["Grand Total", totals.grandTotal.toFixed(2)]];
+    const body = [
+      header,
+      ...rows,
+      ["Grand Total", totals.grandTotal.toFixed(2)],
+    ];
 
-    const csv = body.map((r) => r.map((s) => `"${String(s).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csv = body
+      .map((r) => r.map((s) => `"${String(s).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
     const a = document.createElement("a");
@@ -260,7 +320,8 @@ export default function ExpenseSplitDeluxe({
               Expense Split Deluxe
             </h1>
             <p className="text-emerald-100 mt-2">
-              Fairly divide household, child-related, and trip costs—supporting equal or weighted rules.
+              Fairly divide household, child-related, and trip costs—supporting
+              equal or weighted rules.
             </p>
           </div>
 
@@ -272,10 +333,16 @@ export default function ExpenseSplitDeluxe({
                 : "bg-gray-400 cursor-not-allowed text-gray-200"
             }`}
             disabled={!hasDownloadPermission}
-            title={hasDownloadPermission ? "Download Report" : "Upgrade to download reports"}
+            title={
+              hasDownloadPermission
+                ? "Download Report"
+                : "Upgrade to download reports"
+            }
           >
             <Download className="h-4 w-4" />
-            {hasDownloadPermission ? "Download Report (CSV)" : "Upgrade to Download"}
+            {hasDownloadPermission
+              ? "Download Report (CSV)"
+              : "Upgrade to Download"}
           </button>
         </div>
       </div>
@@ -293,11 +360,16 @@ export default function ExpenseSplitDeluxe({
 
             <div className="space-y-3">
               {people.map((p) => (
-                <div key={p.id} className="flex items-center gap-2 bg-white border rounded-lg p-3">
+                <div
+                  key={p.id}
+                  className="flex items-center gap-2 bg-white border rounded-lg p-3"
+                >
                   <input
                     className="flex-1 rounded border px-2 py-1"
                     value={p.name}
-                    onChange={(e) => updatePerson(p.id, { name: e.target.value })}
+                    onChange={(e) =>
+                      updatePerson(p.id, { name: e.target.value })
+                    }
                   />
                   <div className="flex items-center gap-1 text-xs text-gray-600">
                     <label className="whitespace-nowrap">Weight</label>
@@ -306,7 +378,9 @@ export default function ExpenseSplitDeluxe({
                       step="0.1"
                       className="w-20 rounded border px-2 py-1"
                       value={p.weight}
-                      onChange={(e) => updatePerson(p.id, { weight: Number(e.target.value) })}
+                      onChange={(e) =>
+                        updatePerson(p.id, { weight: Number(e.target.value) })
+                      }
                     />
                   </div>
                   <div className="flex items-center gap-1 text-xs text-gray-600">
@@ -315,14 +389,18 @@ export default function ExpenseSplitDeluxe({
                       type="number"
                       className="w-20 rounded border px-2 py-1"
                       value={p.tripDays ?? 0}
-                      onChange={(e) => updatePerson(p.id, { tripDays: Number(e.target.value) })}
+                      onChange={(e) =>
+                        updatePerson(p.id, { tripDays: Number(e.target.value) })
+                      }
                     />
                   </div>
                   <label className="flex items-center gap-1 text-xs text-gray-700">
                     <input
                       type="checkbox"
                       checked={!!p.isParent}
-                      onChange={(e) => updatePerson(p.id, { isParent: e.target.checked })}
+                      onChange={(e) =>
+                        updatePerson(p.id, { isParent: e.target.checked })
+                      }
                     />
                     Parent
                   </label>
@@ -341,7 +419,9 @@ export default function ExpenseSplitDeluxe({
                   className="flex-1 rounded border px-3 py-2"
                   placeholder="Name"
                   value={newPerson.name}
-                  onChange={(e) => setNewPerson((s) => ({ ...s, name: e.target.value }))}
+                  onChange={(e) =>
+                    setNewPerson((s) => ({ ...s, name: e.target.value }))
+                  }
                 />
                 <input
                   className="w-24 rounded border px-3 py-2"
@@ -349,20 +429,29 @@ export default function ExpenseSplitDeluxe({
                   type="number"
                   step="0.1"
                   value={newPerson.weight}
-                  onChange={(e) => setNewPerson((s) => ({ ...s, weight: e.target.value }))}
+                  onChange={(e) =>
+                    setNewPerson((s) => ({ ...s, weight: e.target.value }))
+                  }
                 />
                 <input
                   className="w-28 rounded border px-3 py-2"
                   placeholder="Trip Days"
                   type="number"
                   value={newPerson.tripDays}
-                  onChange={(e) => setNewPerson((s) => ({ ...s, tripDays: e.target.value }))}
+                  onChange={(e) =>
+                    setNewPerson((s) => ({ ...s, tripDays: e.target.value }))
+                  }
                 />
                 <label className="flex items-center gap-2 bg-white border rounded-lg px-3">
                   <input
                     type="checkbox"
                     checked={newPerson.isParent}
-                    onChange={(e) => setNewPerson((s) => ({ ...s, isParent: e.target.checked }))}
+                    onChange={(e) =>
+                      setNewPerson((s) => ({
+                        ...s,
+                        isParent: e.target.checked,
+                      }))
+                    }
                   />
                   <span className="text-sm">Parent</span>
                 </label>
@@ -381,17 +470,26 @@ export default function ExpenseSplitDeluxe({
           <section className="bg-cyan-50 border border-cyan-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Baby className="h-5 w-5 text-cyan-700" />
-              <h3 className="font-semibold text-cyan-800">Children (for child-related costs)</h3>
+              <h3 className="font-semibold text-cyan-800">
+                Children (for child-related costs)
+              </h3>
             </div>
 
             <div className="space-y-3">
               {children.map((c) => (
-                <div key={c.id} className="flex items-center gap-2 bg-white border rounded-lg p-3">
+                <div
+                  key={c.id}
+                  className="flex items-center gap-2 bg-white border rounded-lg p-3"
+                >
                   <input
                     className="flex-1 rounded border px-2 py-1"
                     value={c.name}
                     onChange={(e) =>
-                      setChildren((prev) => prev.map((x) => (x.id === c.id ? { ...x, name: e.target.value } : x)))
+                      setChildren((prev) =>
+                        prev.map((x) =>
+                          x.id === c.id ? { ...x, name: e.target.value } : x,
+                        ),
+                      )
                     }
                   />
                   <div className="flex items-center gap-1 text-xs text-gray-600">
@@ -402,7 +500,11 @@ export default function ExpenseSplitDeluxe({
                       value={c.custodyDays ?? 0}
                       onChange={(e) =>
                         setChildren((prev) =>
-                          prev.map((x) => (x.id === c.id ? { ...x, custodyDays: Number(e.target.value) } : x)),
+                          prev.map((x) =>
+                            x.id === c.id
+                              ? { ...x, custodyDays: Number(e.target.value) }
+                              : x,
+                          ),
                         )
                       }
                     />
@@ -422,14 +524,18 @@ export default function ExpenseSplitDeluxe({
                   className="flex-1 rounded border px-3 py-2"
                   placeholder="Name"
                   value={newChild.name}
-                  onChange={(e) => setNewChild((s) => ({ ...s, name: e.target.value }))}
+                  onChange={(e) =>
+                    setNewChild((s) => ({ ...s, name: e.target.value }))
+                  }
                 />
                 <input
                   className="w-36 rounded border px-3 py-2"
                   placeholder="Custody Days"
                   type="number"
                   value={newChild.custodyDays}
-                  onChange={(e) => setNewChild((s) => ({ ...s, custodyDays: e.target.value }))}
+                  onChange={(e) =>
+                    setNewChild((s) => ({ ...s, custodyDays: e.target.value }))
+                  }
                 />
                 <button
                   onClick={addChild}
@@ -442,8 +548,9 @@ export default function ExpenseSplitDeluxe({
 
               <p className="text-xs text-cyan-700 flex items-start gap-2 mt-1">
                 <Info className="h-4 w-4 mt-0.5" />
-                Child metadata is optional. Child expenses split between people marked as parents, either equally or by
-                parent weights (toggle below).
+                Child metadata is optional. Child expenses split between people
+                marked as parents, either equally or by parent weights (toggle
+                below).
               </p>
             </div>
           </section>
@@ -462,18 +569,26 @@ export default function ExpenseSplitDeluxe({
                     <input
                       className="sm:col-span-3 rounded border px-2 py-1"
                       value={e.name}
-                      onChange={(ev) => updateExpense(e.id, { name: ev.target.value })}
+                      onChange={(ev) =>
+                        updateExpense(e.id, { name: ev.target.value })
+                      }
                     />
                     <input
                       type="number"
                       className="sm:col-span-2 rounded border px-2 py-1"
                       value={e.amount}
-                      onChange={(ev) => updateExpense(e.id, { amount: Number(ev.target.value) })}
+                      onChange={(ev) =>
+                        updateExpense(e.id, { amount: Number(ev.target.value) })
+                      }
                     />
                     <select
                       className="sm:col-span-2 rounded border px-2 py-1 bg-white"
                       value={e.category}
-                      onChange={(ev) => updateExpense(e.id, { category: ev.target.value as ExpenseCategory })}
+                      onChange={(ev) =>
+                        updateExpense(e.id, {
+                          category: ev.target.value as ExpenseCategory,
+                        })
+                      }
                     >
                       <option value="general">General</option>
                       <option value="child">Child-Related</option>
@@ -491,7 +606,9 @@ export default function ExpenseSplitDeluxe({
                     className="mt-2 w-full rounded border px-2 py-1 text-sm"
                     placeholder="Notes (optional)"
                     value={e.notes ?? ""}
-                    onChange={(ev) => updateExpense(e.id, { notes: ev.target.value })}
+                    onChange={(ev) =>
+                      updateExpense(e.id, { notes: ev.target.value })
+                    }
                   />
                 </div>
               ))}
@@ -501,19 +618,28 @@ export default function ExpenseSplitDeluxe({
                   className="sm:col-span-3 rounded border px-3 py-2"
                   placeholder="Expense name"
                   value={newExpense.name}
-                  onChange={(e) => setNewExpense((s) => ({ ...s, name: e.target.value }))}
+                  onChange={(e) =>
+                    setNewExpense((s) => ({ ...s, name: e.target.value }))
+                  }
                 />
                 <input
                   className="sm:col-span-2 rounded border px-3 py-2"
                   placeholder="Amount"
                   type="number"
                   value={newExpense.amount}
-                  onChange={(e) => setNewExpense((s) => ({ ...s, amount: e.target.value }))}
+                  onChange={(e) =>
+                    setNewExpense((s) => ({ ...s, amount: e.target.value }))
+                  }
                 />
                 <select
                   className="sm:col-span-2 rounded border px-3 py-2 bg-white"
                   value={newExpense.category}
-                  onChange={(e) => setNewExpense((s) => ({ ...s, category: e.target.value as ExpenseCategory }))}
+                  onChange={(e) =>
+                    setNewExpense((s) => ({
+                      ...s,
+                      category: e.target.value as ExpenseCategory,
+                    }))
+                  }
                 >
                   <option value="general">General</option>
                   <option value="child">Child-Related</option>
@@ -592,7 +718,9 @@ export default function ExpenseSplitDeluxe({
                 </label>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Only people marked as <span className="font-medium">Parent</span> share child expenses.
+                Only people marked as{" "}
+                <span className="font-medium">Parent</span> share child
+                expenses.
               </p>
             </div>
 
@@ -632,32 +760,49 @@ export default function ExpenseSplitDeluxe({
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white border rounded-lg p-3">
                 <div className="text-sm text-gray-500">Grand Total</div>
-                <div className="text-2xl font-bold text-gray-800">{currency(totals.grandTotal)}</div>
+                <div className="text-2xl font-bold text-gray-800">
+                  {currency(totals.grandTotal)}
+                </div>
               </div>
               <div className="bg-white border rounded-lg p-3">
                 <div className="text-sm text-gray-500">Average / Person</div>
-                <div className="text-2xl font-bold text-gray-800">{currency(totals.averagePerPerson)}</div>
+                <div className="text-2xl font-bold text-gray-800">
+                  {currency(totals.averagePerPerson)}
+                </div>
               </div>
               <div className="bg-white border rounded-lg p-3">
                 <div className="text-sm text-gray-500">People</div>
-                <div className="text-2xl font-bold text-gray-800">{people.length}</div>
+                <div className="text-2xl font-bold text-gray-800">
+                  {people.length}
+                </div>
               </div>
               <div className="bg-white border rounded-lg p-3">
                 <div className="text-sm text-gray-500">Expenses</div>
-                <div className="text-2xl font-bold text-gray-800">{expenses.length}</div>
+                <div className="text-2xl font-bold text-gray-800">
+                  {expenses.length}
+                </div>
               </div>
             </div>
           </div>
 
           <div className="bg-white border rounded-xl overflow-hidden">
-            <div className="bg-gray-100 px-4 py-3 font-medium text-gray-700">What Each Person Owes</div>
+            <div className="bg-gray-100 px-4 py-3 font-medium text-gray-700">
+              What Each Person Owes
+            </div>
             <div className="divide-y">
               {totals.byPerson.map(({ person, owed }) => (
-                <div key={person.id} className="flex items-center justify-between px-4 py-3">
+                <div
+                  key={person.id}
+                  className="flex items-center justify-between px-4 py-3"
+                >
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-800">{person.name}</span>
+                    <span className="font-semibold text-gray-800">
+                      {person.name}
+                    </span>
                     {person.isParent && (
-                      <span className="text-xs rounded bg-teal-100 text-teal-700 px-2 py-0.5">Parent</span>
+                      <span className="text-xs rounded bg-teal-100 text-teal-700 px-2 py-0.5">
+                        Parent
+                      </span>
                     )}
                   </div>
                   <div className="text-lg font-semibold">{currency(owed)}</div>

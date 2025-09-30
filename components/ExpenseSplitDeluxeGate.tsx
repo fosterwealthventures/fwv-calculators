@@ -37,23 +37,39 @@ export default function ExpenseSplitDeluxeGate({
       >
         {/* Everything inside here is the Deluxe (Pro-choice) content */}
         <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <h3 className="text-lg font-semibold">Travel Split (Itineraries) — Pro Choice</h3>
-          <p className="mt-2 text-sm text-gray-600">Wire your real Travel Split UI here.</p>
+          <h3 className="text-lg font-semibold">
+            Travel Split (Itineraries) — Pro Choice
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Wire your real Travel Split UI here.
+          </p>
         </div>
 
         <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <h3 className="text-lg font-semibold">Couples & Roommate Templates — Pro Choice</h3>
-          <p className="mt-2 text-sm text-gray-600">Wire your real templates UI here.</p>
+          <h3 className="text-lg font-semibold">
+            Couples & Roommate Templates — Pro Choice
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Wire your real templates UI here.
+          </p>
         </div>
 
         <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <h3 className="text-lg font-semibold">Child-Related Allocations & Notes — Pro Choice</h3>
-          <p className="mt-2 text-sm text-gray-600">Wire your real child allocation UI here.</p>
+          <h3 className="text-lg font-semibold">
+            Child-Related Allocations & Notes — Pro Choice
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Wire your real child allocation UI here.
+          </p>
         </div>
 
         <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <h3 className="text-lg font-semibold">Downloadable Report (PDF/CSV) — Pro Choice</h3>
-          <p className="mt-2 text-sm text-gray-600">Wire your real download/export here.</p>
+          <h3 className="text-lg font-semibold">
+            Downloadable Report (PDF/CSV) — Pro Choice
+          </h3>
+          <p className="mt-2 text-sm text-gray-600">
+            Wire your real download/export here.
+          </p>
         </div>
       </ProChoiceGate>
     </section>

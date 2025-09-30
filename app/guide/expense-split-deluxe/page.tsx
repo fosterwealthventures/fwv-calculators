@@ -19,9 +19,9 @@ export default function ExpenseSplitDeluxeGuide() {
       <h1 className="heading-hero">Expense Split Deluxe — Guide</h1>
 
       <p className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-        <span className="font-semibold">2 Corinthians 9:7 —</span>{" "}
-        “Each of you should give what you have decided in your heart to give,
-        not reluctantly or under compulsion, for God loves a cheerful giver.”
+        <span className="font-semibold">2 Corinthians 9:7 —</span> “Each of you
+        should give what you have decided in your heart to give, not reluctantly
+        or under compulsion, for God loves a cheerful giver.”
       </p>
 
       <section className="mt-6 space-y-4">

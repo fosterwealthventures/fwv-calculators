@@ -5,10 +5,13 @@ import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // Lazy-load the two calculators so we don't SSR them and risk hydration issues
-const EmployeeCost = dynamic(() => import("@/components/calculators/EmployeeCost"), { ssr: false });
+const EmployeeCost = dynamic(
+  () => import("@/components/calculators/EmployeeCost"),
+  { ssr: false },
+);
 const ExpenseSplitDeluxe = dynamic(
   () => import("@/components/calculators/ExpenseSplitDeluxe"),
-  { ssr: false }
+  { ssr: false },
 );
 
 type ProChoice = "employee" | "expense" | null;
@@ -27,7 +30,9 @@ export default function ProSuite() {
     if (queryChoice === "employee" || queryChoice === "expense") {
       setChoice(queryChoice);
       // persist selection so returning users land where they left off
-      try { localStorage.setItem("fwv-pro-choice", queryChoice); } catch {}
+      try {
+        localStorage.setItem("fwv-pro-choice", queryChoice);
+      } catch {}
       return;
     }
 
@@ -43,7 +48,9 @@ export default function ProSuite() {
   // 2) Helper to set URL and state together (no full reload)
   const choose = (val: Exclude<ProChoice, null>) => {
     setChoice(val);
-    try { localStorage.setItem("fwv-pro-choice", val); } catch {}
+    try {
+      localStorage.setItem("fwv-pro-choice", val);
+    } catch {}
     const usp = new URLSearchParams(Array.from(search.entries()));
     usp.set("pro", val);
     router.replace(`?${usp.toString()}`);
@@ -62,8 +69,14 @@ export default function ProSuite() {
     return (
       <section className="w-full max-w-4xl mx-auto">
         <header className="mb-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Choose your Pro calculator</h2>
-          <p className="mt-2 text-sm opacity-80">Your Pro plan includes <span className="font-medium">one</span> of the following calculators. Pick the one you want to use now — you can switch anytime.</p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+            Choose your Pro calculator
+          </h2>
+          <p className="mt-2 text-sm opacity-80">
+            Your Pro plan includes <span className="font-medium">one</span> of
+            the following calculators. Pick the one you want to use now — you
+            can switch anytime.
+          </p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,11 +87,16 @@ export default function ProSuite() {
             className="group rounded-2xl border border-gray-200 dark:border-gray-800 p-5 text-left shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Employee Cost Calculator</h3>
-              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">Pro</span>
+              <h3 className="text-lg font-semibold">
+                Employee Cost Calculator
+              </h3>
+              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                Pro
+              </span>
             </div>
             <p className="mt-2 text-sm opacity-80">
-              Calculate the all‑in cost of a new hire (wages, taxes, benefits) and model scenarios.
+              Calculate the all‑in cost of a new hire (wages, taxes, benefits)
+              and model scenarios.
             </p>
             <ul className="mt-3 text-sm list-disc pl-5 space-y-1 opacity-90">
               <li>Wages, employer taxes, benefits</li>
@@ -87,7 +105,9 @@ export default function ProSuite() {
             </ul>
             <div className="mt-4 inline-flex items-center gap-2 text-indigo-600 group-hover:gap-3 transition-all">
               <span className="text-sm font-medium">Use this</span>
-              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z"/></svg>
+              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z" />
+              </svg>
             </div>
           </button>
 
@@ -99,10 +119,13 @@ export default function ProSuite() {
           >
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Expense Split Deluxe</h3>
-              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">Pro</span>
+              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                Pro
+              </span>
             </div>
             <p className="mt-2 text-sm opacity-80">
-              Split shared expenses fairly (roommates, couples, travel). Add custom categories and rules.
+              Split shared expenses fairly (roommates, couples, travel). Add
+              custom categories and rules.
             </p>
             <ul className="mt-3 text-sm list-disc pl-5 space-y-1 opacity-90">
               <li>Equal / percentage / income‑weighted</li>
@@ -111,7 +134,9 @@ export default function ProSuite() {
             </ul>
             <div className="mt-4 inline-flex items-center gap-2 text-indigo-600 group-hover:gap-3 transition-all">
               <span className="text-sm font-medium">Use this</span>
-              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z"/></svg>
+              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z" />
+              </svg>
             </div>
           </button>
         </div>
@@ -153,11 +178,7 @@ export default function ProSuite() {
         </button>
       </div>
 
-      {choice === "employee" ? (
-        <EmployeeCost />
-      ) : (
-        <ExpenseSplitDeluxe />
-      )}
+      {choice === "employee" ? <EmployeeCost /> : <ExpenseSplitDeluxe />}
     </section>
   );
 }

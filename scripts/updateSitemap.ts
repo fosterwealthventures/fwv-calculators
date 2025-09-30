@@ -25,7 +25,7 @@ const OUT_PATH = path.join(PUBLIC_DIR, "sitemap.xml");
 const SITE_URL =
   (process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "").replace(
     /\/+$/,
-    ""
+    "",
   ) || "https://example.com";
 
 // Folders to ignore when traversing /app
@@ -47,7 +47,10 @@ function isDynamicSeg(seg: string) {
   return /\[.+\]/.test(seg);
 }
 
-async function walkAppRoutes(dir: string, baseSegs: string[] = []): Promise<UrlItem[]> {
+async function walkAppRoutes(
+  dir: string,
+  baseSegs: string[] = [],
+): Promise<UrlItem[]> {
   const items: UrlItem[] = [];
   let entries: fs.Dirent[];
   try {
@@ -58,15 +61,15 @@ async function walkAppRoutes(dir: string, baseSegs: string[] = []): Promise<UrlI
 
   // If this folder contains a page.(tsx|jsx|mdx|md), treat it as a route
   const hasPage = entries.some(
-    (e) =>
-      e.isFile() &&
-      /^page\.(t|j)sx?$/.test(e.name)
+    (e) => e.isFile() && /^page\.(t|j)sx?$/.test(e.name),
   );
-  const hasMdxPage = entries.some((e) => e.isFile() && /^page\.(mdx?|md)$/.test(e.name));
+  const hasMdxPage = entries.some(
+    (e) => e.isFile() && /^page\.(mdx?|md)$/.test(e.name),
+  );
 
   if (hasPage || hasMdxPage) {
     const route = "/" + baseSegs.join("/");
-    const fileForMtime = path.join(dir, (hasPage ? "page.tsx" : "page.mdx"));
+    const fileForMtime = path.join(dir, hasPage ? "page.tsx" : "page.mdx");
     let stat: fs.Stats | undefined;
     try {
       stat = await fsp.stat(fileForMtime);
@@ -141,8 +144,10 @@ function buildXml(urls: UrlItem[]) {
     lines.push("  <url>");
     lines.push(`    <loc>${u.loc}</loc>`);
     if (u.lastmod) lines.push(`    <lastmod>${u.lastmod}</lastmod>`);
-    if (u.changefreq) lines.push(`    <changefreq>${u.changefreq}</changefreq>`);
-    if (typeof u.priority === "number") lines.push(`    <priority>${u.priority.toFixed(1)}</priority>`);
+    if (u.changefreq)
+      lines.push(`    <changefreq>${u.changefreq}</changefreq>`);
+    if (typeof u.priority === "number")
+      lines.push(`    <priority>${u.priority.toFixed(1)}</priority>`);
     lines.push("  </url>");
   }
 
@@ -156,14 +161,22 @@ function buildXml(urls: UrlItem[]) {
     await fsp.mkdir(PUBLIC_DIR, { recursive: true });
   }
 
-  const appUrls = (await pathExists(APP_DIR)) ? await walkAppRoutes(APP_DIR, []) : [];
+  const appUrls = (await pathExists(APP_DIR))
+    ? await walkAppRoutes(APP_DIR, [])
+    : [];
   const blogUrls = await collectBlogUrls();
 
   // De-dupe by loc
   const all = [...appUrls, ...blogUrls];
   const unique = Array.from(new Map(all.map((u) => [u.loc, u])).values())
     // Sort: home first, then alpha
-    .sort((a, b) => (a.loc === SITE_URL ? -1 : b.loc === SITE_URL ? 1 : a.loc.localeCompare(b.loc)));
+    .sort((a, b) =>
+      a.loc === SITE_URL
+        ? -1
+        : b.loc === SITE_URL
+          ? 1
+          : a.loc.localeCompare(b.loc),
+    );
 
   const xml = buildXml(unique);
   await fsp.writeFile(OUT_PATH, xml, "utf8");

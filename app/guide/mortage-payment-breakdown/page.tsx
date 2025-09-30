@@ -4,7 +4,8 @@ import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
 export const metadata: Metadata = {
-  title: "Break-Even Made Simple—Use Our Calculator to Master Costs & Profit Margins",
+  title:
+    "Break-Even Made Simple—Use Our Calculator to Master Costs & Profit Margins",
   description:
     "Understand break-even analysis and how to calculate the units needed to cover costs and reach profitability.",
 };

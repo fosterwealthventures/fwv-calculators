@@ -17,6 +17,13 @@ yarn-error.log*
 
 # system files
 .DS_Store
+EOF
+node_modules
+.next
+.env*
+.vercel
+at > .gitignore <<'EOF'
+
 node_modules
 .next
 .env*

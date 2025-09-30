@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ProChoice } from "@/lib/plan";
 
 type Props = {
-  want: "employee" | "expense_split";  // Updated to match plan.ts
+  want: "employee" | "expense_split"; // Updated to match plan.ts
   redirect?: string;
   children: React.ReactNode;
 };
@@ -13,15 +13,19 @@ type Props = {
 function getProChoice(): ProChoice {
   try {
     if (typeof window === "undefined") return null;
-    
+
     // localStorage
     const lsChoice = localStorage.getItem("fwv-pro-choice") as ProChoice;
-    if (lsChoice && ["employee", "expense_split"].includes(lsChoice)) return lsChoice;
-    
+    if (lsChoice && ["employee", "expense_split"].includes(lsChoice))
+      return lsChoice;
+
     // cookie
     const cookieMatch = document.cookie.match(/(?:^|; )fwv_pro_choice=([^;]*)/);
-    const cookieChoice = cookieMatch ? decodeURIComponent(cookieMatch[1]) as ProChoice : null;
-    if (cookieChoice && ["employee", "expense_split"].includes(cookieChoice)) return cookieChoice;
+    const cookieChoice = cookieMatch
+      ? (decodeURIComponent(cookieMatch[1]) as ProChoice)
+      : null;
+    if (cookieChoice && ["employee", "expense_split"].includes(cookieChoice))
+      return cookieChoice;
   } catch {}
   return null;
 }
@@ -54,7 +58,8 @@ export default function ProChoiceGate({ want, redirect, children }: Props) {
           Choose Your Pro Calculator
         </h3>
         <p className="text-blue-700 mb-4">
-          Your Pro plan includes one advanced calculator. Choose <strong>{label}</strong> as your permanent selection.
+          Your Pro plan includes one advanced calculator. Choose{" "}
+          <strong>{label}</strong> as your permanent selection.
         </p>
         <button
           onClick={() => {
@@ -84,8 +89,11 @@ export default function ProChoiceGate({ want, redirect, children }: Props) {
               This calculator requires: <strong>{label}</strong>
             </p>
             <p className="text-xs text-amber-800">
-              Your Pro plan is currently set to: <strong>
-                {choice === "employee" ? "Employee Cost" : "Expense Split Deluxe"}
+              Your Pro plan is currently set to:{" "}
+              <strong>
+                {choice === "employee"
+                  ? "Employee Cost"
+                  : "Expense Split Deluxe"}
               </strong>
             </p>
           </div>

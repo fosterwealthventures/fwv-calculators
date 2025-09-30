@@ -103,7 +103,9 @@ export default function GuidePage() {
       </section>
 
       <section>
-        <CTAButton href="/?calc=interest">👉 Try the matching calculator</CTAButton>
+        <CTAButton href="/?calc=interest">
+          👉 Try the matching calculator
+        </CTAButton>
       </section>
 
       <section>
@@ -134,7 +136,9 @@ export default function GuidePage() {
       </section>
 
       <section>
-        <CTAButton href="/?calc=interest">👉 Open the calculator again</CTAButton>
+        <CTAButton href="/?calc=interest">
+          👉 Open the calculator again
+        </CTAButton>
       </section>
 
       <section>

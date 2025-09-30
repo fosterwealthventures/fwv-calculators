@@ -8,20 +8,25 @@ import { Plan, hasAccess, prettyPlan } from "@/lib/plan";
 function getPlanClient(): Plan {
   try {
     if (typeof window === "undefined") return "free";
-    
+
     // URL query (for testing)
     const urlParams = new URLSearchParams(window.location.search);
     const urlPlan = urlParams.get("plan") as Plan;
-    if (urlPlan && ["free", "plus", "pro", "premium"].includes(urlPlan)) return urlPlan;
-    
+    if (urlPlan && ["free", "plus", "pro", "premium"].includes(urlPlan))
+      return urlPlan;
+
     // localStorage
     const lsPlan = localStorage.getItem("fwv-plan") as Plan;
-    if (lsPlan && ["free", "plus", "pro", "premium"].includes(lsPlan)) return lsPlan;
-    
+    if (lsPlan && ["free", "plus", "pro", "premium"].includes(lsPlan))
+      return lsPlan;
+
     // cookie
     const cookieMatch = document.cookie.match(/(?:^|; )fwv_plan=([^;]*)/);
-    const cookiePlan = cookieMatch ? decodeURIComponent(cookieMatch[1]) as Plan : null;
-    if (cookiePlan && ["free", "plus", "pro", "premium"].includes(cookiePlan)) return cookiePlan;
+    const cookiePlan = cookieMatch
+      ? (decodeURIComponent(cookieMatch[1]) as Plan)
+      : null;
+    if (cookiePlan && ["free", "plus", "pro", "premium"].includes(cookiePlan))
+      return cookiePlan;
   } catch {}
   return "free";
 }
@@ -48,7 +53,8 @@ export default function PaidGate({
   if (!mounted) return <div className="p-4 text-center">Loading...</div>;
   if (allowed) return <>{children}</>;
 
-  const dest = `/pricing?required=${required}` + 
+  const dest =
+    `/pricing?required=${required}` +
     (calc ? `&calc=${encodeURIComponent(calc)}` : "");
 
   return (

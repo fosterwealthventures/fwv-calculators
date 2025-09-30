@@ -24,21 +24,25 @@ export default function EmployeeCostGuide() {
 
       {/* Subheading */}
       <p className="mt-3 text-gray-600">
-        Salary is just the start. This guide shows what goes into your total cost of labor — benefits, payroll tax,
-        unemployment insurance, workers’ comp, and other overhead — so you can budget with confidence.
+        Salary is just the start. This guide shows what goes into your total
+        cost of labor — benefits, payroll tax, unemployment insurance, workers’
+        comp, and other overhead — so you can budget with confidence.
       </p>
 
       {/* Scripture (Premium pages styling) */}
       <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-4 shadow-soft">
         <p className="text-sm italic text-gray-700">
-          <span className="font-semibold">Proverbs 21:5</span> — “The plans of the diligent lead surely to abundance,
-          but everyone who is hasty comes only to poverty.”
+          <span className="font-semibold">Proverbs 21:5</span> — “The plans of
+          the diligent lead surely to abundance, but everyone who is hasty comes
+          only to poverty.”
         </p>
       </div>
 
       {/* What it does */}
       <section className="mt-8 space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-900">What the Calculator Includes</h2>
+        <h2 className="text-2xl font-semibold text-gray-900">
+          What the Calculator Includes
+        </h2>
         <ul className="list-disc pl-6 text-gray-700 space-y-2">
           <li>Base pay (annual salary or hourly × hours/week × weeks/year)</li>
           <li>Benefits load (health, dental, vision, retirement, PTO, etc.)</li>
@@ -56,17 +60,23 @@ export default function EmployeeCostGuide() {
           <li>Choose salary or hourly pay and enter your numbers.</li>
           <li>Set your benefits percentage and tax/insurance assumptions.</li>
           <li>Add any additional recurring or one-time expenses.</li>
-          <li>View the breakdown and total by annual, quarterly, monthly, bi-weekly, weekly, or daily.</li>
+          <li>
+            View the breakdown and total by annual, quarterly, monthly,
+            bi-weekly, weekly, or daily.
+          </li>
           <li>Download a quick text report for your records.</li>
         </ol>
       </section>
 
       {/* CTA Card */}
       <div className="mt-10 rounded-2xl border border-neutral-200 bg-white p-6 shadow-soft">
-        <h3 className="text-xl font-semibold text-gray-900">Ready to calculate your true cost?</h3>
+        <h3 className="text-xl font-semibold text-gray-900">
+          Ready to calculate your true cost?
+        </h3>
         <p className="mt-2 text-gray-700">
-          The Employee Cost Calculator is included with the <span className="font-semibold">Pro</span> plan (choose one:
-          Employee Cost or Expense Split Deluxe). Upgrade to unlock.
+          The Employee Cost Calculator is included with the{" "}
+          <span className="font-semibold">Pro</span> plan (choose one: Employee
+          Cost or Expense Split Deluxe). Upgrade to unlock.
         </p>
 
         <div className="mt-4 flex flex-wrap gap-3">
@@ -98,21 +108,29 @@ export default function EmployeeCostGuide() {
 
       {/* FAQ */}
       <section className="mt-10 space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Frequently Asked</h2>
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Frequently Asked
+        </h2>
 
         <div>
-          <h4 className="font-semibold text-gray-900">What’s a good benefits % to use?</h4>
+          <h4 className="font-semibold text-gray-900">
+            What’s a good benefits % to use?
+          </h4>
           <p className="text-gray-700">
-            Small businesses often start between 15–30% depending on coverage. If you contribute to retirement, offer
-            rich health plans, or provide significant PTO, your percentage may be higher.
+            Small businesses often start between 15–30% depending on coverage.
+            If you contribute to retirement, offer rich health plans, or provide
+            significant PTO, your percentage may be higher.
           </p>
         </div>
 
         <div>
-          <h4 className="font-semibold text-gray-900">Is this a quote or legal advice?</h4>
+          <h4 className="font-semibold text-gray-900">
+            Is this a quote or legal advice?
+          </h4>
           <p className="text-gray-700">
-            No. This calculator is for planning and education. Always confirm your actual tax rates and insurance costs
-            with a payroll provider, accountant, or insurer.
+            No. This calculator is for planning and education. Always confirm
+            your actual tax rates and insurance costs with a payroll provider,
+            accountant, or insurer.
           </p>
         </div>
       </section>

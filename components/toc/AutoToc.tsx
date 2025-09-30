@@ -33,19 +33,29 @@ function extractHeadings(html: string) {
   return results;
 }
 
-export default function AutoToc({ html, title = "On this page" }: { html: string; title?: string }) {
+export default function AutoToc({
+  html,
+  title = "On this page",
+}: {
+  html: string;
+  title?: string;
+}) {
   const items = useMemo(() => extractHeadings(html), [html]);
   if (!items.length) return null;
 
   return (
-    <nav aria-label="Table of contents"
-         className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <nav
+      aria-label="Table of contents"
+      className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+    >
       <div className="text-sm font-semibold text-gray-900">{title}</div>
       <ul className="mt-3 space-y-2 text-sm">
         {items.map((h, idx) => (
           <li key={idx} className={h.level === 3 ? "ml-4" : ""}>
-            <a className="text-gray-700 hover:text-brand-green hover:underline"
-               href={`#${h.id}`}>
+            <a
+              className="text-gray-700 hover:text-brand-green hover:underline"
+              href={`#${h.id}`}
+            >
               {h.text}
             </a>
           </li>

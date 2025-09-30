@@ -28,7 +28,7 @@ export function getAllPosts(): PostMeta[] {
       slug,
       title: String(data.title ?? slug),
       date: String(data.date ?? new Date().toISOString().slice(0, 10)),
-      tags: Array.isArray(data.tags) ? data.tags : undefined
+      tags: Array.isArray(data.tags) ? data.tags : undefined,
     } as PostMeta;
   });
 
@@ -49,6 +49,6 @@ export function getPostBySlug(slug: string): Post | null {
     title: String(data.title ?? slug),
     date: String(data.date ?? new Date().toISOString().slice(0, 10)),
     tags: Array.isArray(data.tags) ? data.tags : undefined,
-    content
+    content,
   };
 }

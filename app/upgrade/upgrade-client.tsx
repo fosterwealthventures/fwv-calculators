@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  calc: string | null;     // e.g. "employee-cost" or "expense-split-deluxe" or null
-  redirect: string;        // where to go after selecting
+  calc: string | null; // e.g. "employee-cost" or "expense-split-deluxe" or null
+  redirect: string; // where to go after selecting
 };
 
 function setPlan(plan: "free" | "plus" | "pro" | "premium") {
@@ -34,7 +34,10 @@ function lockProChoiceIfProvided(calc: string | null) {
 export default function UpgradeClient({ calc, redirect }: Props) {
   const router = useRouter();
 
-  const go = (plan: "free" | "plus" | "pro" | "premium", lockChoice?: string | null) => {
+  const go = (
+    plan: "free" | "plus" | "pro" | "premium",
+    lockChoice?: string | null,
+  ) => {
     setPlan(plan);
     if (plan === "pro") lockProChoiceIfProvided(lockChoice ?? calc);
     router.replace(redirect || "/dashboard");
@@ -49,7 +52,8 @@ export default function UpgradeClient({ calc, redirect }: Props) {
     <main className="mx-auto max-w-3xl px-4 py-8 space-y-4">
       <h1 className="heading-hero">Upgrade</h1>
       <p className="text-gray-600">
-        Pick a plan to unlock more calculators. Your selection takes effect immediately on this device.
+        Pick a plan to unlock more calculators. Your selection takes effect
+        immediately on this device.
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -79,7 +83,8 @@ export default function UpgradeClient({ calc, redirect }: Props) {
         >
           <h3 className="text-lg font-semibold">Pro</h3>
           <p className="mt-1 text-sm text-gray-600">
-            Choose 1 advanced calculator ({calc ?? "you’ll pick on first open"}).
+            Choose 1 advanced calculator ({calc ?? "you’ll pick on first open"}
+            ).
           </p>
         </button>
 

@@ -23,13 +23,14 @@ export default async function BlogIndex() {
   // Load posts via your helper. Cast to a light shape so we don’t fight types.
   let posts: PostListItem[] = [];
   try {
-    posts = (getAllPosts() as any[])?.map((p: any) => ({
-      slug: p.slug,
-      title: p.title ?? p.data?.title,
-      description: p.description ?? p.data?.description,
-      excerpt: p.excerpt ?? p.data?.excerpt,
-      date: p.date ?? p.data?.date,
-    })) ?? [];
+    posts =
+      (getAllPosts() as any[])?.map((p: any) => ({
+        slug: p.slug,
+        title: p.title ?? p.data?.title,
+        description: p.description ?? p.data?.description,
+        excerpt: p.excerpt ?? p.data?.excerpt,
+        date: p.date ?? p.data?.date,
+      })) ?? [];
   } catch {
     posts = [];
   }
@@ -51,22 +52,18 @@ export default async function BlogIndex() {
     },
     {
       slug: "mortgage-payment-breakdown",
-      title:
-        "Mortgage Payment Breakdown — See What Impacts Your Monthly Cost",
+      title: "Mortgage Payment Breakdown — See What Impacts Your Monthly Cost",
       description:
         "Principal, interest, taxes, insurance—explained with examples.",
     },
     {
       slug: "simple-vs-compound-interest",
-      title:
-        "Simple vs Compound Interest — Which One Grows Your Money Faster?",
-      description:
-        "Side-by-side comparisons with real-world scenarios.",
+      title: "Simple vs Compound Interest — Which One Grows Your Money Faster?",
+      description: "Side-by-side comparisons with real-world scenarios.",
     },
     {
       slug: "set-your-freelancer-rate-right",
-      title:
-        "Set Your Freelancer Rate Right — Avoid Undervaluing Your Time",
+      title: "Set Your Freelancer Rate Right — Avoid Undervaluing Your Time",
       description: "Price confidently with a structured approach.",
     },
   ];

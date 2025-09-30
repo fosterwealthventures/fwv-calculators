@@ -19,9 +19,9 @@ export default function SavingsGrowthGuide() {
       <h1 className="heading-hero">Savings Growth Calculator — Guide</h1>
 
       <p className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-        <span className="font-semibold">Proverbs 21:5 —</span>{" "}
-        “The plans of the diligent lead surely to abundance, but everyone who is
-        hasty comes only to poverty.”
+        <span className="font-semibold">Proverbs 21:5 —</span> “The plans of the
+        diligent lead surely to abundance, but everyone who is hasty comes only
+        to poverty.”
       </p>
 
       <section className="mt-6 space-y-4">

@@ -55,7 +55,7 @@ const CARDS: Card[] = [
 function setCookie(name: string, value: string, days = 365) {
   const maxAge = 60 * 60 * 24 * days;
   document.cookie = `${name}=${encodeURIComponent(
-    value
+    value,
   )}; path=/; max-age=${maxAge}; samesite=lax`;
 }
 
@@ -118,7 +118,10 @@ export default function UpgradeCard() {
     return (
       <div className="grid gap-6 md:grid-cols-3">
         {CARDS.map((c) => (
-          <div key={c.plan} className="rounded-xl border bg-white p-5 shadow-sm">
+          <div
+            key={c.plan}
+            className="rounded-xl border bg-white p-5 shadow-sm"
+          >
             <div className="animate-pulse">
               <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-full mb-3"></div>
@@ -138,7 +141,10 @@ export default function UpgradeCard() {
   return (
     <div className="grid gap-6 md:grid-cols-3">
       {CARDS.map((c) => (
-        <div key={c.plan} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div
+          key={c.plan}
+          className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+        >
           <h3 className="text-xl font-semibold text-gray-900">{c.title}</h3>
           {c.sub && <p className="mt-2 text-sm text-gray-600">{c.sub}</p>}
           <ul className="mt-4 space-y-2 text-sm text-gray-700">

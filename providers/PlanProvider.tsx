@@ -1,12 +1,12 @@
 // providers/PlanProvider.tsx
-'use client';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+"use client";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type PlanId = 'free' | 'plus' | 'pro' | 'premium';
+export type PlanId = "free" | "plus" | "pro" | "premium";
 
-const PLAN_COOKIE = 'fwv_plan';
-const PLAN_LS = 'fwv:plan';
-const VALID = new Set<PlanId>(['free', 'plus', 'pro', 'premium']);
+const PLAN_COOKIE = "fwv_plan";
+const PLAN_LS = "fwv:plan";
+const VALID = new Set<PlanId>(["free", "plus", "pro", "premium"]);
 
 type Ctx = {
   plan: PlanId;
@@ -18,7 +18,7 @@ const PlanCtx = createContext<Ctx | null>(null);
 
 export function PlanProvider({
   children,
-  initialPlan = 'free',
+  initialPlan = "free",
 }: {
   children: React.ReactNode;
   initialPlan?: PlanId;
@@ -28,8 +28,8 @@ export function PlanProvider({
 
   useEffect(() => {
     const cookieMatch = document.cookie.match(/(?:^|; )fwv_plan=([^;]+)/);
-    const fromCookie = (cookieMatch?.[1] ?? '') as PlanId | '';
-    const fromLS = (localStorage.getItem(PLAN_LS) ?? '') as PlanId | '';
+    const fromCookie = (cookieMatch?.[1] ?? "") as PlanId | "";
+    const fromLS = (localStorage.getItem(PLAN_LS) ?? "") as PlanId | "";
 
     const resolved: PlanId =
       (VALID.has(fromCookie as PlanId) && (fromCookie as PlanId)) ||
@@ -44,14 +44,14 @@ export function PlanProvider({
   }, [initialPlan]); // run once (keyed by the SSR plan)
 
   const setPlan = (p: PlanId) => {
-    const next = VALID.has(p) ? p : 'free';
+    const next = VALID.has(p) ? p : "free";
     document.cookie = `${PLAN_COOKIE}=${next}; path=/; max-age=${60 * 60 * 24 * 365}`;
     localStorage.setItem(PLAN_LS, next);
     setPlanState(next);
   };
 
   return (
-    <PlanCtx.Provider value={{ plan, setPlan, showAds: plan === 'free' }}>
+    <PlanCtx.Provider value={{ plan, setPlan, showAds: plan === "free" }}>
       {children}
     </PlanCtx.Provider>
   );
@@ -59,6 +59,6 @@ export function PlanProvider({
 
 export const usePlan = () => {
   const v = useContext(PlanCtx);
-  if (!v) throw new Error('usePlan must be used inside PlanProvider');
+  if (!v) throw new Error("usePlan must be used inside PlanProvider");
   return v;
 };

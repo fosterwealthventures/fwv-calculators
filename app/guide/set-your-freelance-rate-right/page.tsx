@@ -13,9 +13,13 @@ export const metadata: Metadata = {
 function Breadcrumb() {
   return (
     <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">Home</Link>{" "}
+      <Link href="/" className="text-brand-green hover:underline">
+        Home
+      </Link>{" "}
       &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link>{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">
+        Guides
+      </Link>{" "}
       &rsaquo; <span>Set Your Freelancer Rate Right</span>
     </nav>
   );
@@ -86,7 +90,9 @@ export default function GuidePage() {
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
+      <p className="mt-3 text-sm text-gray-600">
+        Estimated reading time: 3–4 minutes
+      </p>
 
       <section>
         <CTAButton href="/?calc=freelancer-rate">
@@ -98,10 +104,14 @@ export default function GuidePage() {
         <h2>Related Guides</h2>
         <ul>
           <li>
-            <Link href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</Link>
+            <Link href="/guide/roi-vs-annualized-roi">
+              ROI vs Annualized ROI
+            </Link>
           </li>
           <li>
-            <Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link>
+            <Link href="/guide/break-even-made-simple">
+              Break-Even Made Simple
+            </Link>
           </li>
         </ul>
       </section>

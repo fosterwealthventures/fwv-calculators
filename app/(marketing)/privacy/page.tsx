@@ -18,27 +18,32 @@ export default function PrivacyPage() {
           to this Policy.
         </p>
 
-        <h2 className="text-xl font-semibold text-brand-green">Information We Collect</h2>
+        <h2 className="text-xl font-semibold text-brand-green">
+          Information We Collect
+        </h2>
         <ul className="list-disc ml-6">
           <li>
-            Usage data (pages viewed, approximate location by IP,
-            device/browser info)
+            Usage data (pages viewed, approximate location by IP, device/browser
+            info)
           </li>
           <li>Contact info you voluntarily submit (e.g., email)</li>
           <li>
-            Advertising/analytics cookies if enabled (see “Cookies & Ads”
-            below)
+            Advertising/analytics cookies if enabled (see “Cookies & Ads” below)
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold text-brand-green">How We Use Information</h2>
+        <h2 className="text-xl font-semibold text-brand-green">
+          How We Use Information
+        </h2>
         <ul className="list-disc ml-6">
           <li>Operate and improve our calculators and website</li>
           <li>Respond to inquiries and provide support</li>
           <li>Show ads and measure their performance (if ads are enabled)</li>
         </ul>
 
-        <h2 className="text-xl font-semibold text-brand-green">Cookies & Ads</h2>
+        <h2 className="text-xl font-semibold text-brand-green">
+          Cookies & Ads
+        </h2>
         <p>
           We may use cookies for analytics and advertising. Third-party vendors,
           including Google, may use cookies to serve ads based on your prior

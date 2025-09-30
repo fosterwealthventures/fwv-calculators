@@ -29,10 +29,22 @@ type Out = {
 
 function parseArgs() {
   return yargs(hideBin(process.argv))
-    .option("file", { type: "string", describe: "Path to CSV, JSON array, or NDJSON of topics" })
-    .option("topics", { type: "string", describe: "Comma-separated topic list" })
-    .option("serp", { type: "string", describe: "Default SERP URLs (comma-separated)" })
-    .option("tags", { type: "string", describe: "Default tags (comma-separated)" })
+    .option("file", {
+      type: "string",
+      describe: "Path to CSV, JSON array, or NDJSON of topics",
+    })
+    .option("topics", {
+      type: "string",
+      describe: "Comma-separated topic list",
+    })
+    .option("serp", {
+      type: "string",
+      describe: "Default SERP URLs (comma-separated)",
+    })
+    .option("tags", {
+      type: "string",
+      describe: "Default tags (comma-separated)",
+    })
     .option("prepend-date", { type: "boolean", default: false })
     .option("ext", { type: "string", default: "mdx", choices: ["md", "mdx"] })
     .option("longform", { type: "boolean", default: false })
@@ -42,12 +54,17 @@ function parseArgs() {
 
 function coerceBool(v: unknown, fallback = false) {
   if (typeof v === "boolean") return v;
-  if (typeof v === "string") return ["1", "true", "yes", "y"].includes(v.toLowerCase());
+  if (typeof v === "string")
+    return ["1", "true", "yes", "y"].includes(v.toLowerCase());
   return fallback;
 }
 
 function rowsFromTopicsString(s?: string): Row[] {
-  return s ? String(s).split(",").map((t) => ({ topic: t.trim() })) : [];
+  return s
+    ? String(s)
+        .split(",")
+        .map((t) => ({ topic: t.trim() }))
+    : [];
 }
 
 function readRows(file?: string, topicsArg?: string): Row[] {
@@ -55,9 +72,15 @@ function readRows(file?: string, topicsArg?: string): Row[] {
   const raw = fs.readFileSync(path.resolve(file), "utf8").trim();
   if (raw.startsWith("[")) return JSON.parse(raw) as Row[]; // JSON array
   if (raw.split("\n").some((l) => l.trim().startsWith("{"))) {
-    return raw.split("\n").filter(Boolean).map((l) => JSON.parse(l) as Row); // NDJSON
+    return raw
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => JSON.parse(l) as Row); // NDJSON
   }
-  const recs = parseCsv(raw, { columns: true, skip_empty_lines: true }) as Row[];
+  const recs = parseCsv(raw, {
+    columns: true,
+    skip_empty_lines: true,
+  }) as Row[];
   return recs.map((r) => {
     if (!("topic" in r)) {
       const keys = Object.keys(r);
@@ -70,15 +93,30 @@ function readRows(file?: string, topicsArg?: string): Row[] {
 async function generateOne(
   openai: OpenAI,
   row: Row,
-  defaults: { serp?: string; tags?: string; prependDate: boolean; ext: "md" | "mdx"; longform: boolean }
+  defaults: {
+    serp?: string;
+    tags?: string;
+    prependDate: boolean;
+    ext: "md" | "mdx";
+    longform: boolean;
+  },
 ) {
   const topic = row.topic?.trim();
   if (!topic) return { skipped: true, reason: "Missing topic" };
 
-  const serp = (row.serp ?? defaults.serp ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-  const tags = (row.tags ?? defaults.tags ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-  const prependDate = coerceBool(row.prependDate ?? defaults.prependDate, false);
-  const ext = ((row.ext ?? defaults.ext) as "md" | "mdx");
+  const serp = (row.serp ?? defaults.serp ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const tags = (row.tags ?? defaults.tags ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const prependDate = coerceBool(
+    row.prependDate ?? defaults.prependDate,
+    false,
+  );
+  const ext = (row.ext ?? defaults.ext) as "md" | "mdx";
   const longform = coerceBool(row.longform ?? defaults.longform, false);
 
   const prompt = `You are a senior SEO editor.
@@ -127,16 +165,18 @@ ${longform ? "- Target length: about 1200–1600 words if intent is informationa
   fs.mkdirSync(CONTENT_DIR, { recursive: true });
   const filePath = path.join(CONTENT_DIR, `${finalSlug}.${ext}`);
 
-  if (fs.existsSync(filePath)) return { skipped: true, reason: "Exists", filePath };
+  if (fs.existsSync(filePath))
+    return { skipped: true, reason: "Exists", filePath };
 
-  const front = matter.stringify("", {
-    title: out.title,
-    description: out.description,
-    slug: finalSlug,
-    date: new Date().toISOString(),
-    tags: out.tags?.length ? out.tags : tags,
-    excerpt: out.excerpt,
-  })
+  const front = matter
+    .stringify("", {
+      title: out.title,
+      description: out.description,
+      slug: finalSlug,
+      date: new Date().toISOString(),
+      tags: out.tags?.length ? out.tags : tags,
+      excerpt: out.excerpt,
+    })
     .trim()
     .replace(/^---\n|\n---$/g, "");
 
@@ -159,7 +199,10 @@ function sleep(ms: number) {
 
 async function main() {
   const argv = parseArgs();
-  const rows = readRows(argv.file as string | undefined, argv.topics as string | undefined);
+  const rows = readRows(
+    argv.file as string | undefined,
+    argv.topics as string | undefined,
+  );
   if (!rows.length) {
     console.error("No topics found. Use --file=... or --topics=...");
     process.exit(1);
@@ -167,7 +210,12 @@ async function main() {
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  const results: { ok?: true; skipped?: true; filePath?: string; reason?: string }[] = [];
+  const results: {
+    ok?: true;
+    skipped?: true;
+    filePath?: string;
+    reason?: string;
+  }[] = [];
   for (const row of rows) {
     const res = await generateOne(openai, row, {
       serp: argv.serp as string | undefined,
@@ -177,7 +225,10 @@ async function main() {
       longform: Boolean(argv.longform),
     });
     if (res.ok) console.log("✅ Created:", res.filePath);
-    else console.log(`⏭️  Skipped: ${row.topic} — ${res.reason}${res.filePath ? " (" + res.filePath + ")" : ""}`);
+    else
+      console.log(
+        `⏭️  Skipped: ${row.topic} — ${res.reason}${res.filePath ? " (" + res.filePath + ")" : ""}`,
+      );
     results.push(res);
     await sleep(Number(argv.delayMs));
   }

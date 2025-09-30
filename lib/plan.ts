@@ -34,24 +34,62 @@ export function prettyPlan(p: Plan): "Free" | "Plus" | "Pro" | "Premium" {
 
 /** Calculator access by plan */
 export const PLAN_CALCULATORS: Record<Plan, string[]> = {
-  free: ["roi", "break-even", "mortgage", "interest", "freelancer-rate", "tip-split"],
-  plus: ["roi", "break-even", "mortgage", "interest", "freelancer-rate", "tip-split", "savings", "debt-payoff"],
-  pro: ["roi", "break-even", "mortgage", "interest", "freelancer-rate", "tip-split", "savings", "debt-payoff", "employee-cost", "expense-split-deluxe"],
-  premium: ["roi", "break-even", "mortgage", "interest", "freelancer-rate", "tip-split", "savings", "debt-payoff", "employee-cost", "expense-split-deluxe"]
+  free: [
+    "roi",
+    "break-even",
+    "mortgage",
+    "interest",
+    "freelancer-rate",
+    "tip-split",
+  ],
+  plus: [
+    "roi",
+    "break-even",
+    "mortgage",
+    "interest",
+    "freelancer-rate",
+    "tip-split",
+    "savings",
+    "debt-payoff",
+  ],
+  pro: [
+    "roi",
+    "break-even",
+    "mortgage",
+    "interest",
+    "freelancer-rate",
+    "tip-split",
+    "savings",
+    "debt-payoff",
+    "employee-cost",
+    "expense-split-deluxe",
+  ],
+  premium: [
+    "roi",
+    "break-even",
+    "mortgage",
+    "interest",
+    "freelancer-rate",
+    "tip-split",
+    "savings",
+    "debt-payoff",
+    "employee-cost",
+    "expense-split-deluxe",
+  ],
 };
 
 /** Check if a user can access a specific calculator */
 export function planAllows(
-  calculatorKey: string, 
-  userPlan: Plan, 
-  proChoice?: ProChoice
+  calculatorKey: string,
+  userPlan: Plan,
+  proChoice?: ProChoice,
 ): boolean {
   // Premium gets everything
   if (userPlan === "premium") return true;
-  
+
   // Check if calculator is in user's plan
   const hasCalculator = PLAN_CALCULATORS[userPlan].includes(calculatorKey);
-  
+
   // For Pro plan, check choice restrictions
   if (userPlan === "pro" && hasCalculator) {
     // Pro choice restrictions only apply to these two calculators
@@ -62,7 +100,7 @@ export function planAllows(
       return proChoice === "expense_split";
     }
   }
-  
+
   return hasCalculator;
 }
 
@@ -70,21 +108,24 @@ export function planAllows(
 export function canDownload(userPlan: Plan, calculatorKey?: string): boolean {
   // Premium always gets downloads
   if (userPlan === "premium") return true;
-  
+
   // Pro gets downloads for their chosen calculator (or any if no choice restriction applies)
   if (userPlan === "pro") {
     // If no specific calculator, they have download capability in general
     if (!calculatorKey) return true;
-    
+
     // For choice calculators, they can only download from their chosen one
-    if (calculatorKey === "employee-cost" || calculatorKey === "expense-split-deluxe") {
+    if (
+      calculatorKey === "employee-cost" ||
+      calculatorKey === "expense-split-deluxe"
+    ) {
       // This will be checked at the component level with their actual choice
       return true;
     }
-    
+
     return true;
   }
-  
+
   // Plus and Free cannot download
   return false;
 }
@@ -95,15 +136,18 @@ export function shouldShowAds(userPlan: Plan): boolean {
 }
 
 /** Get available calculators for a plan (filtered by pro choice if applicable) */
-export function getAvailableCalculators(userPlan: Plan, proChoice?: ProChoice): string[] {
+export function getAvailableCalculators(
+  userPlan: Plan,
+  proChoice?: ProChoice,
+): string[] {
   const allCalculators = PLAN_CALCULATORS[userPlan];
-  
+
   if (userPlan !== "pro" || !proChoice) {
     return allCalculators;
   }
-  
+
   // Filter for Pro plan based on choice
-  return allCalculators.filter(calc => {
+  return allCalculators.filter((calc) => {
     if (calc === "employee-cost") return proChoice === "employee";
     if (calc === "expense-split-deluxe") return proChoice === "expense_split";
     return true; // All other calculators are available

@@ -6,7 +6,6 @@ import GuideNav from "@/components/GuideNav";
 import AdInSidebar from "@/components/ads/AdInSidebar";
 import AdGateFreeOnly from "@/components/ads/AdGateFreeOnly";
 
-
 export const revalidate = 60;
 
 export default function GuideIndexPage() {
@@ -25,7 +24,10 @@ export default function GuideIndexPage() {
 
         <ul className="mt-8 divide-y divide-gray-200">
           {guides.map((g) => (
-            <li key={g.slug} className="flex items-start justify-between gap-4 py-4">
+            <li
+              key={g.slug}
+              className="flex items-start justify-between gap-4 py-4"
+            >
               <div>
                 <Link
                   href={`/guide/${g.slug}`}
@@ -43,10 +45,14 @@ export default function GuideIndexPage() {
                     g.plan === "Free"
                       ? "bg-gray-100 text-gray-700"
                       : g.plan === "Plus"
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-indigo-100 text-indigo-700"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-indigo-100 text-indigo-700"
                   }`}
-                  title={g.plan === "Free" ? "Available on Free" : `Requires ${g.plan} plan`}
+                  title={
+                    g.plan === "Free"
+                      ? "Available on Free"
+                      : `Requires ${g.plan} plan`
+                  }
                 >
                   {g.plan}
                 </span>

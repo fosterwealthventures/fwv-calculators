@@ -60,7 +60,9 @@ export default function PriceClient() {
 
       {/* Billing cycle toggle */}
       <div className="mt-5 flex items-center gap-2">
-        <span className={`text-sm ${cycle === "mo" ? "font-semibold" : "text-gray-500"}`}>
+        <span
+          className={`text-sm ${cycle === "mo" ? "font-semibold" : "text-gray-500"}`}
+        >
           Monthly
         </span>
         <button
@@ -74,7 +76,9 @@ export default function PriceClient() {
             data-on={cycle === "yr"}
           />
         </button>
-        <span className={`text-sm ${cycle === "yr" ? "font-semibold" : "text-gray-500"}`}>
+        <span
+          className={`text-sm ${cycle === "yr" ? "font-semibold" : "text-gray-500"}`}
+        >
           Yearly
         </span>
         <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-800">
@@ -88,7 +92,8 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Free</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.free)} <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.free)}{" "}
+            <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>Access to free calculators</li>
@@ -106,7 +111,8 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm ring-1 ring-brand-green/20">
           <h3 className="text-lg font-semibold">Plus</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.plus)} <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.plus)}{" "}
+            <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>Remove all ads</li>
@@ -126,11 +132,14 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Pro</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.pro)} <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.pro)}{" "}
+            <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>All Free benefits, no ads</li>
-            <li><strong>Choose 1 advanced calculator</strong>:</li>
+            <li>
+              <strong>Choose 1 advanced calculator</strong>:
+            </li>
             <li className="ml-4">• Employee Cost or Expense Split Deluxe</li>
           </ul>
           <button
@@ -145,11 +154,14 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Premium</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.premium)} <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.premium)}{" "}
+            <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>All Pro benefits</li>
-            <li><strong>Access to ALL calculators</strong>:</li>
+            <li>
+              <strong>Access to ALL calculators</strong>:
+            </li>
             <li className="ml-4">• Employee Cost + Expense Split Deluxe</li>
             <li>Priority support</li>
           </ul>

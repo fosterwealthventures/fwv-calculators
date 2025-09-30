@@ -14,9 +14,13 @@ export const metadata: Metadata = {
 function Breadcrumb() {
   return (
     <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">Home</Link>{" "}
+      <Link href="/" className="text-brand-green hover:underline">
+        Home
+      </Link>{" "}
       &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link>{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">
+        Guides
+      </Link>{" "}
       &rsaquo; <span>Restaurant Tip & Tab Split</span>
     </nav>
   );
@@ -95,7 +99,9 @@ export default function TipTabSplitGuide() {
         icon={<ReceiptText className="text-brand-green" />}
       />
 
-      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
+      <p className="mt-3 text-sm text-gray-600">
+        Estimated reading time: 3–4 minutes
+      </p>
 
       <section>
         <h2>Quick Summary</h2>
@@ -123,7 +129,9 @@ export default function TipTabSplitGuide() {
       </section>
 
       <section>
-        <CTAButton href="/?calc=tip-split">👉 Try the Tip &amp; Tab Split Calculator</CTAButton>
+        <CTAButton href="/?calc=tip-split">
+          👉 Try the Tip &amp; Tab Split Calculator
+        </CTAButton>
       </section>
 
       <section>

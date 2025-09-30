@@ -72,10 +72,11 @@ function splitCsv(val?: string): string[] {
 
 function assertOpenAIKey(): string {
   const raw = (process.env.OPENAI_API_KEY ?? "").trim();
-  if (!raw) fail("OPENAI_API_KEY is missing. Add it to your .env as a single line.");
+  if (!raw)
+    fail("OPENAI_API_KEY is missing. Add it to your .env as a single line.");
   if (/\r|\n/.test(raw)) {
     fail(
-      "OPENAI_API_KEY contains a newline. Ensure it's one line with no quotes or trailing spaces."
+      "OPENAI_API_KEY contains a newline. Ensure it's one line with no quotes or trailing spaces.",
     );
   }
   // Basic format sanity check (project keys often start with sk-proj-)
@@ -95,8 +96,13 @@ async function withRetries<T>(fn: () => Promise<T>): Promise<T> {
       const code = err?.status ?? err?.code ?? err?.response?.status;
       const retryable =
         code === 429 || (typeof code === "number" && code >= 500 && code < 600);
-      const delay = Math.round(RETRY_BASE_MS * Math.pow(1.8, i) + Math.random() * 250);
-      log("error", `Attempt ${i + 1} failed${code ? ` (code ${code})` : ""}: ${err?.message || err}`);
+      const delay = Math.round(
+        RETRY_BASE_MS * Math.pow(1.8, i) + Math.random() * 250,
+      );
+      log(
+        "error",
+        `Attempt ${i + 1} failed${code ? ` (code ${code})` : ""}: ${err?.message || err}`,
+      );
       if (i < MAX_RETRIES - 1 && retryable) {
         log("info", `Retrying in ${delay}ms…`);
         await new Promise((r) => setTimeout(r, delay));
@@ -115,7 +121,9 @@ async function withRetries<T>(fn: () => Promise<T>): Promise<T> {
   // Title (positional)
   const title = rest.find((a) => !a.startsWith("--"));
   if (!title) {
-    fail('Usage: npx tsx scripts/generatePost.ts "Post Title" --serp="https://a.com,https://b.com" --tags="finance,roi"');
+    fail(
+      'Usage: npx tsx scripts/generatePost.ts "Post Title" --serp="https://a.com,https://b.com" --tags="finance,roi"',
+    );
   }
 
   const flags = parseFlags(rest);
@@ -131,7 +139,9 @@ async function withRetries<T>(fn: () => Promise<T>): Promise<T> {
   const openai = new OpenAI({ apiKey });
 
   // Ensure output folder
-  const absOutDir = path.isAbsolute(outDir) ? outDir : path.join(process.cwd(), outDir);
+  const absOutDir = path.isAbsolute(outDir)
+    ? outDir
+    : path.join(process.cwd(), outDir);
   fs.mkdirSync(absOutDir, { recursive: true });
 
   // Build prompt
@@ -139,7 +149,8 @@ async function withRetries<T>(fn: () => Promise<T>): Promise<T> {
   const slug = slugify(title);
   const fmTags = tags.length ? tags : ["finance", "analytics", "calculators"];
 
-  const systemPrompt = toLF(`You are a precise, engaging financial/operations content writer.
+  const systemPrompt =
+    toLF(`You are a precise, engaging financial/operations content writer.
 Write SEO-friendly, accurate, skimmable articles for a calculators site.
 Audience: small-business owners, founders, freelancers, and consumers.
 Tone: helpful, credible, plain-language; no fluff; short paragraphs; useful examples.
@@ -179,7 +190,7 @@ REQUIREMENTS:
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
-    })
+    }),
   );
 
   const md = completion.choices?.[0]?.message?.content?.trim();
@@ -192,7 +203,9 @@ REQUIREMENTS:
     `date: "${today}"`,
     `tags: [${fmTags.map((t) => `"${t}"`).join(", ")}]`,
     `slug: "${slug}"`,
-    serpUrls.length ? `sources:\n${serpUrls.map((u) => `  - "${u}"`).join("\n")}` : undefined,
+    serpUrls.length
+      ? `sources:\n${serpUrls.map((u) => `  - "${u}"`).join("\n")}`
+      : undefined,
     "---",
     "",
   ]
@@ -214,9 +227,15 @@ REQUIREMENTS:
     log("success", `Wrote ${outPath}`);
   }
 
-  log("info", "If you maintain a sitemap, run: npx tsx scripts/updateSitemap.ts");
+  log(
+    "info",
+    "If you maintain a sitemap, run: npx tsx scripts/updateSitemap.ts",
+  );
 })().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error("\n💥 Unhandled error in generatePost:", err?.response?.data || err);
+  console.error(
+    "\n💥 Unhandled error in generatePost:",
+    err?.response?.data || err,
+  );
   process.exit(1);
 });

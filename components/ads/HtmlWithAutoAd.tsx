@@ -46,7 +46,9 @@ export default function HtmlWithAutoAd({
     return (
       <>
         <div dangerouslySetInnerHTML={{ __html: head + "</h2>" }} />
-        <div className="my-10"><AdInContent slot={slot} /></div>
+        <div className="my-10">
+          <AdInContent slot={slot} />
+        </div>
         <div dangerouslySetInnerHTML={{ __html: rest }} />
       </>
     );
@@ -59,7 +61,9 @@ export default function HtmlWithAutoAd({
     return (
       <>
         <div dangerouslySetInnerHTML={{ __html: head + "</p>" }} />
-        <div className="my-10"><AdInContent slot={slot} /></div>
+        <div className="my-10">
+          <AdInContent slot={slot} />
+        </div>
         <div dangerouslySetInnerHTML={{ __html: rest }} />
       </>
     );

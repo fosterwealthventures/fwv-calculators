@@ -7,7 +7,9 @@ export async function GET(req: NextRequest) {
   const calc = url.searchParams.get("calc"); // "employee-cost" or "expense-split-deluxe"
   const redirect = url.searchParams.get("redirect") || "/dashboard";
 
-  const plan = ["free", "plus", "pro", "premium"].includes(to) ? (to as "free" | "plus" | "pro" | "premium") : "free";
+  const plan = ["free", "plus", "pro", "premium"].includes(to)
+    ? (to as "free" | "plus" | "pro" | "premium")
+    : "free";
 
   const res = NextResponse.redirect(redirect);
 
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
         "Set-Cookie",
         // keep the existing cookie header intact; append is tricky in edge runtimes,
         // but for a single cookie it's fine to set it again:
-        res.headers.get("Set-Cookie") || ""
+        res.headers.get("Set-Cookie") || "",
       );
       // No server cookie for choice; calculators read localStorage.
       // The Upgrade UI also handles it on click.

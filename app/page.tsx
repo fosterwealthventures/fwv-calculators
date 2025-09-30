@@ -12,8 +12,8 @@ export default function Home() {
       <section className="space-y-2">
         <h1 className="heading-hero">Foster Wealth Calculators</h1>
         <p className="text-gray-700">
-          Start with the free calculators below. Upgrade any time to unlock Savings, Debt Payoff,
-          Employee Cost, and Expense Split Deluxe.
+          Start with the free calculators below. Upgrade any time to unlock
+          Savings, Debt Payoff, Employee Cost, and Expense Split Deluxe.
         </p>
 
         {/* 👇 Add a button that goes to your existing "Calculators" tab */}
@@ -33,8 +33,8 @@ export default function Home() {
         style={{ borderColor: "#E5E7EB" }}
       >
         <blockquote className="italic text-gray-700">
-          “The plans of the diligent lead surely to abundance, but everyone who is hasty comes
-          only to poverty.”
+          “The plans of the diligent lead surely to abundance, but everyone who
+          is hasty comes only to poverty.”
         </blockquote>
         <div className="mt-1 text-emerald-700 font-medium">— Proverbs 21:5</div>
       </section>

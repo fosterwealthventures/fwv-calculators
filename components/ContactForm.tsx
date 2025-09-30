@@ -29,7 +29,9 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
       <label className="grid gap-1">
-        <span className="text-sm font-medium text-gray-700">Your Email Address</span>
+        <span className="text-sm font-medium text-gray-700">
+          Your Email Address
+        </span>
         <input
           type="email"
           name="email"
@@ -57,8 +59,14 @@ export default function ContactForm() {
         Send Message
       </button>
 
-      {status === "success" && <p className="text-green-600">✅ Message sent successfully!</p>}
-      {status === "error" && <p className="text-red-600">❌ Something went wrong. Please try again.</p>}
+      {status === "success" && (
+        <p className="text-green-600">✅ Message sent successfully!</p>
+      )}
+      {status === "error" && (
+        <p className="text-red-600">
+          ❌ Something went wrong. Please try again.
+        </p>
+      )}
     </form>
   );
 }

@@ -15,7 +15,9 @@ export default function AdInContent({ slot, className = "" }: Props) {
     if (process.env.NODE_ENV !== "production") return;
     if (!client || !adSlot) return;
 
-    const el = ref.current?.querySelector("ins.adsbygoogle") as HTMLElement | null;
+    const el = ref.current?.querySelector(
+      "ins.adsbygoogle",
+    ) as HTMLElement | null;
     if (!el) return;
 
     // Only push once per mount if not already initialized
@@ -31,7 +33,9 @@ export default function AdInContent({ slot, className = "" }: Props) {
   }, [client, adSlot]);
 
   const Placeholder = (
-    <div className={`rounded-xl border bg-white p-4 text-sm text-gray-500 ${className}`}>
+    <div
+      className={`rounded-xl border bg-white p-4 text-sm text-gray-500 ${className}`}
+    >
       Ad (in-content)
     </div>
   );

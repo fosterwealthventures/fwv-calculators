@@ -38,9 +38,13 @@ export default async function BlogPostPage({
         {/* Main article */}
         <div>
           <nav className="mb-6 text-sm text-gray-600" aria-label="Breadcrumb">
-            <Link href="/" className="hover:underline">Home</Link>
+            <Link href="/" className="hover:underline">
+              Home
+            </Link>
             <span className="mx-2">›</span>
-            <Link href="/blog" className="hover:underline">Blog</Link>
+            <Link href="/blog" className="hover:underline">
+              Blog
+            </Link>
             <span className="mx-2">›</span>
             <span className="text-gray-500">{title}</span>
           </nav>
@@ -56,7 +60,9 @@ export default async function BlogPostPage({
             <div dangerouslySetInnerHTML={{ __html: html }} />
             <div className="my-10">
               <AdGateFreeOnly>
-                <AdInContent slot={process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT} />
+                <AdInContent
+                  slot={process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT}
+                />
               </AdGateFreeOnly>
             </div>
           </article>

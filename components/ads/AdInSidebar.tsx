@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
 import { getAdsClient } from "./adEnv";
 
-
 type Props = {
   width?: number;
   height?: number;
@@ -25,7 +24,9 @@ export default function AdInSidebar({
     if (process.env.NODE_ENV !== "production") return;
     if (!client || !slot) return;
 
-    const el = ref.current?.querySelector("ins.adsbygoogle") as HTMLElement | null;
+    const el = ref.current?.querySelector(
+      "ins.adsbygoogle",
+    ) as HTMLElement | null;
     if (!el) return;
 
     try {

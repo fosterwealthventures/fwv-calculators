@@ -104,5 +104,14 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
 }
 
 /* ---------- Default export so both import styles work ---------- */
-const GuideParts = { Section, H2, P, UL, LI, GuideHero, CTAButton, SocialShare };
+const GuideParts = {
+  Section,
+  H2,
+  P,
+  UL,
+  LI,
+  GuideHero,
+  CTAButton,
+  SocialShare,
+};
 export default GuideParts;

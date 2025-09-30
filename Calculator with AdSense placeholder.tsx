@@ -26,7 +26,9 @@ const FosterWealthCalculators = () => {
   const FREE_CALCS = new Set(["roi", "break-even", "mortgage"]);
   const PRO_CALCS = new Set(["employee-cost", "savings", "debt-payoff"]);
 
-  const [activeSuite, setActiveSuite] = useState<"business" | "financial">("business");
+  const [activeSuite, setActiveSuite] = useState<"business" | "financial">(
+    "business",
+  );
   const [activeCalculator, setActiveCalculator] = useState("roi"); // default to a free calc
 
   // =========================
@@ -119,7 +121,10 @@ const FosterWealthCalculators = () => {
     const hasSuffix = Boolean(suffix);
     return (
       <div className={`space-y-1 ${className}`}>
-        <label htmlFor={id} className={`block text-sm font-semibold ${labelColor}`}>
+        <label
+          htmlFor={id}
+          className={`block text-sm font-semibold ${labelColor}`}
+        >
           {label}
         </label>
         <div className="relative">
@@ -187,7 +192,8 @@ const FosterWealthCalculators = () => {
 
     const profit = final - initial;
     const roiPercent = initial > 0 ? (profit / initial) * 100 : 0;
-    const annualizedROI = time > 0 ? Math.pow(final / initial, 1 / time) - 1 : 0;
+    const annualizedROI =
+      time > 0 ? Math.pow(final / initial, 1 / time) - 1 : 0;
 
     return { profit, roiPercent, annualizedROI: annualizedROI * 100 };
   };
@@ -198,9 +204,11 @@ const FosterWealthCalculators = () => {
     const price = parseFloat(breakEvenInputs.pricePerUnit) || 0;
 
     const contributionMargin = price - variableCost;
-    const breakEvenUnits = contributionMargin > 0 ? fixed / contributionMargin : 0;
+    const breakEvenUnits =
+      contributionMargin > 0 ? fixed / contributionMargin : 0;
     const breakEvenRevenue = breakEvenUnits * price;
-    const contributionMarginPercent = price > 0 ? (contributionMargin / price) * 100 : 0;
+    const contributionMarginPercent =
+      price > 0 ? (contributionMargin / price) * 100 : 0;
 
     return { breakEvenUnits, breakEvenRevenue, contributionMarginPercent };
   };
@@ -214,7 +222,8 @@ const FosterWealthCalculators = () => {
     const loanAmount = loan - downPayment;
     const monthlyPayment =
       rate > 0
-        ? (loanAmount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1)
+        ? (loanAmount * rate * Math.pow(1 + rate, term)) /
+          (Math.pow(1 + rate, term) - 1)
         : loanAmount / (term || 1);
     const totalPayment = monthlyPayment * (term || 1);
     const totalInterest = totalPayment - loanAmount;
@@ -230,7 +239,8 @@ const FosterWealthCalculators = () => {
 
     const futureValue =
       rate !== 0
-        ? current * Math.pow(1 + rate, time) + monthly * ((Math.pow(1 + rate, time) - 1) / rate)
+        ? current * Math.pow(1 + rate, time) +
+          monthly * ((Math.pow(1 + rate, time) - 1) / rate)
         : current + monthly * time;
     const totalContributions = current + monthly * time;
     const totalGrowth = futureValue - totalContributions;
@@ -252,7 +262,10 @@ const FosterWealthCalculators = () => {
     if (rate >= 0 && totalPayment > 0) {
       while (balance > 0.01 && months < 600) {
         const interestPayment = balance * rate;
-        const principalPayment = Math.min(totalPayment - interestPayment, balance);
+        const principalPayment = Math.min(
+          totalPayment - interestPayment,
+          balance,
+        );
         if (principalPayment <= 0) break;
         totalInterestPaid += interestPayment;
         balance -= principalPayment;
@@ -303,7 +316,9 @@ const FosterWealthCalculators = () => {
     if (tier === "pro" && !isPro) {
       const ok =
         typeof window !== "undefined"
-          ? window.confirm("This calculator is available on the Professional plan. Upgrade now?")
+          ? window.confirm(
+              "This calculator is available on the Professional plan. Upgrade now?",
+            )
           : false;
       if (ok) window.location.href = "/upgrade"; // TODO: replace with your checkout URL
       return;
@@ -376,7 +391,8 @@ const FosterWealthCalculators = () => {
                 <span className="font-semibold">Professional Feature</span>
               </div>
               <p className="mb-4">
-                The Employee Cost calculator is available on the Professional plan.
+                The Employee Cost calculator is available on the Professional
+                plan.
               </p>
               <button
                 className="bg-blue-600 text-white px-5 py-2 rounded-lg"
@@ -392,9 +408,13 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Compensation (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Compensation</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Compensation
+                </h4>
 
-                <p className="text-sm font-semibold text-blue-700 mb-2">Pay Structure</p>
+                <p className="text-sm font-semibold text-blue-700 mb-2">
+                  Pay Structure
+                </p>
                 <div className="flex gap-4 mb-3">
                   <label className="flex items-center text-gray-800">
                     <input
@@ -402,7 +422,10 @@ const FosterWealthCalculators = () => {
                       value="salary"
                       checked={employeeInputs.payType === "salary"}
                       onChange={(e) =>
-                        setEmployeeInputs({ ...employeeInputs, payType: e.target.value })
+                        setEmployeeInputs({
+                          ...employeeInputs,
+                          payType: e.target.value,
+                        })
                       }
                       className="mr-2"
                     />
@@ -414,7 +437,10 @@ const FosterWealthCalculators = () => {
                       value="hourly"
                       checked={employeeInputs.payType === "hourly"}
                       onChange={(e) =>
-                        setEmployeeInputs({ ...employeeInputs, payType: e.target.value })
+                        setEmployeeInputs({
+                          ...employeeInputs,
+                          payType: e.target.value,
+                        })
                       }
                       className="mr-2"
                     />
@@ -430,7 +456,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={employeeInputs.baseSalary}
                     onChange={(e) =>
-                      setEmployeeInputs({ ...employeeInputs, baseSalary: e.target.value })
+                      setEmployeeInputs({
+                        ...employeeInputs,
+                        baseSalary: e.target.value,
+                      })
                     }
                   />
                 ) : (
@@ -442,7 +471,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={employeeInputs.hourlyRate}
                       onChange={(e) =>
-                        setEmployeeInputs({ ...employeeInputs, hourlyRate: e.target.value })
+                        setEmployeeInputs({
+                          ...employeeInputs,
+                          hourlyRate: e.target.value,
+                        })
                       }
                     />
                     <Field
@@ -452,7 +484,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={employeeInputs.hoursPerWeek}
                       onChange={(e) =>
-                        setEmployeeInputs({ ...employeeInputs, hoursPerWeek: e.target.value })
+                        setEmployeeInputs({
+                          ...employeeInputs,
+                          hoursPerWeek: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -465,7 +500,10 @@ const FosterWealthCalculators = () => {
                   labelColor="text-blue-700"
                   value={employeeInputs.annualOvertime}
                   onChange={(e) =>
-                    setEmployeeInputs({ ...employeeInputs, annualOvertime: e.target.value })
+                    setEmployeeInputs({
+                      ...employeeInputs,
+                      annualOvertime: e.target.value,
+                    })
                   }
                   hint="Total expected overtime pay this year"
                   className="mt-3"
@@ -483,7 +521,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-green-700"
                     value={employeeInputs.healthInsurance}
                     onChange={(e) =>
-                      setEmployeeInputs({ ...employeeInputs, healthInsurance: e.target.value })
+                      setEmployeeInputs({
+                        ...employeeInputs,
+                        healthInsurance: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -493,7 +534,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-green-700"
                     value={employeeInputs.retirement401k}
                     onChange={(e) =>
-                      setEmployeeInputs({ ...employeeInputs, retirement401k: e.target.value })
+                      setEmployeeInputs({
+                        ...employeeInputs,
+                        retirement401k: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -503,7 +547,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">Total Cost Analysis</h4>
                 <AdSidebar />
@@ -524,15 +571,21 @@ const FosterWealthCalculators = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Base Wages (+ Overtime):</span>
-                    <span>{formatCurrency(results.employeeCost.annualWages)}</span>
+                    <span>
+                      {formatCurrency(results.employeeCost.annualWages)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Benefits:</span>
-                    <span>{formatCurrency(results.employeeCost.benefitsCost)}</span>
+                    <span>
+                      {formatCurrency(results.employeeCost.benefitsCost)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Taxes:</span>
-                    <span>{formatCurrency(results.employeeCost.taxesCost)}</span>
+                    <span>
+                      {formatCurrency(results.employeeCost.taxesCost)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -546,7 +599,9 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Investment Details (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Investment Details</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Investment Details
+                </h4>
                 <div className="space-y-3">
                   <Field
                     id="roiInitial"
@@ -555,7 +610,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={roiInputs.initialInvestment}
                     onChange={(e) =>
-                      setRoiInputs({ ...roiInputs, initialInvestment: e.target.value })
+                      setRoiInputs({
+                        ...roiInputs,
+                        initialInvestment: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -564,7 +622,9 @@ const FosterWealthCalculators = () => {
                     prefix="$"
                     labelColor="text-blue-700"
                     value={roiInputs.finalValue}
-                    onChange={(e) => setRoiInputs({ ...roiInputs, finalValue: e.target.value })}
+                    onChange={(e) =>
+                      setRoiInputs({ ...roiInputs, finalValue: e.target.value })
+                    }
                   />
                   <Field
                     id="roiYears"
@@ -572,7 +632,12 @@ const FosterWealthCalculators = () => {
                     suffix="yrs"
                     labelColor="text-blue-700"
                     value={roiInputs.timeHorizon}
-                    onChange={(e) => setRoiInputs({ ...roiInputs, timeHorizon: e.target.value })}
+                    onChange={(e) =>
+                      setRoiInputs({
+                        ...roiInputs,
+                        timeHorizon: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -581,7 +646,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">ROI Analysis</h4>
                 <AdSidebar />
@@ -616,7 +684,9 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Business Costs (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Business Costs</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Business Costs
+                </h4>
                 <div className="space-y-3">
                   <Field
                     id="fixedCosts"
@@ -626,7 +696,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={breakEvenInputs.fixedCosts}
                     onChange={(e) =>
-                      setBreakEvenInputs({ ...breakEvenInputs, fixedCosts: e.target.value })
+                      setBreakEvenInputs({
+                        ...breakEvenInputs,
+                        fixedCosts: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -649,7 +722,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={breakEvenInputs.pricePerUnit}
                     onChange={(e) =>
-                      setBreakEvenInputs({ ...breakEvenInputs, pricePerUnit: e.target.value })
+                      setBreakEvenInputs({
+                        ...breakEvenInputs,
+                        pricePerUnit: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -659,7 +735,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">Break-Even Analysis</h4>
                 <AdSidebar />
@@ -704,7 +783,9 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Loan Details (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Loan Details</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Loan Details
+                </h4>
                 <div className="space-y-3">
                   <Field
                     id="homePrice"
@@ -713,7 +794,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={mortgageInputs.loanAmount}
                     onChange={(e) =>
-                      setMortgageInputs({ ...mortgageInputs, loanAmount: e.target.value })
+                      setMortgageInputs({
+                        ...mortgageInputs,
+                        loanAmount: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -723,7 +807,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={mortgageInputs.downPayment}
                     onChange={(e) =>
-                      setMortgageInputs({ ...mortgageInputs, downPayment: e.target.value })
+                      setMortgageInputs({
+                        ...mortgageInputs,
+                        downPayment: e.target.value,
+                      })
                     }
                   />
                   <div className="grid grid-cols-2 gap-3">
@@ -735,7 +822,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={mortgageInputs.interestRate}
                       onChange={(e) =>
-                        setMortgageInputs({ ...mortgageInputs, interestRate: e.target.value })
+                        setMortgageInputs({
+                          ...mortgageInputs,
+                          interestRate: e.target.value,
+                        })
                       }
                     />
                     <Field
@@ -745,7 +835,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={mortgageInputs.loanTerm}
                       onChange={(e) =>
-                        setMortgageInputs({ ...mortgageInputs, loanTerm: e.target.value })
+                        setMortgageInputs({
+                          ...mortgageInputs,
+                          loanTerm: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -756,7 +849,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">Mortgage Payment</h4>
                 <AdSidebar />
@@ -793,7 +889,9 @@ const FosterWealthCalculators = () => {
                 <Lock className="w-4 h-4" />
                 <span className="font-semibold">Professional Feature</span>
               </div>
-              <p className="mb-4">This calculator is available on the Professional plan.</p>
+              <p className="mb-4">
+                This calculator is available on the Professional plan.
+              </p>
               <button
                 className="bg-blue-600 text-white px-5 py-2 rounded-lg"
                 onClick={() => (window.location.href = "/upgrade")}
@@ -808,7 +906,9 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Savings Plan (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Savings Plan</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Savings Plan
+                </h4>
                 <div className="space-y-3">
                   <Field
                     id="currentSavings"
@@ -817,7 +917,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={savingsInputs.currentSavings}
                     onChange={(e) =>
-                      setSavingsInputs({ ...savingsInputs, currentSavings: e.target.value })
+                      setSavingsInputs({
+                        ...savingsInputs,
+                        currentSavings: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -828,7 +931,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={savingsInputs.monthlyContribution}
                     onChange={(e) =>
-                      setSavingsInputs({ ...savingsInputs, monthlyContribution: e.target.value })
+                      setSavingsInputs({
+                        ...savingsInputs,
+                        monthlyContribution: e.target.value,
+                      })
                     }
                   />
                   <div className="grid grid-cols-2 gap-3">
@@ -840,7 +946,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={savingsInputs.annualReturn}
                       onChange={(e) =>
-                        setSavingsInputs({ ...savingsInputs, annualReturn: e.target.value })
+                        setSavingsInputs({
+                          ...savingsInputs,
+                          annualReturn: e.target.value,
+                        })
                       }
                     />
                     <Field
@@ -850,7 +959,10 @@ const FosterWealthCalculators = () => {
                       labelColor="text-blue-700"
                       value={savingsInputs.timeHorizon}
                       onChange={(e) =>
-                        setSavingsInputs({ ...savingsInputs, timeHorizon: e.target.value })
+                        setSavingsInputs({
+                          ...savingsInputs,
+                          timeHorizon: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -861,7 +973,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">Future Value</h4>
                 <AdSidebar />
@@ -898,7 +1013,9 @@ const FosterWealthCalculators = () => {
                 <Lock className="w-4 h-4" />
                 <span className="font-semibold">Professional Feature</span>
               </div>
-              <p className="mb-4">This calculator is available on the Professional plan.</p>
+              <p className="mb-4">
+                This calculator is available on the Professional plan.
+              </p>
               <button
                 className="bg-blue-600 text-white px-5 py-2 rounded-lg"
                 onClick={() => (window.location.href = "/upgrade")}
@@ -913,7 +1030,9 @@ const FosterWealthCalculators = () => {
             <div className="space-y-4">
               {/* Debt Info (Blue) */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-3">Debt Information</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">
+                  Debt Information
+                </h4>
                 <div className="space-y-3">
                   <Field
                     id="debtTotal"
@@ -921,7 +1040,12 @@ const FosterWealthCalculators = () => {
                     prefix="$"
                     labelColor="text-blue-700"
                     value={debtInputs.totalDebt}
-                    onChange={(e) => setDebtInputs({ ...debtInputs, totalDebt: e.target.value })}
+                    onChange={(e) =>
+                      setDebtInputs({
+                        ...debtInputs,
+                        totalDebt: e.target.value,
+                      })
+                    }
                   />
                   <Field
                     id="debtRate"
@@ -930,7 +1054,12 @@ const FosterWealthCalculators = () => {
                     suffix="%"
                     labelColor="text-blue-700"
                     value={debtInputs.interestRate}
-                    onChange={(e) => setDebtInputs({ ...debtInputs, interestRate: e.target.value })}
+                    onChange={(e) =>
+                      setDebtInputs({
+                        ...debtInputs,
+                        interestRate: e.target.value,
+                      })
+                    }
                   />
                   <Field
                     id="monthlyPayment"
@@ -940,7 +1069,10 @@ const FosterWealthCalculators = () => {
                     labelColor="text-blue-700"
                     value={debtInputs.monthlyPayment}
                     onChange={(e) =>
-                      setDebtInputs({ ...debtInputs, monthlyPayment: e.target.value })
+                      setDebtInputs({
+                        ...debtInputs,
+                        monthlyPayment: e.target.value,
+                      })
                     }
                   />
                   <Field
@@ -950,7 +1082,12 @@ const FosterWealthCalculators = () => {
                     suffix="/mo"
                     labelColor="text-blue-700"
                     value={debtInputs.extraPayment}
-                    onChange={(e) => setDebtInputs({ ...debtInputs, extraPayment: e.target.value })}
+                    onChange={(e) =>
+                      setDebtInputs({
+                        ...debtInputs,
+                        extraPayment: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -959,7 +1096,10 @@ const FosterWealthCalculators = () => {
             </div>
 
             {/* Results */}
-            <div className="bg-gray-900 text-white p-6 rounded-lg" aria-live="polite">
+            <div
+              className="bg-gray-900 text-white p-6 rounded-lg"
+              aria-live="polite"
+            >
               <div className="flex justify-between items-start">
                 <h4 className="text-xl font-bold mb-4">Payoff Timeline</h4>
                 <AdSidebar />
@@ -1004,9 +1144,13 @@ const FosterWealthCalculators = () => {
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-3 mb-3">
           <Calculator className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-800">Foster Wealth Ventures</h1>
+          <h1 className="text-3xl font-bold text-gray-800">
+            Foster Wealth Ventures
+          </h1>
         </div>
-        <p className="text-gray-600">Professional Business & Financial Calculator Suites</p>
+        <p className="text-gray-600">
+          Professional Business & Financial Calculator Suites
+        </p>
       </div>
 
       {/* AdSense Top Banner (free users) */}
@@ -1023,11 +1167,13 @@ const FosterWealthCalculators = () => {
                 onClick={() => {
                   setActiveSuite(key as "business" | "financial");
                   const firstKey = Object.keys(suite.calculators)[0];
-                  const firstTier = suite.calculators[firstKey].tier as "free" | "pro";
+                  const firstTier = suite.calculators[firstKey].tier as
+                    | "free"
+                    | "pro";
                   if (firstTier === "pro" && !isPro) {
                     const freeKey =
                       Object.entries(suite.calculators).find(
-                        ([, c]: any) => c.tier === "free"
+                        ([, c]: any) => c.tier === "free",
                       )?.[0] || firstKey;
                     setActiveCalculator(freeKey);
                   } else {
@@ -1090,16 +1236,20 @@ const FosterWealthCalculators = () => {
           </p>
         </div>
 
-        {activeSuite === "business" ? renderBusinessCalculator() : renderFinancialCalculator()}
+        {activeSuite === "business"
+          ? renderBusinessCalculator()
+          : renderFinancialCalculator()}
       </div>
 
       {/* Plans + Footer Ad */}
       <div className="mt-12 text-center">
         <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-lg">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Ready to Get Started?</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">
+            Ready to Get Started?
+          </h3>
           <p className="text-gray-600 mb-6">
-            Get access to our complete calculator suite with advanced features, custom reports, and
-            priority support.
+            Get access to our complete calculator suite with advanced features,
+            custom reports, and priority support.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">

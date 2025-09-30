@@ -23,7 +23,9 @@ export function usePlan() {
 
   useEffect(() => {
     try {
-      const urlPlan = parsePlan(new URL(window.location.href).searchParams.get("plan"));
+      const urlPlan = parsePlan(
+        new URL(window.location.href).searchParams.get("plan"),
+      );
       if (urlPlan) {
         localStorage.setItem("fwv-plan", urlPlan);
         document.cookie = `fwv_plan=${urlPlan}; path=/; max-age=${60 * 60 * 24 * 365}`;

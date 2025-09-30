@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
 import { getAdsClient, getFooterSlot } from "./adEnv";
 
-
 type Props = { slot?: string; className?: string };
 
 export default function AdFooter({ slot, className = "" }: Props) {
@@ -18,7 +17,9 @@ export default function AdFooter({ slot, className = "" }: Props) {
     pushedRef.current = true;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, [client, adSlot]);
 
   const wrapper = `mt-8 flex justify-center ${className}`;

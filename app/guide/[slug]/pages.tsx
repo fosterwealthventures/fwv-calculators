@@ -37,19 +37,27 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
   return (
     <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-8 lg:grid-cols-[1fr_320px]">
       {/* JSON-LD (SEO) */}
-      <Script id="breadcrumb-jsonld" type="application/ld+json"
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Script id="article-jsonld" type="application/ld+json"
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
       {/* Main */}
       <div>
         <nav className="mb-6 text-sm text-gray-600" aria-label="Breadcrumb">
-          <Link href="/" className="hover:underline">Home</Link>
+          <Link href="/" className="hover:underline">
+            Home
+          </Link>
           <span className="mx-2">›</span>
-          <Link href="/guide" className="hover:underline">Guides</Link>
+          <Link href="/guide" className="hover:underline">
+            Guides
+          </Link>
           <span className="mx-2">›</span>
           <span className="text-gray-500">{title}</span>
         </nav>
@@ -73,9 +81,19 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
         <section className="mt-12 border-t pt-6">
           <h2 className="text-xl font-semibold text-brand-green">Related</h2>
           <ul className="mt-4 list-disc list-inside text-gray-700">
-            <li><Link href="/guide/roi-vs-annualized-roi">Guide: ROI vs Annualized ROI</Link></li>
-            <li><Link href="/guide/mortgage-payment-breakdown">Guide: Mortgage Payment Breakdown</Link></li>
-            <li><Link href="/dashboard">Explore All Calculators</Link></li>
+            <li>
+              <Link href="/guide/roi-vs-annualized-roi">
+                Guide: ROI vs Annualized ROI
+              </Link>
+            </li>
+            <li>
+              <Link href="/guide/mortgage-payment-breakdown">
+                Guide: Mortgage Payment Breakdown
+              </Link>
+            </li>
+            <li>
+              <Link href="/dashboard">Explore All Calculators</Link>
+            </li>
           </ul>
         </section>
       </div>

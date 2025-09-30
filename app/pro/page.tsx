@@ -12,13 +12,18 @@ const FosterWealthCalculatorsClient = NextDynamic(
     ssr: false,
     loading: () => (
       <main className="min-h-dvh bg-white">
-        <div className="mx-auto max-w-6xl p-8 text-sm opacity-70">Loading calculators…</div>
+        <div className="mx-auto max-w-6xl p-8 text-sm opacity-70">
+          Loading calculators…
+        </div>
       </main>
     ),
-  }
+  },
 );
 
-async function getUserFromCookies(): Promise<{ plan: Plan; proChoice: ProChoice }> {
+async function getUserFromCookies(): Promise<{
+  plan: Plan;
+  proChoice: ProChoice;
+}> {
   const jar = await cookies();
   const plan = (jar.get("fwv_plan")?.value as Plan) ?? "free";
   const proChoice = (jar.get("fwv_pro_choice")?.value as ProChoice) ?? null;
@@ -34,10 +39,13 @@ export default async function ProPage() {
       <main className="min-h-dvh bg-gray-50">
         <div className="mx-auto max-w-6xl p-8 space-y-6">
           <header className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Choose your Pro calculator</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+              Choose your Pro calculator
+            </h1>
             <p className="text-sm text-gray-700">
-              Your Pro plan includes <span className="font-medium">one</span> of the following. Pick the one you want
-              to unlock now — you can switch later.
+              Your Pro plan includes <span className="font-medium">one</span> of
+              the following. Pick the one you want to unlock now — you can
+              switch later.
             </p>
           </header>
 
@@ -48,11 +56,16 @@ export default async function ProPage() {
               className="group rounded-2xl border border-gray-200 bg-white p-6 text-left shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Employee Cost Calculator</h3>
-                <span className="text-xs px-2 py-1 rounded-full bg-gray-100 border border-gray-200">Pro</span>
+                <h3 className="text-lg font-semibold">
+                  Employee Cost Calculator
+                </h3>
+                <span className="text-xs px-2 py-1 rounded-full bg-gray-100 border border-gray-200">
+                  Pro
+                </span>
               </div>
               <p className="mt-2 text-sm text-gray-700">
-                Calculate the all-in cost of a new hire (wages, taxes, benefits) and model scenarios.
+                Calculate the all-in cost of a new hire (wages, taxes, benefits)
+                and model scenarios.
               </p>
               <ul className="mt-3 text-sm list-disc pl-5 space-y-1 text-gray-800">
                 <li>Wages, employer taxes, benefits</li>
@@ -61,7 +74,11 @@ export default async function ProPage() {
               </ul>
               <span className="mt-4 inline-flex items-center gap-2 text-emerald-700 group-hover:gap-3 transition-all">
                 <span className="text-sm font-medium">Use this</span>
-                <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
                   <path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z" />
                 </svg>
               </span>
@@ -74,10 +91,13 @@ export default async function ProPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Expense Split Deluxe</h3>
-                <span className="text-xs px-2 py-1 rounded-full bg-gray-100 border border-gray-200">Pro</span>
+                <span className="text-xs px-2 py-1 rounded-full bg-gray-100 border border-gray-200">
+                  Pro
+                </span>
               </div>
               <p className="mt-2 text-sm text-gray-700">
-                Split shared expenses fairly (roommates, couples, travel). Add custom categories and rules.
+                Split shared expenses fairly (roommates, couples, travel). Add
+                custom categories and rules.
               </p>
               <ul className="mt-3 text-sm list-disc pl-5 space-y-1 text-gray-800">
                 <li>Equal / percentage / income-weighted</li>
@@ -86,7 +106,11 @@ export default async function ProPage() {
               </ul>
               <span className="mt-4 inline-flex items-center gap-2 text-emerald-700 group-hover:gap-3 transition-all">
                 <span className="text-sm font-medium">Use this</span>
-                <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
                   <path d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V16a1 1 0 11-2 0V7.414L6.707 9.707A1 1 0 015.293 8.293l5-5z" />
                 </svg>
               </span>
@@ -95,7 +119,10 @@ export default async function ProPage() {
 
           <p className="text-xs text-gray-600">
             Having trouble?{" "}
-            <a className="underline underline-offset-2" href={`/pro/choose-pro?redirect=${encodeURIComponent("/pro")}`}>
+            <a
+              className="underline underline-offset-2"
+              href={`/pro/choose-pro?redirect=${encodeURIComponent("/pro")}`}
+            >
               Use the simple chooser
             </a>
             .

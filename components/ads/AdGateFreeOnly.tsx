@@ -18,8 +18,9 @@ function getPlanFromCookie(): "free" | "plus" | "pro" | "premium" {
 }
 
 export default function AdGateFreeOnly({ children }: { children: ReactNode }) {
-  const [plan, setPlan] =
-    useState<"free" | "plus" | "pro" | "premium">(getPlanFromCookie());
+  const [plan, setPlan] = useState<"free" | "plus" | "pro" | "premium">(
+    getPlanFromCookie(),
+  );
 
   useEffect(() => {
     // re-check in case cookie changes after hydration (e.g., user logs in/upgrades)

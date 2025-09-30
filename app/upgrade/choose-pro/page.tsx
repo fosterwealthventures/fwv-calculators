@@ -15,7 +15,9 @@ export default async function ChooseProPage({
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-brand-green">Choose Your Pro Feature</h1>
+      <h1 className="text-3xl font-bold text-brand-green">
+        Choose Your Pro Feature
+      </h1>
       <p className="mt-2 text-gray-700">
         Your plan: <b>{plan}</b>. Pick which Pro feature you want to unlock.
       </p>

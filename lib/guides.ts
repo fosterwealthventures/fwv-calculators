@@ -15,31 +15,36 @@ export function getAllGuides(): Guide[] {
     {
       slug: "roi",
       title: "ROI Calculator — Guide",
-      description: "Understand return on investment and read it alongside annualized ROI.",
+      description:
+        "Understand return on investment and read it alongside annualized ROI.",
       plan: "Free",
     },
     {
       slug: "break-even",
       title: "Break-Even Calculator — Guide",
-      description: "Master fixed vs. variable costs and where you cross into profit.",
+      description:
+        "Master fixed vs. variable costs and where you cross into profit.",
       plan: "Free",
     },
     {
       slug: "mortgage-payment",
       title: "Mortgage Payment Calculator — Guide",
-      description: "See what impacts your monthly cost: principal, interest, taxes, insurance.",
+      description:
+        "See what impacts your monthly cost: principal, interest, taxes, insurance.",
       plan: "Free",
     },
     {
       slug: "simple-vs-compound-interest",
       title: "Simple vs. Compound Interest — Guide",
-      description: "Which grows money faster? Learn by experimenting with inputs.",
+      description:
+        "Which grows money faster? Learn by experimenting with inputs.",
       plan: "Free",
     },
     {
       slug: "freelancer-rate",
       title: "Freelancer Rate Calculator — Guide",
-      description: "Price your time properly so you don’t undervalue your work.",
+      description:
+        "Price your time properly so you don’t undervalue your work.",
       plan: "Free",
     },
 
@@ -53,7 +58,8 @@ export function getAllGuides(): Guide[] {
     {
       slug: "debt-payoff",
       title: "Debt Payoff Calculator — Guide",
-      description: "Snowball vs. Avalanche — choose the path to faster freedom.",
+      description:
+        "Snowball vs. Avalanche — choose the path to faster freedom.",
       plan: "Plus",
     },
 

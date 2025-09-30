@@ -6,22 +6,36 @@
 @layer base {
   :root {
     --brand-green: #064e3b; /* FWV green */
-    --brand-gold:  #d4af37; /* FWV gold  */
-    --header-h: 72px;       /* keep header height reference */
+    --brand-gold: #d4af37; /* FWV gold  */
+    --header-h: 72px; /* keep header height reference */
   }
 
-  html, body { height: 100%; }
+  html,
+  body {
+    height: 100%;
+  }
 
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
     /* If you're using next/font with Inter in layout, it sets --font-sans.
        This line uses it when present, with sensible fallbacks. */
-    font-family: var(--font-sans, ui-sans-serif), system-ui, -apple-system,
-      Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
-      "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family:
+      var(--font-sans, ui-sans-serif),
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol";
   }
 
-  a { @apply text-gray-800 hover:text-[color:var(--brand-green)] transition-colors; }
+  a {
+    @apply text-gray-800 hover:text-[color:var(--brand-green)] transition-colors;
+  }
 }
 
 /* ------------------ Utilities (shared across pages) ------------------ */
@@ -32,17 +46,27 @@
     max-width: 72rem; /* ≈ Tailwind max-w-6xl */
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem;  /* px-4 */
+    padding-left: 1rem; /* px-4 */
     padding-right: 1rem;
   }
 
   /* Consistent top rhythm for page content */
-  .page { @apply pt-6 md:pt-8; }
+  .page {
+    @apply pt-6 md:pt-8;
+  }
 
   /* Brand typography helpers */
-  .heading-hero    { @apply text-3xl md:text-4xl font-bold tracking-tight; color: var(--brand-green); }
-  .heading-section { @apply text-2xl md:text-3xl font-semibold tracking-tight; color: var(--brand-green); }
-  .lead            { @apply text-base md:text-lg text-gray-600; }
+  .heading-hero {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    color: var(--brand-green);
+  }
+  .heading-section {
+    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    color: var(--brand-green);
+  }
+  .lead {
+    @apply text-base md:text-lg text-gray-600;
+  }
 
   /* Soft elevation used on cards */
   .shadow-soft {
@@ -52,13 +76,20 @@
   }
 
   /* Quote/notice card (used for scripture blocks) */
-  .quote-card { @apply rounded-2xl border bg-white p-4 md:p-5; }
+  .quote-card {
+    @apply rounded-2xl border bg-white p-4 md:p-5;
+  }
 
   /* Compact, CLS-safe ad slot (keeps layout tidy) */
-  .ad-slot { min-height: 10rem; border-radius: 0.75rem; }
+  .ad-slot {
+    min-height: 10rem;
+    border-radius: 0.75rem;
+  }
 }
 
 /* Responsive adjustment for ad slot height */
 @media (min-width: 768px) {
-  .ad-slot { min-height: 12rem; }
+  .ad-slot {
+    min-height: 12rem;
+  }
 }
