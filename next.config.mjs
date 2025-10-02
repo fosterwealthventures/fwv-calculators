@@ -1,75 +1,88 @@
 // next.config.mjs
-const isDev = process.env.NODE_ENV !== "production";
+
+const AD_HOSTS = [
+  // Google Ads / Analytics / Tag Manager image & tracking hosts
+  "pagead2.googlesyndication.com",
+  "tpc.googlesyndication.com",
+  "googleads.g.doubleclick.net",
+  "www.googletagmanager.com",
+  "www.google-analytics.com",
+];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // --- Core ---
   reactStrictMode: true,
   poweredByHeader: false,
+  compress: true,
+  trailingSlash: false,
+  productionBrowserSourceMaps: false,
+  staticPageGenerationTimeout: 180,
 
-  // Ignore ESLint during builds (re-enable later if you want)
+  // --- Build-time checks ---
   eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: false },
 
-  // Nicer source maps in dev only
-  webpack: (config, { dev }) => {
+  // --- Webpack tweaks ---
+  webpack(config, { dev }) {
     if (dev) config.devtool = "source-map";
     return config;
   },
 
-  // ✅ Add redirects so /guides (and any subpath) maps to /guide
-  async redirects() {
-    return [
-      { source: "/guides", destination: "/guide", permanent: true },
-      {
-        source: "/guides/:path*",
-        destination: "/guide/:path*",
-        permanent: true,
-      },
-    ];
-  },
-
+  // --- HTTP headers ---
   async headers() {
-    if (isDev) return [];
-
-    // Works-first CSP for GA + AdSense (tighten later if needed)
-    const csp = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https:",
-      "font-src 'self' data:",
-      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
-      "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.youtube.com",
-      "media-src 'self' blob: data:",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
-    ].join("; ");
-
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: [
-          { key: "Content-Security-Policy", value: csp },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
         ],
       },
+      {
+        source: "/_next/static/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
     ];
   },
 
+  // --- Redirects (keep/add here as needed) ---
+  async redirects() {
+    return [
+      // Guides plural → singular
+      { source: "/guides", destination: "/guide", permanent: true },
+      { source: "/guides/:path*", destination: "/guide/:path*", permanent: true },
+
+      // Short/legacy guide slugs → canonical slugs
+      { source: "/guide/roi", destination: "/guide/roi-vs-annualized-roi", permanent: true },
+
+      // ✅ NEW: fix the three broken legacy links
+      { source: "/guide/break-even", destination: "/guide/break-even-made-simple", permanent: true },
+      { source: "/guide/mortgage-payment", destination: "/guide/mortgage-payment-breakdown", permanent: true },
+      { source: "/guide/freelancer-rate", destination: "/guide/set-your-freelance-rate-right", permanent: true },
+
+      // Restaurant variants you already normalize
+      { source: "/guide/restaurant-tip-tab-split", destination: "/guide/restaurant-tips-tabs-split", permanent: true },
+      { source: "/guide/restaurant-tips-tab-split", destination: "/guide/restaurant-tips-tabs-split", permanent: true },
+      { source: "/guide/restaurant-tip-tabs-split", destination: "/guide/restaurant-tips-tabs-split", permanent: true },
+
+      // Trailing slash cleanups (harmless; keeps URLs consistent)
+      { source: "/guide/mortgage-payment-breakdown/", destination: "/guide/mortgage-payment-breakdown", permanent: true },
+      { source: "/guide/simple-vs-compound-interest/", destination: "/guide/simple-vs-compound-interest", permanent: true },
+    ];
+  },
+
+  // --- Images ---
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "pagead2.googlesyndication.com" },
-      { protocol: "https", hostname: "tpc.googlesyndication.com" },
-      { protocol: "https", hostname: "www.google-analytics.com" },
-      { protocol: "https", hostname: "googleads.g.doubleclick.net" },
-      { protocol: "https", hostname: "www.googletagmanager.com" },
+      ...AD_HOSTS.map((hostname) => ({ protocol: "https", hostname })),
+      // Add any other image domains you need
     ],
   },
 };

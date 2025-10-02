@@ -1,5 +1,12 @@
 // app/guide/employee-cost/page.tsx
 import Link from "next/link";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+const PremiumUpsell = dynamic(() => import("@/components/PremiumUpsell.client"), {
+  ssr: false,
+});
+
+
 
 export const metadata = {
   title: "Employee Cost Calculator Guide | Foster Wealth Ventures",
@@ -81,20 +88,25 @@ export default function EmployeeCostGuide() {
 
         <div className="mt-4 flex flex-wrap gap-3">
           {/* Unlock with Pro */}
-          <Link
-            href="/pro?calc=employee-cost"
-            className="rounded-xl bg-brand-green px-4 py-2 font-semibold text-white hover:opacity-90"
-          >
-            Unlock with Pro ($29.99/mo)
-          </Link>
+          {/* Unlock with Pro */}
 
-          {/* Open Calculator — Home route */}
-          <Link
-            href="/?calc=employee-cost"
-            className="rounded-xl border border-brand-green px-4 py-2 font-semibold text-brand-green hover:bg-brand-green/5"
-          >
-            Open on Home
-          </Link>
+       // Final CTA section (employee-cost)
+<Link
+  href="/pro?calc=employee-cost"
+  className="inline-flex items-center rounded-xl bg-brand-green px-4 py-2 font-semibold text-white hover:opacity-90"
+>
+  Unlock with Pro ($29.99/mo)
+</Link>
+
+<PremiumUpsell className="mt-2" price={59.99} />
+
+<Link
+  href="/calculators?calc=employee-cost"
+  className="mt-2 inline-flex items-center rounded-xl border border-brand-green px-4 py-2 font-semibold text-brand-green hover:bg-brand-green/5"
+>
+  Open Calculator
+</Link>
+
 
           {/* Open Calculator — /calculators route */}
           <Link

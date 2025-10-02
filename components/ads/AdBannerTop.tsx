@@ -4,12 +4,6 @@ import { useEffect, useRef } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
 import { getAdsClient } from "./adEnv";
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
-
 export default function AdBannerTop() {
   const insRef = useRef<HTMLModElement | null>(null);
   const client = getAdsClient();
@@ -18,9 +12,7 @@ export default function AdBannerTop() {
     if (!client || typeof window === "undefined") return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   }, [client]);
 
   return (
@@ -36,15 +28,11 @@ export default function AdBannerTop() {
           className="adsbygoogle"
           style={{ display: "block", width: "100%" }}
           data-ad-client={client || ""}
-          data-ad-slot="0000000000" // <- replace with your real slot id
+          data-ad-slot="0000000000"   // <- replace with your real slot id
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(adsbygoogle=window.adsbygoogle||[]).push({});`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: `(adsbygoogle=window.adsbygoogle||[]).push({});` }} />
       </div>
     </AdGateFreeOnly>
   );

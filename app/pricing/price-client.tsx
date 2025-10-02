@@ -8,7 +8,7 @@ type PlanKey = "free" | "plus" | "pro" | "premium";
 
 const MONTHLY = {
   free: 0,
-  plus: 4.99,
+  plus: 6.99,
   pro: 29.99,
   premium: 59.99,
 } as const;

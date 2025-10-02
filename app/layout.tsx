@@ -8,6 +8,9 @@ import { EntitlementsProvider } from "@/lib/entitlements-client";
 import GoogleAd from "@/components/ads/GoogleAd";
 import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
 import { PlanProvider } from "@/providers/PlanProvider";
+import { isPaid, type Plan } from "@/lib/plan";
+
+
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +21,6 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-type Plan = "free" | "plus" | "pro" | "premium";
 
 function parsePlan(v?: string | null): "free" | "plus" | "pro" | "premium" {
   const x = (v || "").toLowerCase().trim();
@@ -159,11 +161,12 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies();
   const plan = parsePlan(cookieStore.get("fwv_plan")?.value);
-  const showAds = plan === "free";
+  const showAds = !isPaid(plan);
   const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
   return (
-    <html lang="en" data-plan={plan}>
+    <html lang="en" data-plan={plan} suppressHydrationWarning>
+
       <head>
         {/* Helpful for Google */}
         {ADSENSE_CLIENT ? (

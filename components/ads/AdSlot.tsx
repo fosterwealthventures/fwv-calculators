@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
 import { getAdsClient } from "./adEnv";
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
+try {
+  (window.adsbygoogle = window.adsbygoogle || []).push({});
+} catch {}
+
 
 /**
  * Responsive AdSense slot that self-gates to Free plan only.

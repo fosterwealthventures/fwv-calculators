@@ -1,31 +1,30 @@
-// app/pro/page.tsx
-import type { Plan, ProChoice } from "@/lib/plan";
 import { cookies } from "next/headers";
 import ProClient from "./pro-client";
 
 export const dynamic = "force-dynamic";
 
+type Plan = "free" | "plus" | "pro" | "premium";
+type ProChoice = "expense-split-deluxe" | "employee-cost" | null;
+
 async function getUserFromCookies(): Promise<{ plan: Plan; proChoice: ProChoice }> {
-  const jar = await cookies(); // if your Next types say it's sync, await is harmless
-  const plan = (jar.get("fwv_plan")?.value as Plan) ?? "free";
-  const proChoice = (jar.get("fwv_pro_choice")?.value as ProChoice) ?? null;
+  // Using await handles both sync/async cookie typings across Next versions
+  const jar = await cookies();
+  const plan = (jar.get("fwv_plan")?.value ?? "free") as Plan;
+  const proChoice = (jar.get("fwv_pro_choice")?.value ?? null) as ProChoice;
   return { plan, proChoice };
 }
 
-export default async function ProPage() {
-  const { plan: userPlan, proChoice } = await getUserFromCookies();
-
-  if (userPlan === "pro" && !proChoice) {
-    return (
-      <main className="min-h-dvh bg-gray-50">
-        {/* your chooser UI exactly as you had it */}
-      </main>
-    );
-  }
+export default async function ProPage({
+  searchParams,
+}: {
+  searchParams?: { redirect?: string };
+}) {
+  const backTo = searchParams?.redirect ?? "/pro";
+  const { plan, proChoice } = await getUserFromCookies();
 
   return (
     <main className="min-h-dvh bg-white">
-      <ProClient />
+      <ProClient plan={plan} proChoice={proChoice} backTo={backTo} />
     </main>
   );
 }

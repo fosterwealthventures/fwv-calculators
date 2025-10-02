@@ -18,15 +18,13 @@ export default function DisclaimerPage() {
       <p className="mt-6 leading-7">
         The calculators, guides, and content on this site are provided for{" "}
         <strong>informational and educational purposes only</strong>. They are
-        not financial, legal, investment, tax, or accounting advice, and they do
-        not create a client relationship with Foster Wealth Ventures (FWV).
+        not financial, legal, investment, tax, or accounting advice, and they
+        do not create a client relationship with Foster Wealth Ventures (FWV).
         Please consult a qualified professional for advice specific to your
         situation.
       </p>
 
-      <h2 className="mt-10 text-2xl font-semibold">
-        Accuracy &amp; Assumptions
-      </h2>
+      <h2 className="mt-10 text-2xl font-semibold">Accuracy &amp; Assumptions</h2>
       <p className="mt-4 leading-7">
         Results depend on the inputs you provide and simplified assumptions in
         our models. Calculations may not reflect your exact circumstances. FWV
@@ -42,9 +40,7 @@ export default function DisclaimerPage() {
         terms and privacy policies.
       </p>
 
-      <h2 className="mt-10 text-2xl font-semibold">
-        Ads &amp; Affiliate Links
-      </h2>
+      <h2 className="mt-10 text-2xl font-semibold">Ads &amp; Affiliate Links</h2>
       <p className="mt-4 leading-7">
         This site may display ads and/or use affiliate links. We may earn a
         commission if you click or purchase through those links, at no extra

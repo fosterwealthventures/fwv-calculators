@@ -1,20 +1,26 @@
-// components/Breadcrumb.tsx
 import Link from "next/link";
 
-type Crumb = { href: string; label: string };
+type Item = { href: string; label: string };
 
-export default function Breadcrumb({ trail = [] as Crumb[] }) {
-  const items: Crumb[] = [{ href: "/", label: "Home" }, ...trail];
+export default function Breadcrumb({ trail }: { trail: Item[] }) {
+  if (!trail?.length) return null;
   return (
     <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-600">
-      {items.map((it, i) => (
-        <span key={i}>
-          <Link className="underline hover:text-brand-green" href={it.href}>
-            {it.label}
+      <ol className="flex flex-wrap items-center gap-2">
+        <li>
+          <Link href="/" className="hover:underline">
+            Home
           </Link>
-          {i < items.length - 1 ? " › " : null}
-        </span>
-      ))}
+        </li>
+        {trail.map((item, i) => (
+          <li key={i} className="flex items-center gap-2">
+            <span aria-hidden>›</span>
+            <Link href={item.href} className="hover:underline">
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ol>
     </nav>
   );
 }

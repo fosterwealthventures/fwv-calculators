@@ -1,178 +1,126 @@
-// app/guide/restaurant-tips-tabs-split/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReceiptText } from "lucide-react";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
 export const metadata: Metadata = {
-  title: "Restaurant Tip & Tab Split—Discounts, Tax & Fair Splits",
+  title: "Restaurant Tips & Tabs Split — Guide",
   description:
-    "A practical guide to tipping and splitting the bill with discounts and tax. Learn which amounts tip applies to and how to keep it fair per person.",
+    "Split a restaurant bill fairly: subtotal, tax, tip, and per-person totals—by equal shares or by items.",
 };
 
 function Breadcrumb() {
   return (
     <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">
-        Home
-      </Link>{" "}
-      &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">
-        Guides
-      </Link>{" "}
-      &rsaquo; <span>Restaurant Tip & Tab Split</span>
+      <Link href="/" className="text-brand-green hover:underline">Home</Link> ›{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> ›{" "}
+      <span>Restaurant Tips & Tabs Split</span>
     </nav>
   );
 }
 
-export default function TipTabSplitGuide() {
-  // If your route folder is /guide/restaurant-tips-tabs-split this constant can be updated,
-  // but it doesn't affect TypeScript. It’s only for sharing.
+export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/restaurant-tip-tab-split";
-
-  // Coerce Next’s metadata.title to a plain string for <SocialShare />
-  const shareTitle = String(metadata.title ?? "");
-
-  const faq = [
-    {
-      q: "Should we tip on tax?",
-      a: "Most groups tip on the discounted, pre-tax subtotal. Tipping on tax is uncommon.",
-    },
-    {
-      q: "What about auto-gratuity or service charge?",
-      a: "If your receipt includes a service charge or auto-gratuity, set tip to 0% in the calculator.",
-    },
-    {
-      q: "Do we split before or after tip?",
-      a: "Split the total after tax and tip so everyone contributes fairly to the final amount.",
-    },
-  ];
-
-  const howToSteps = [
-    "Enter the bill amount and number of people.",
-    "Choose discount type (% or $), then enter the discount value.",
-    "Set where tax applies (after or before discount).",
-    "Choose the tip % and whether tip is on the discounted or original subtotal.",
-    "Review the total and per-person amounts; adjust inputs if needed.",
-  ];
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: shareTitle,
-    description: metadata.description,
-    mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:05:43Z",
-    publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to split a restaurant bill with discounts, tax and tip",
-    step: howToSteps.map((name, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name,
-    })),
-  };
+    "https://www.fosterwealthventures.com/guide/restaurant-tips-tabs-split";
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
       <Breadcrumb />
 
       <GuideHero
-        title="Restaurant Tip & Tab Split — How to Handle Discounts & Tax"
-        subtitle="A simple, fair method that matches the logic in our free calculator."
-        icon={<ReceiptText className="text-brand-green" />}
+        title="Restaurant Tips & Tabs Split"
+        subtitle="Divide the check (and the tip) the fair way—either evenly or by what each person ordered."
+        minTier="free"
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
 
       <section>
         <h2>Quick Summary</h2>
         <p>
-          <strong>Most fair approach:</strong> apply discounts first, calculate
-          tax on the discounted subtotal, compute tip on the discounted{" "}
-          <em>pre-tax</em> subtotal, then split the final total across people.
+          The calculator lets you split the bill <strong>equally</strong> or
+          <strong> by items</strong>. Tip and tax are allocated either evenly or in proportion to each
+          person’s pre-tip subtotal—your choice for fairness.
         </p>
       </section>
 
       <section>
-        <h2>Common pitfalls</h2>
+        <CTAButton href="/?calc=restaurant-tips-tabs-split">
+          👉 Try the matching calculator
+        </CTAButton>
+      </section>
+
+      <section>
+        <h2>Inputs</h2>
         <ul>
-          <li>Forgetting to apply the discount before tax.</li>
-          <li>Tipping on the wrong base (tax vs pre-tax subtotal).</li>
-          <li>Not accounting for auto-gratuity already on the receipt.</li>
+          <li><strong>Subtotal</strong> (before tax/tip) or individual <strong>items</strong> with prices.</li>
+          <li><strong>Tax %</strong> (or tax amount, if known).</li>
+          <li><strong>Tip %</strong> (or choose a fixed tip amount).</li>
+          <li><strong>People</strong> — names or seat numbers.</li>
+          <li><strong>Split method</strong> — Equal shares, or By items per person.</li>
+          <li>Options: round each share to cents, exclude non-drinkers from alcohol items, etc.</li>
         </ul>
+      </section>
+
+      <section>
+        <h2>Outputs</h2>
+        <ul>
+          <li><strong>Per-person total</strong> with their share of tip & tax.</li>
+          <li>Breakdown for each person: items + proportional tax + tip.</li>
+          <li>Table total check for sanity (matches receipt).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Step-by-Step</h2>
+        <ol>
+          <li>Enter subtotal (or add items to each person).</li>
+          <li>Add tax % and tip % (or fixed amounts).</li>
+          <li>Choose split method and allocation rule (even vs. proportional).</li>
+          <li>Review each person’s total; enable rounding if desired.</li>
+          <li>Share totals or copy the per-person receipts to messages.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Example</h2>
         <p>
-          See also:{" "}
-          <Link href="/guide/5-costly-calculator-mistakes">
-            5 Costly Calculator Mistakes
-          </Link>
-          .
+          Subtotal $120, tax 8.5%, tip 18%, 3 people. Equal split allocates tax/tip evenly,
+          giving each person ≈ <strong>$46.96</strong>. If you split by items (Alice $30, Ben $50, Cara $40),
+          the calculator assigns tip/tax proportionally to each person’s items.
         </p>
       </section>
 
       <section>
-        <CTAButton href="/?calc=tip-split">
-          👉 Try the Tip &amp; Tab Split Calculator
+        <h2>Common Pitfalls</h2>
+        <ul>
+          <li>Forgetting to include the tax when calculating the tip (or double-tipping).</li>
+          <li>Splitting evenly when some ordered large extras—use “by items” instead.</li>
+          <li>Not rounding shares leads to awkward cents; toggle “round shares”.</li>
+        </ul>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=restaurant-tips-tabs-split">
+          👉 Open the calculator again
         </CTAButton>
       </section>
 
       <section>
         <h2>Related Guides</h2>
         <ul>
-          <li>
-            <Link href="/guide/roi-vs-annualized-roi">
-              ROI vs Annualized ROI
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/simple-vs-compound-interest">
-              Simple vs Compound Interest
-            </Link>
-          </li>
+          <li><Link href="/guide/expense-split-deluxe">Expense Split Deluxe</Link></li>
+          <li><Link href="/guide/simple-vs-compound-interest">Simple vs Compound Interest</Link></li>
         </ul>
       </section>
 
-      <div className="mt-6">
-        <SocialShare url={pageUrl} title={shareTitle} />
+      <div className="not-prose mt-6">
+        <SocialShare url={pageUrl} title="Restaurant Tips & Tabs Split — Guide" />
       </div>
 
       <GuideNav
-        prev={{
-          href: "/guide/5-costly-calculator-mistakes",
-          title: "5 Costly Calculator Mistakes",
-        }}
-      />
-
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        prev={{ href: "/guide/mortgage-payment-breakdown", title: "Mortgage Payment Breakdown" }}
+        next={{ href: "/guide/simple-vs-compound-interest", title: "Simple vs Compound Interest" }}
       />
     </main>
   );

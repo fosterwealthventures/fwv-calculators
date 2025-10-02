@@ -2,9 +2,26 @@
 "use client";
 
 import Link from "next/link";
-import { getAllGuides } from "@/lib/guides";
+import { getAllGuides, tierChip } from "@/lib/guides";
 
 type NavLink = { href: string; title: string };
+
+function Chip({ label }: { label: string }) {
+  // Simple color logic: Free = neutral, Plus = emerald, Pro/Premium = amber (gold-ish)
+  const cls =
+    label.startsWith("Free")
+      ? "bg-gray-50 text-gray-700 border-gray-300"
+      : label.startsWith("Plus")
+      ? "bg-emerald-50 text-emerald-700 border-emerald-600"
+      : "bg-amber-50 text-amber-700 border-amber-600"; // "Pro / Premium"
+  return (
+    <span
+      className={`ml-2 inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${cls}`}
+    >
+      {label}
+    </span>
+  );
+}
 
 export default function GuideNav({
   className = "",
@@ -25,18 +42,22 @@ export default function GuideNav({
         Guides
       </h2>
 
-      {/* Guide list */}
+      {/* Guide list with plan chip */}
       <ul className="space-y-2">
-        {guides.map((g) => (
-          <li key={g.slug}>
-            <Link
-              href={`/guide/${g.slug}`}
-              className="text-sm text-brand-green hover:underline"
-            >
-              {g.title}
-            </Link>
-          </li>
-        ))}
+        {guides.map((g) => {
+          const chip = tierChip(g.minTier);
+          return (
+            <li key={g.slug} className="flex items-center justify-between">
+              <Link
+                href={`/guide/${g.slug}`}
+                className="text-sm text-brand-green hover:underline"
+              >
+                {g.title}
+              </Link>
+              <Chip label={chip} />
+            </li>
+          );
+        })}
       </ul>
 
       {/* Divider */}
@@ -73,7 +94,7 @@ export default function GuideNav({
       {/* Quick jump to the calculators hub */}
       <div className="mt-4">
         <Link
-          href="/dashboard" /* change if your calculators page uses a different route */
+          href="/calculators"
           className="inline-flex items-center rounded-md border border-emerald-600 px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50"
         >
           All Calculators

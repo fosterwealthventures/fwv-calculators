@@ -1,74 +1,110 @@
-// app/guides/page.tsx
+import type { Metadata } from "next";
 import Link from "next/link";
-import Breadcrumb from "@/components/Breadcrumb";
-import { getAllGuides } from "@/lib/guides";
+import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
-import AdInSidebar from "@/components/ads/AdInSidebar";
-import AdGateFreeOnly from "@/components/ads/AdGateFreeOnly";
 
-export const revalidate = 60;
+export const metadata: Metadata = {
+  title: "Simple vs Compound Interest — Guide",
+  description:
+    "Compare simple and compound interest with plain-language examples. Learn which grows faster and why frequency matters.",
+};
 
-export default function GuideIndexPage() {
-  const guides = getAllGuides();
+function Breadcrumb() {
+  return (
+    <nav className="mb-4 text-sm text-gray-600">
+      <Link href="/" className="text-brand-green hover:underline">Home</Link> ›{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> ›{" "}
+      <span>Simple vs Compound Interest</span>
+    </nav>
+  );
+}
+
+export default function GuidePage() {
+  const pageUrl =
+    "https://www.fosterwealthventures.com/guide/simple-vs-compound-interest";
 
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-8 lg:grid-cols-[1fr_320px]">
-      {/* Main */}
-      <div>
-        <Breadcrumb trail={[{ href: "/guide", label: "Guides" }]} />
+    <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
+      <Breadcrumb />
 
-        <h1 className="text-3xl font-bold text-brand-green">Guides</h1>
-        <p className="mt-2 text-gray-600">
-          Short, practical reads that pair with our calculators.
-        </p>
+      <GuideHero
+        title="Simple vs Compound Interest"
+        subtitle="See how compounding accelerates growth and when a simple calculation is good enough."
+        minTier="free"
+      />
 
-        <ul className="mt-8 divide-y divide-gray-200">
-          {guides.map((g) => (
-            <li
-              key={g.slug}
-              className="flex items-start justify-between gap-4 py-4"
-            >
-              <div>
-                <Link
-                  href={`/guide/${g.slug}`}
-                  className="text-lg font-semibold text-brand-green hover:underline"
-                >
-                  {g.title}
-                </Link>
-                {g.description ? (
-                  <p className="mt-1 text-sm text-gray-600">{g.description}</p>
-                ) : null}
-              </div>
-              {g.plan ? (
-                <span
-                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                    g.plan === "Free"
-                      ? "bg-gray-100 text-gray-700"
-                      : g.plan === "Plus"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-indigo-100 text-indigo-700"
-                  }`}
-                  title={
-                    g.plan === "Free"
-                      ? "Available on Free"
-                      : `Requires ${g.plan} plan`
-                  }
-                >
-                  {g.plan}
-                </span>
-              ) : null}
-            </li>
-          ))}
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
+
+      <section>
+        <h2>Quick Summary</h2>
+        <ul>
+          <li><strong>Simple interest</strong> = Principal × Rate × Time</li>
+          <li><strong>Compound interest</strong> grows on the original principal <em>and</em> accumulated interest.</li>
+          <li>More frequent compounding ⇒ slightly faster growth at the same APR.</li>
         </ul>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=interest">👉 Try the matching calculator</CTAButton>
+      </section>
+
+      <section>
+        <h2>Inputs</h2>
+        <ul>
+          <li><strong>Principal</strong> — starting amount.</li>
+          <li><strong>Rate (APR)</strong> — yearly percentage rate.</li>
+          <li><strong>Time</strong> — years or months.</li>
+          <li><strong>Compounding frequency</strong> — yearly, quarterly, monthly, daily; or “simple”.</li>
+          <li>Optional recurring contribution for compound scenarios.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Outputs</h2>
+        <ul>
+          <li><strong>Total interest</strong> and <strong>ending balance</strong> for each method.</li>
+          <li>Side-by-side comparison and growth chart.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Example</h2>
+        <p>
+          $5,000 for 3 years at 6% APR.
+          Simple interest = 5,000 × 0.06 × 3 = <strong>$900</strong>.
+          Yearly compounding ≈ $5,000 × (1.06)^3 − 5,000 ≈ <strong>$955</strong> interest.
+        </p>
+      </section>
+
+      <section>
+        <h2>Common Pitfalls</h2>
+        <ul>
+          <li>Confusing APR with APY (APY includes compounding).</li>
+          <li>Mixing months and years inconsistently.</li>
+          <li>Ignoring fees that reduce the real return.</li>
+        </ul>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=interest">👉 Open the calculator again</CTAButton>
+      </section>
+
+      <section>
+        <h2>Related Guides</h2>
+        <ul>
+          <li><Link href="/guide/savings-growth">Savings Growth</Link></li>
+          <li><Link href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</Link></li>
+        </ul>
+      </section>
+
+      <div className="not-prose mt-6">
+        <SocialShare url={pageUrl} title="Simple vs Compound Interest — Guide" />
       </div>
 
-      {/* Right rail — Ads must show to Free only */}
-      <aside className="sticky top-6 h-fit space-y-8">
-        <GuideNav className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm" />
-        <AdGateFreeOnly>
-          <AdInSidebar width={300} height={600} />
-        </AdGateFreeOnly>
-      </aside>
-    </div>
+      <GuideNav
+        prev={{ href: "/guide/mortgage-payment-breakdown", title: "Mortgage Payment Breakdown" }}
+        next={{ href: "/guide/set-your-freelance-rate-right", title: "Set Your Freelancer Rate Right" }}
+      />
+    </main>
   );
 }

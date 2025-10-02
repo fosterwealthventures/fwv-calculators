@@ -153,3 +153,9 @@ export function getAvailableCalculators(
     return true; // All other calculators are available
   });
 }
+
+// Minimal helper used by ad gating.
+// Does NOT change any of your existing plan/permission logic.
+export function isPaid(plan: Plan | null | undefined): boolean {
+  return plan === "plus" || plan === "pro" || plan === "premium";
+}

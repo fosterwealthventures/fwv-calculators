@@ -4,23 +4,17 @@ import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
 export const metadata: Metadata = {
-  title:
-    "ROI vs Annualized ROI—How to Read Them & Boost Your Investment Strategy",
+  title: "ROI vs Annualized ROI — Guide",
   description:
-    "Learn the difference between ROI and annualized ROI and how to use both to evaluate investments effectively.",
+    "Understand ROI vs Annualized ROI, the calculator inputs/outputs, step-by-step usage, examples, and pitfalls to avoid.",
 };
 
 function Breadcrumb() {
   return (
     <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">
-        Home
-      </Link>{" "}
-      &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">
-        Guides
-      </Link>{" "}
-      &rsaquo; <span>ROI vs Annualized ROI</span>
+      <Link href="/" className="text-brand-green hover:underline">Home</Link> ›{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> ›{" "}
+      <span>ROI vs Annualized ROI</span>
     </nav>
   );
 }
@@ -28,57 +22,6 @@ function Breadcrumb() {
 export default function GuidePage() {
   const pageUrl =
     "https://www.fosterwealthventures.com/guide/roi-vs-annualized-roi";
-  const shareTitle = String(metadata.title ?? "");
-
-  const faq = [
-    {
-      q: "What’s the main takeaway from ROI vs Annualized ROI?",
-      a: "Use the paired calculator to apply concepts and avoid pitfalls we list in this guide.",
-    },
-    {
-      q: "How do I apply this in real life?",
-      a: "Follow the walkthrough below and then try the calculator with your own numbers.",
-    },
-  ];
-
-  const howToSteps = [
-    "Skim the Quick Summary.",
-    "Review formulas.",
-    "Follow walkthrough.",
-    "Click the calculator.",
-  ];
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: shareTitle,
-    description:
-      "Learn the difference between ROI and annualized ROI and how to use both to evaluate investments effectively.",
-    mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:27:38Z",
-    publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to apply ROI vs Annualized ROI",
-    step: howToSteps.map((n, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name: n,
-    })),
-  };
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
@@ -86,56 +29,92 @@ export default function GuidePage() {
 
       <GuideHero
         title="ROI vs Annualized ROI"
-        subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
-        icon={null}
+        subtitle="What the calculator needs, what it returns, and how to compare opportunities fairly."
+        minTier="free"
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 4–5 minutes</p>
+
+      <section>
+        <h2>Quick Summary</h2>
+        <p>
+          <strong>ROI</strong> measures your total percentage gain/loss vs. what you paid.
+          <strong> Annualized ROI</strong> converts that result into a yearly rate so different
+          holding periods are comparable. Use ROI when time frames match; use Annualized ROI when they don’t.
+        </p>
+      </section>
 
       <section>
         <CTAButton href="/?calc=roi">👉 Try the matching calculator</CTAButton>
       </section>
 
       <section>
-        <h2>Related Guides</h2>
+        <h2>Inputs</h2>
         <ul>
-          <li>
-            <Link href="/guide/break-even-made-simple">
-              Break-Even Made Simple
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/mortgage-payment-breakdown">
-              Mortgage Payment Breakdown
-            </Link>
-          </li>
+          <li><strong>Initial Cost</strong> — purchase price + fees.</li>
+          <li><strong>Ending/Current Value</strong> — sale proceeds or current value.</li>
+          <li><strong>Holding Period</strong> — start & end dates (or months/years).</li>
+          <li>Optional: recurring fees or one-time costs that affect net return.</li>
         </ul>
       </section>
 
-      <div className="mt-6 not-prose">
-        <SocialShare url={pageUrl} title={shareTitle} />
+      <section>
+        <h2>Outputs</h2>
+        <ul>
+          <li><strong>ROI (%)</strong> = (Ending − Cost) ÷ Cost.</li>
+          <li><strong>Annualized ROI (%/yr)</strong> ≈ (Ending ÷ Cost)^(1/Years) − 1.</li>
+          <li><strong>Gain / Loss ($)</strong> and exact <strong>time held</strong>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Step-by-Step</h2>
+        <ol>
+          <li>Enter cost and ending value (include fees).</li>
+          <li>Select the precise dates to capture the true time held.</li>
+          <li>Read ROI and Annualized ROI; compare scenarios (fees, timing).</li>
+          <li>Use Annualized ROI to compare opportunities with different durations.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Example</h2>
+        <p>
+          Pay <strong>$8,000</strong>; sell later for <strong>$9,560</strong> after ~1.5 years.
+          ROI = (9,560 − 8,000) ÷ 8,000 = <strong>19.5%</strong>. Annualized ROI ≈
+          (9,560 ÷ 8,000)^(1/1.5) − 1 ≈ <strong>12.1%/yr</strong>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Common Pitfalls</h2>
+        <ul>
+          <li>Ignoring fees/taxes that shrink real returns.</li>
+          <li>Comparing a short ROI to a long ROI without annualizing the short one.</li>
+          <li>Treating ROI as a forecast—it’s a <em>measurement</em>, not a prediction.</li>
+        </ul>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=roi">👉 Open the calculator again</CTAButton>
+
+      </section>
+
+      <section>
+        <h2>Related Guides</h2>
+        <ul>
+          <li><Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link></li>
+          <li><Link href="/guide/mortgage-payment-breakdown">Mortgage Payment Breakdown</Link></li>
+        </ul>
+      </section>
+
+      <div className="not-prose mt-6">
+        <SocialShare url={pageUrl} title="ROI vs Annualized ROI — Guide" />
       </div>
 
       <GuideNav
-        next={{
-          href: "/guide/break-even-made-simple",
-          title: "Break-Even Made Simple",
-        }}
-      />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        prev={{ href: "/guide/set-your-freelance-rate-right", title: "Set Your Freelancer Rate Right" }}
+        next={{ href: "/guide/break-even-made-simple", title: "Break-Even Made Simple" }}
       />
     </main>
   );

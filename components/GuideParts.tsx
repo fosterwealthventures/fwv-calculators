@@ -1,7 +1,9 @@
-//components/GuideParts.tsx
+// components/GuideParts.tsx
 import Link from "next/link";
 import type { PropsWithChildren, ReactNode } from "react";
 import { Share2 } from "lucide-react";
+import type { Tier } from "@/lib/guides";
+import { tierChip } from "@/lib/guides";
 
 /* ---------- Layout / Typography helpers ---------- */
 export function Section({ children }: PropsWithChildren) {
@@ -20,23 +22,49 @@ export function LI({ children }: PropsWithChildren) {
   return <li className="my-1">{children}</li>;
 }
 
+/* ---------- Plan badge ---------- */
+export function PlanBadge({ minTier }: { minTier: Tier }) {
+  const label = tierChip(minTier);
+  const cls =
+    label.startsWith("Free")
+      ? "bg-gray-50 text-gray-700 border-gray-300"
+      : label.startsWith("Plus")
+      ? "bg-emerald-50 text-emerald-700 border-emerald-600"
+      : "bg-amber-50 text-amber-700 border-amber-600"; // "Pro / Premium"
+
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${cls}`}>
+      {label}
+    </span>
+  );
+}
+
 /* ---------- Hero ---------- */
 export function GuideHero({
   title,
   subtitle,
   icon,
+  minTier, // optional: shows Free / Plus / Pro / Premium chip
 }: {
   title: string;
   subtitle?: string;
   icon?: ReactNode;
+  minTier?: Tier;
 }) {
   return (
     <header className="rounded-2xl border border-brand-gold bg-white p-6 shadow-soft">
       <div className="flex items-center gap-3">
         {icon}
-        <div>
-          <h1 className="m-0 text-2xl font-bold text-brand-green">{title}</h1>
-          {subtitle && <p className="mt-1 text-gray-700">{subtitle}</p>}
+        <div className="flex items-start gap-3 flex-wrap">
+          <div>
+            <h1 className="m-0 text-2xl font-bold text-brand-green">{title}</h1>
+            {subtitle && <p className="mt-1 text-gray-700">{subtitle}</p>}
+          </div>
+          {minTier && (
+            <div className="mt-1">
+              <PlanBadge minTier={minTier} />
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -113,5 +141,6 @@ const GuideParts = {
   GuideHero,
   CTAButton,
   SocialShare,
+  PlanBadge,
 };
 export default GuideParts;
