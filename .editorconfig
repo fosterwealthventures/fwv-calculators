@@ -1,6 +1,4 @@
-# EditorConfig helps developers define and maintain consistent
-# coding styles between different editors and IDEs.
-
+# EditorConfig helps keep consistent formatting across editors
 root = true
 
 [*]
@@ -12,4 +10,9 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 [*.md]
+# Keep trailing spaces in Markdown (used for line breaks)
 trim_trailing_whitespace = false
+
+[*.{bat,cmd}]
+# Windows scripts should keep CRLF
+end_of_line = crlf
