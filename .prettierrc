@@ -1,1 +1,26 @@
-{}
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": false,
+    "noEmit": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "scripts/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "dist"
+  ]
+}

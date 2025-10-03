@@ -1,33 +1,26 @@
 // components/ads/AdGateFreeOnly.tsx
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import React from "react";
+import { usePlan } from "@/providers/PlanProvider";
 
-/**
- * Client-side gate:
- * - Reads a cookie "plan" (free|plus|pro|premium)
- * - Only renders children for "free"
- * - If no cookie is present, default to "free" (ads show to unknown visitors)
- *
- * If you have an auth/provider, replace this with your real session/plan lookup.
- */
-function getPlanFromCookie(): "free" | "plus" | "pro" | "premium" {
-  if (typeof document === "undefined") return "free";
-  const m = document.cookie.match(/(?:^|;\s*)plan=(free|plus|pro|premium)\b/i);
-  return m ? (m[1].toLowerCase() as any) : "free";
-}
+export type AdGateFreeOnlyProps = {
+  children: React.ReactNode;
+  /** Preferred prop */
+  calcId?: string;
+  /** @deprecated use `calcId` instead; kept for backward compatibility */
+  calcd?: string;
+};
 
-export default function AdGateFreeOnly({ children }: { children: ReactNode }) {
-  const [plan, setPlan] = useState<"free" | "plus" | "pro" | "premium">(
-    getPlanFromCookie(),
-  );
+export default function AdGateFreeOnly({
+  children,
+  calcId: _calcId,
+  calcd: _calcd,
+}: AdGateFreeOnlyProps) {
+  // PlanProvider exposes a boolean `showAds` (true only on Free)
+  const { showAds } = usePlan();
 
-  useEffect(() => {
-    // re-check in case cookie changes after hydration (e.g., user logs in/upgrades)
-    const current = getPlanFromCookie();
-    if (current !== plan) setPlan(current);
-  }, [plan]);
+  if (!showAds) return null; // hide ads for Plus/Pro/Premium
 
-  if (plan !== "free") return null;
   return <>{children}</>;
 }

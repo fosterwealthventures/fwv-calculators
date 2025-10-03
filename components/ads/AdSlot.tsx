@@ -4,21 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
 import { getAdsClient } from "./adEnv";
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
-
 /**
  * Responsive AdSense slot that self-gates to Free plan only.
  */
 export default function AdSlot({
   slot = "test-slot",
+  calcId = "free:slot",
   style,
   className = "",
 }: {
   slot?: string;
+  calcId?: string;
   style?: React.CSSProperties;
   className?: string;
 }) {
@@ -38,10 +34,10 @@ export default function AdSlot({
         if (
           !pushedRef.current &&
           typeof window !== "undefined" &&
-          Array.isArray(window.adsbygoogle)
+          Array.isArray((window as any).adsbygoogle)
         ) {
           try {
-            window.adsbygoogle.push({});
+            (window as any).adsbygoogle.push({});
             pushedRef.current = true;
           } catch {
             /* noop */
@@ -57,9 +53,10 @@ export default function AdSlot({
   }, []);
 
   return (
-    <AdGateFreeOnly>
+    <AdGateFreeOnly calcId={calcId}>
       <div
         ref={ref}
+        data-testid="ad-slot"
         className={className}
         style={{
           minHeight: 120,
