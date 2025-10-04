@@ -1,3 +1,6 @@
+/* eslint-env node */
+// filepath: c:\fwv-calculators\next.config.mjs
+
 // next.config.mjs
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -15,13 +18,55 @@ const nextConfig = {
     return config;
   },
 
-  // ✅ Add redirects so /guides (and any subpath) maps to /guide
+  // ✅ Combined redirects: /guides → /guide + guide slug fixes + old calculators
   async redirects() {
     return [
+      // Guides plural → singular
       { source: "/guides", destination: "/guide", permanent: true },
       {
         source: "/guides/:path*",
         destination: "/guide/:path*",
+        permanent: true,
+      },
+
+      // Guide slug fixes (misspellings and legacy names)
+      {
+        source: "/guide/mortage-payment-breakdown",
+        destination: "/guide/mortgage-payment-breakdown",
+        permanent: true,
+      },
+      {
+        source: "/guide/mortgage-payment",
+        destination: "/guide/mortgage-payment-breakdown",
+        permanent: true,
+      },
+      {
+        source: "/guide/freelancer-rate",
+        destination: "/guide/set-your-freelance-rate-right",
+        permanent: true,
+      },
+      {
+        source: "/guide/roi",
+        destination: "/guide/roi-vs-annualized-roi",
+        permanent: true,
+      },
+      {
+        source: "/guide/restaurant-tip-tab-split",
+        destination: "/guide/restaurant-tips-tabs-split",
+        permanent: true,
+      },
+
+      // Old calculators page → Dashboard
+      {
+        source: "/calculators",
+        destination: "/dashboard",
+        permanent: true,
+      },
+
+      // Debt planner → payoff
+      {
+        source: "/guide/debt-planner",
+        destination: "/guide/debt-payoff",
         permanent: true,
       },
     ];

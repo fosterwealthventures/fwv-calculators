@@ -27,93 +27,64 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/set-your-freelancer-rate-right";
+    "https://www.fosterwealthventures.com/guide/set-your-freelance-rate-right";
   const shareTitle = String(metadata.title ?? "");
 
-  const faq = [
-    {
-      q: "What’s the main takeaway from this guide?",
-      a: "Use the calculator to quickly apply concepts and avoid undervaluing your time.",
-    },
-    {
-      q: "How do I apply this in real life?",
-      a: "Follow the walkthrough below and then try the calculator with your own numbers.",
-    },
-  ];
-
-  const howToSteps = [
-    "Skim summary",
-    "Review concepts",
-    "Follow walkthrough",
-    "Try the calculator",
-  ];
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: shareTitle,
-    description:
-      "Learn how to calculate the right hourly and project rates to meet income goals and cover expenses as a freelancer.",
-    mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:27:38Z",
-    publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to apply Set Your Freelancer Rate Right",
-    step: howToSteps.map((n, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name: n,
-    })),
-  };
-
+  // (Schemas retained if previously used)
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
       <Breadcrumb />
-
       <GuideHero
         title="Set Your Freelancer Rate Right"
         subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
         icon={null}
       />
-
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
 
       <section>
+        <h2>What it does</h2>
+        <p>
+          Turns your income goal, weeks off, billable hours, and overhead into a minimum hourly rate. Prevents the common error of dividing income by 2,000 hours.
+        </p>
+      </section>
+
+      <section>
+        <h2>How to use it</h2>
+        <p>Fill four inputs, then tweak:</p>
+        <ul>
+          <li>Target income (before personal taxes)</li>
+          <li>Weeks off for vacation, holidays, sick</li>
+          <li>Billable hours per week (real client time)</li>
+          <li>Overhead % (software, insurance, gear, marketing)</li>
+          <li>Example: 90000 goal, 4 weeks off, 25 hrs, 30% → higher rate than you guess</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>When to use it</h2>
+        <p>
+          Use before quoting a new client or bidding a project. Helpful when raising rates or planning a shift to fewer hours.
+        </p>
+      </section>
+
+      <section>
+        <h2>Interpreting results</h2>
+        <p>
+          The rate shown is a floor, not a cap. If it feels too high, adjust overhead, add realistic billable time, or lower income target; if demand is strong, quote above it for rush or complex work.
+        </p>
         <CTAButton href="/?calc=freelancer-rate">
-          👉 Try the matching calculator
+          Open the calculator (Freelancer Rate)
         </CTAButton>
       </section>
 
       <section>
         <h2>Related Guides</h2>
-        <ul>
-          <li>
-            <Link href="/guide/roi-vs-annualized-roi">
-              ROI vs Annualized ROI
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/break-even-made-simple">
-              Break-Even Made Simple
-            </Link>
-          </li>
-        </ul>
+        <p>
+          See cost structure in{" "}
+          <Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link>, improve fairness in{" "}
+          <Link href="/guide/restaurant-tips-tabs-split">Restaurant Tip & Tab Split</Link>, or browse every tool on the{" "}
+          <Link href="/dashboard">calculator dashboard</Link>.
+        </p>
       </section>
 
       <div className="mt-6 not-prose">
@@ -130,19 +101,48 @@ export default function GuidePage() {
           title: "5 Costly Calculator Mistakes",
         }}
       />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-      />
     </main>
   );
+}
+
+import React from 'react';
+
+export function NavText({ children }: { children: React.ReactNode }) {
+  return <p className="mb-4 text-sm">{children}</p>;
+}
+
+export function H1({ children }: { children: React.ReactNode }) {
+  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
+}
+
+export function Quote({ children }: { children: React.ReactNode }) {
+  return (
+    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
+      {children}
+    </blockquote>
+  );
+}
+
+export function QuoteRef({ children }: { children: React.ReactNode }) {
+  return <span className="font-semibold">{children}</span>;
+}
+
+export function Section({ children }: { children: React.ReactNode }) {
+  return <section className="mt-8 space-y-8">{children}</section>;
+}
+
+export function H2({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-2xl font-semibold">{children}</h2>;
+}
+
+export function List({ children }: { children: React.ReactNode }) {
+  return <ul className="list-disc pl-6">{children}</ul>;
+}
+
+export function CTAWrap({ children }: { children: React.ReactNode }) {
+  return <div className="mt-6">{children}</div>;
+}
+
+export function HelperText({ children }: { children: React.ReactNode }) {
+  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }

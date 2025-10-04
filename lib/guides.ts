@@ -13,21 +13,21 @@ export function getAllGuides(): Guide[] {
   return [
     // --- Free guides (examples) ---
     {
-      slug: "roi",
-      title: "ROI Calculator — Guide",
+      slug: "roi-vs-annualized-roi",
+      title: "ROI vs Annualized ROI — Guide",
       description:
         "Understand return on investment and read it alongside annualized ROI.",
       plan: "Free",
     },
     {
-      slug: "break-even",
+      slug: "break-even-made-simple",
       title: "Break-Even Calculator — Guide",
       description:
         "Master fixed vs. variable costs and where you cross into profit.",
       plan: "Free",
     },
     {
-      slug: "mortgage-payment",
+      slug: "mortgage-payment-breakdown",
       title: "Mortgage Payment Calculator — Guide",
       description:
         "See what impacts your monthly cost: principal, interest, taxes, insurance.",
@@ -41,10 +41,10 @@ export function getAllGuides(): Guide[] {
       plan: "Free",
     },
     {
-      slug: "freelancer-rate",
+      slug: "set-your-freelance-rate-right",
       title: "Freelancer Rate Calculator — Guide",
       description:
-        "Price your time properly so you don’t undervalue your work.",
+        "Price your time properly so you don't undervalue your work.",
       plan: "Free",
     },
 
@@ -58,8 +58,7 @@ export function getAllGuides(): Guide[] {
     {
       slug: "debt-payoff",
       title: "Debt Payoff Calculator — Guide",
-      description:
-        "Snowball vs. Avalanche — choose the path to faster freedom.",
+      description: "Organize debts and apply Snowball or Avalanche strategies to become debt-free faster.",
       plan: "Plus",
     },
 

@@ -88,20 +88,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-
-    // Paid (Pro)
-    {
-      url: `${base}/guide/expense-split-deluxe`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${base}/guide/employee-cost`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
   ];
 
   return [...staticRoutes, ...guideRoutes];

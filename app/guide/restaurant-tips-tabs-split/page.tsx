@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Restaurant Tip & Tab Split—Discounts, Tax & Fair Splits",
@@ -27,27 +28,14 @@ function Breadcrumb() {
 }
 
 export default function TipTabSplitGuide() {
-  // If your route folder is /guide/restaurant-tips-tabs-split this constant can be updated,
-  // but it doesn't affect TypeScript. It’s only for sharing.
   const pageUrl =
     "https://www.fosterwealthventures.com/guide/restaurant-tip-tab-split";
-
-  // Coerce Next’s metadata.title to a plain string for <SocialShare />
   const shareTitle = String(metadata.title ?? "");
 
   const faq = [
-    {
-      q: "Should we tip on tax?",
-      a: "Most groups tip on the discounted, pre-tax subtotal. Tipping on tax is uncommon.",
-    },
-    {
-      q: "What about auto-gratuity or service charge?",
-      a: "If your receipt includes a service charge or auto-gratuity, set tip to 0% in the calculator.",
-    },
-    {
-      q: "Do we split before or after tip?",
-      a: "Split the total after tax and tip so everyone contributes fairly to the final amount.",
-    },
+    { q: "Should we tip on tax?", a: "Most groups tip on the discounted, pre-tax subtotal. Tipping on tax is uncommon." },
+    { q: "What about auto-gratuity or service charge?", a: "If your receipt includes a service charge or auto-gratuity, set tip to 0% in the calculator." },
+    { q: "Do we split before or after tip?", a: "Split the total after tax and tip so everyone contributes fairly to the final amount." },
   ];
 
   const howToSteps = [
@@ -99,55 +87,59 @@ export default function TipTabSplitGuide() {
         icon={<ReceiptText className="text-brand-green" />}
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
 
       <section>
-        <h2>Quick Summary</h2>
+        <h2>What this calculator does</h2>
         <p>
-          <strong>Most fair approach:</strong> apply discounts first, calculate
-          tax on the discounted subtotal, compute tip on the discounted{" "}
-          <em>pre-tax</em> subtotal, then split the final total across people.
+          This calculator helps you take a messy shared bill and turn it into a clear per‑person amount. You enter the
+          bill total, apply any discount, choose how tax is calculated, set a tip, and decide whether that tip is on the
+          discounted subtotal or the original amount. It then shows a clean final total and an even split so nobody is
+          guessing or overpaying.
         </p>
       </section>
 
       <section>
-        <h2>Common pitfalls</h2>
-        <ul>
-          <li>Forgetting to apply the discount before tax.</li>
-          <li>Tipping on the wrong base (tax vs pre-tax subtotal).</li>
-          <li>Not accounting for auto-gratuity already on the receipt.</li>
-        </ul>
+        <h2>How to use it</h2>
         <p>
-          See also:{" "}
-          <Link href="/guide/5-costly-calculator-mistakes">
-            5 Costly Calculator Mistakes
-          </Link>
-          .
+          Start by entering the Bill Amount exactly as shown before tax. Add the Number of People at the table. If you
+          have a coupon or promo code, choose whether it is a percent or fixed amount and enter that in the Discount
+          area. Set how tax should apply—most places tax the discounted subtotal. Then enter your Tip Percentage and
+          choose whether the tip should be based on the discounted subtotal or the original subtotal (many groups still
+          tip on the pre‑discount amount to fairly reflect service).
+        </p>
+        <p>
+          The calculator recomputes live: you will see the discounted subtotal, tax added, tip calculated, and final
+          total. It divides that by the number of people for a fair per‑person contribution. If someone wants to round,
+          you can adjust after agreeing as a group. Try a sample: $80 bill, 10% discount, 8% tax, 18% tip on the
+          pre‑discount subtotal, split four ways—watch how each choice changes the final share.
         </p>
       </section>
 
       <section>
-        <CTAButton href="/?calc=tip-split">
-          👉 Try the Tip &amp; Tab Split Calculator
+        <h2>Pitfalls and tips</h2>
+        <p>
+          The most common mistakes: tipping on the wrong base, applying tax before removing the discount, or adding a tip
+          when auto‑gratuity is already included. If there is a service charge on the receipt, set tip to zero unless the
+          group decides to add more. When in doubt, show the screen so everyone understands the math—it removes pressure
+          and keeps things friendly. Ready to try it? Open the calculator and experiment with your own numbers.
+        </p>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=tip-split" data-testid="try-matching-calc">
+          Open the Tip & Tab Split Calculator
         </CTAButton>
       </section>
 
       <section>
         <h2>Related Guides</h2>
-        <ul>
-          <li>
-            <Link href="/guide/roi-vs-annualized-roi">
-              ROI vs Annualized ROI
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/simple-vs-compound-interest">
-              Simple vs Compound Interest
-            </Link>
-          </li>
-        </ul>
+        <p>
+          Compare growth decisions in{" "}
+          <Link href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</Link>, or understand interest behavior in{" "}
+          <Link href="/guide/simple-vs-compound-interest">Simple vs Compound Interest</Link>. Browse every tool on the{" "}
+          <Link href="/dashboard">calculator dashboard</Link>.
+        </p>
       </section>
 
       <div className="mt-6">
@@ -161,19 +153,49 @@ export default function TipTabSplitGuide() {
         }}
       />
 
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
     </main>
   );
+}
+
+export function NavText({ children }: { children: React.ReactNode }) {
+  return <p className="mb-4 text-sm">{children}</p>;
+}
+
+export function H1({ children }: { children: React.ReactNode }) {
+  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
+}
+
+export function Quote({ children }: { children: React.ReactNode }) {
+  return (
+    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
+      {children}
+    </blockquote>
+  );
+}
+
+export function QuoteRef({ children }: { children: React.ReactNode }) {
+  return <span className="font-semibold">{children}</span>;
+}
+
+export function Section({ children }: { children: React.ReactNode }) {
+  return <section className="mt-8 space-y-8">{children}</section>;
+}
+
+export function H2({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-2xl font-semibold">{children}</h2>;
+}
+
+export function List({ children }: { children: React.ReactNode }) {
+  return <ul className="list-disc pl-6">{children}</ul>;
+}
+
+export function CTAWrap({ children }: { children: React.ReactNode }) {
+  return <div className="mt-6">{children}</div>;
+}
+
+export function HelperText({ children }: { children: React.ReactNode }) {
+  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }

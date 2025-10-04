@@ -80,7 +80,6 @@ function ensureDir(dir: string) {
 }
 
 function log(level: "info" | "warn" | "error", msg: string) {
-  // eslint-disable-next-line no-console
   console[level](`[${level.toUpperCase()}] ${msg}`);
 }
 
@@ -161,7 +160,6 @@ Return only Markdown body content (H1 included).
 
   if (dryRun) {
     log("info", "DRY RUN — not writing file. Preview below:\n");
-    // eslint-disable-next-line no-console
     console.log(final);
     return;
   }
@@ -173,7 +171,6 @@ Return only Markdown body content (H1 included).
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error("\n💥 Unhandled error in generatePost:", (err as any)?.response?.data || err);
   process.exit(1);
 });

@@ -12,7 +12,7 @@ function parsePlan(v?: string | null): Plan | null {
     : null;
 }
 
-function getCookie(name: string): string | null {
+function _getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
   const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
   return m ? decodeURIComponent(m[1]) : null;
@@ -27,16 +27,16 @@ export function usePlan() {
         new URL(window.location.href).searchParams.get("plan"),
       );
       if (urlPlan) {
-        localStorage.setItem("fwv-plan", urlPlan);
-        document.cookie = `fwv_plan=${urlPlan}; path=/; max-age=${60 * 60 * 24 * 365}`;
         setPlan(urlPlan);
         return;
       }
       const lsPlan = parsePlan(localStorage.getItem("fwv-plan"));
-      if (lsPlan) return setPlan(lsPlan);
-      const ckPlan = parsePlan(getCookie("fwv_plan"));
-      if (ckPlan) return setPlan(ckPlan);
-    } catch {}
+      if (lsPlan) {
+        setPlan(lsPlan);
+      }
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
   }, []);
 
   const helpers = useMemo(() => {

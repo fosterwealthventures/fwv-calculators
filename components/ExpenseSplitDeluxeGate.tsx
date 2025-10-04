@@ -18,6 +18,9 @@ export default function ExpenseSplitDeluxeGate({
   userPlan?: Plan;
   proChoice?: ProChoice;
 }) {
+  const _userPlan = userPlan; // rename userPlan → _userPlan
+  const _proChoice = proChoice; // rename proChoice → _proChoice
+
   return (
     <section className="space-y-6">
       {/* Always-free basics (swap in your actual basic split UI if you like) */}

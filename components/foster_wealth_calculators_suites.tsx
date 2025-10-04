@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -1148,4 +1147,4 @@ export default function FosterWealthCalculators({
     </div>
   );
 }
-/* eslint-enable react/no-unescaped-entities */
+

@@ -1,62 +1,72 @@
-// app/guide/expense-split-deluxe/page.tsx
 import Link from "next/link";
+import { OpenCalculatorButton, RelatedSection, RelatedLink } from "@/components/GuideLinks";
+import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/components/GuideTypography";
+import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
   title: "Expense Split Deluxe — Guide | Foster Wealth Ventures",
   description:
-    "Split life’s shared costs fairly—roommates, couples, co-parents, and trips—with custom categories and downloadable reports.",
+    "Split shared bills fairly using percentages, weights, and custom rules.",
 };
 
 export default function ExpenseSplitDeluxeGuide() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
-      <nav className="mb-4 text-sm">
+    <main>
+      <NavText>
         <Link href="/guide" className="underline hover:no-underline">
           ← Back to Guides
         </Link>
-      </nav>
+      </NavText>
 
-      <h1 className="heading-hero">Expense Split Deluxe — Guide</h1>
+      <H1>Expense Split Deluxe — Guide</H1>
 
-      <p className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-        <span className="font-semibold">2 Corinthians 9:7 —</span> “Each of you
-        should give what you have decided in your heart to give, not reluctantly
-        or under compulsion, for God loves a cheerful giver.”
-      </p>
+      <Quote variant="paid">
+        "Each of you should give what you have decided in your heart to give…" <span className="font-semibold">2 Corinthians 9:7</span>
+      </Quote>
 
-      <section className="mt-6 space-y-4">
-        <p>
-          Share costs with clarity and kindness. Expense Split Deluxe handles
-          roommates, couples, co-parents, and group travel with flexible splits
-          (equal, by income %, custom weights), itemized categories, notes, and
-          a downloadable report for records.
-        </p>
-        <ul className="list-inside list-disc space-y-2">
-          <li>Add unlimited expenses and custom categories</li>
-          <li>Split by percentage, shares, or exact amounts</li>
-          <li>Travel mode for trips; child-related categories optional</li>
-          <li>Export a clean PDF/CSV summary for transparency</li>
-        </ul>
-      </section>
+      <Section>
+        <div>
+          <H2>What it does</H2>
+          <p>
+            Splits expenses among people by fixed shares, weights (e.g., usage),
+            or percentages; supports exclusions and caps.
+          </p>
+        </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          href="/pricing"
-          className="rounded-xl bg-brand-green px-4 py-2 font-semibold text-white hover:opacity-90"
-        >
-          Unlock with Pro ($29.99/mo)
-        </Link>
-        <Link
-          href="/calculators/expense-split-deluxe"
-          className="rounded-xl border border-brand-green px-4 py-2 font-semibold text-brand-green hover:bg-brand-green/5"
-        >
-          Open Calculator
-        </Link>
-      </div>
+        <div>
+          <H2>How to use it</H2>
+          <ul className="list-disc pl-6">
+            <li>Add participants and optional weights or % shares.</li>
+            <li>Enter each bill and choose split method.</li>
+            <li>Review per-person totals and adjustments.</li>
+          </ul>
+        </div>
 
-      <footer className="mt-8 text-xs text-gray-500">
-        Powered by <span className="font-semibold">Foster Wealth Ventures</span>
-      </footer>
+        <div>
+          <H2>Tips</H2>
+          <p>
+            Use weights for usage-based fairness (e.g., room size or miles
+            driven). Export/print the breakdown for records.
+          </p>
+        </div>
+      </Section>
+
+      <CTAWrap>
+        <OpenCalculatorButton
+          slug="expense-split-deluxe"
+          tier={(CALC_TIERS as any)["expense_split"]}
+          className="mt-2"
+        />
+        <HelperText>
+          Pro/Premium may be required depending on your pro-choice gate.
+        </HelperText>
+      </CTAWrap>
+
+      <RelatedSection title="Related Guides">
+        <RelatedLink href="/guide/employee-cost">Employee Cost</RelatedLink>
+        <RelatedLink href="/guide/break-even">Break-Even</RelatedLink>
+        <RelatedLink href="/guide/savings-growth">Savings Growth</RelatedLink>
+      </RelatedSection>
     </main>
   );
 }

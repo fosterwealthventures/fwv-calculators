@@ -103,15 +103,29 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
   );
 }
 
-/* ---------- Default export so both import styles work ---------- */
-const GuideParts = {
-  Section,
-  H2,
-  P,
-  UL,
-  LI,
-  GuideHero,
-  CTAButton,
-  SocialShare,
+/* ---------- Calculator Button ---------- */
+
+type OpenCalcBtnProps = {
+  slug: string;                 // calculator key, e.g., "savings"
+  className?: string;
+  _tier?: unknown;              // keep for compatibility with existing calls
+  children?: React.ReactNode;   // custom label (optional)
 };
-export default GuideParts;
+
+export function OpenCalculatorButton({
+  slug,
+  className = "",
+  _tier, // intentionally unused, but retained for backwards compatibility
+  children,
+}: OpenCalcBtnProps) {
+    const base = process.env.NEXT_PUBLIC_CALC_BASE ?? "/";
+  
+    return (
+      <Link
+        href={`${base}${slug}`}
+        className={`inline-flex items-center rounded-xl px-4 py-2 font-semibold transition hover:opacity-90 bg-brand-gold text-brand-green ${className}`}
+      >
+        {children ?? "Open Calculator"}
+      </Link>
+    );
+  }

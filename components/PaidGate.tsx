@@ -27,7 +27,9 @@ function getPlanClient(): Plan {
       : null;
     if (cookiePlan && ["free", "plus", "pro", "premium"].includes(cookiePlan))
       return cookiePlan;
-  } catch {}
+  } catch {
+    // no-op (intentionally ignoring errors in upgrade flow)
+  }
   return "free";
 }
 

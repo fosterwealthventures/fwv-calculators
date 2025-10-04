@@ -8,7 +8,7 @@ type PlanKey = "free" | "plus" | "pro" | "premium";
 
 const MONTHLY = {
   free: 0,
-  plus: 4.99,
+  plus: 6.99,
   pro: 29.99,
   premium: 59.99,
 } as const;
@@ -46,7 +46,9 @@ export default function PriceClient() {
       localStorage.setItem("fwv.planId", plan);
       localStorage.setItem("fwv-plan", plan);
       document.cookie = `fwv_plan=${plan}; path=/; max-age=31536000; samesite=lax`;
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
     const next = `${redirectTo}${redirectTo.includes("?") ? "&" : "?"}plan=${plan}`;
     router.replace(next);
   };
