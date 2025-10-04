@@ -8,18 +8,17 @@ export const metadata = {
 };
 
 type Post = { slug: string; title: string; date?: string; excerpt?: string };
-export const revalidate = 3600; // optional incremental rebuild
+export const revalidate = 3600;
 
 export default function BlogIndex() {
-  const posts = getAllPosts() as Post[];
+  const posts = (getAllPosts?.() ?? []) as Post[];
 
   return (
     <main className="mx-auto max-w-7xl px-6 md:px-10 py-10">
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Blog</h1>
-
       {!posts.length ? (
         <p className="mt-6 text-sm text-neutral-600">
-          No posts yet. Add <code>.md</code> or <code>.mdx</code> files under <code>content/blog</code>.
+          No posts yet. Add <code>.md</code>/<code>.mdx</code> files to <code>content/blog</code>.
         </p>
       ) : (
         <ul className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
