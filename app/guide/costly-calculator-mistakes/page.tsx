@@ -1,240 +1,180 @@
+// app/guide/costly-calculator-mistakes/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
+
 import GuideNav from "@/components/GuideNav";
-import React from "react";
+import { SocialShare, OpenCalculatorButton } from "@/components/GuideParts";
+import {
+  NavText,
+  H1,
+  Section,
+  H2,
+  List,
+  CTAWrap,
+  HelperText,
+} from "@/components/GuideTypography";
+import { RelatedSection, RelatedLink } from "@/components/GuideLinks";
 
 export const metadata: Metadata = {
-  title:
-    "5 Costly Calculator Mistakes That Kill Your Accuracy—Avoid Them with Our Tools",
+  title: "5 Costly Calculator Mistakes (and How to Avoid Them)",
   description:
-    "Discover the most common mistakes people make with business calculators and how to prevent them.",
+    "The five input traps that quietly ruin results—and the quick fixes. Standardize time bases, use the right units, include all costs, stress-test assumptions, and annualize for fair comparisons.",
 };
 
 function Breadcrumb() {
   return (
-    <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">
-        Home
-      </Link>{" "}
-      &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">
-        Guides
-      </Link>{" "}
-      &rsaquo; <span>5 Costly Calculator Mistakes</span>
-    </nav>
+    <NavText>
+      <Link href="/" className="text-brand-green hover:underline">Home</Link> &rsaquo;{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> &rsaquo;{" "}
+      <span>5 Costly Calculator Mistakes</span>
+    </NavText>
   );
 }
 
-export default function GuidePage() {
+export default function CostlyCalculatorMistakesGuide() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/5-costly-calculator-mistakes";
-
-  const faq = [
-    {
-      q: "What’s the main takeaway from 5 Costly Calculator Mistakes?",
-      a: "Use the paired calculator to quickly apply the concepts, and watch for the pitfalls we list in this guide.",
-    },
-    {
-      q: "How do I apply this in real life?",
-      a: "Follow the step-by-step walkthrough below and then try the CTA calculator to see results with your own numbers.",
-    },
-  ];
-  const howToSteps = [
-    "Skim the Quick Summary to orient yourself.",
-    "Review the core concepts and formulas.",
-    "Follow the walkthrough steps in order.",
-    "Click the CTA button to open the matching calculator.",
-  ];
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline:
-      "5 Costly Calculator Mistakes That Kill Your Accuracy—Avoid Them with Our Tools",
-    description:
-      "Discover the most common mistakes people make with business calculators and how to prevent them.",
-    mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:27:38Z",
-    publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
-  };
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to apply 5 Costly Calculator Mistakes",
-    step: howToSteps.map((name, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name: name,
-    })),
-  };
+    "https://fosterwealthventures.com/guide/costly-calculator-mistakes";
+  const shareTitle = String(metadata.title ?? "");
 
   return (
-    <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
+    <main>
+      {/* Navigation */}
       <Breadcrumb />
 
-      <GuideHero
-        title="5 Costly Calculator Mistakes"
-        subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
-        icon={null}
-      />
+      {/* Page Title */}
+      <H1>5 Costly Calculator Mistakes (and How to Avoid Them)</H1>
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      {/* Read time */}
+      <p className="mt-2 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
 
-      <section>
-        <h2>Quick Summary</h2>
-        <p>
-          Discover the most common mistakes people make with business
-          calculators and how to prevent them.
-        </p>
-      </section>
-
-      <section>
-        <CTAButton href="/?calc=roi">👉 Try the matching calculator</CTAButton>
-      </section>
-
-      <section>
-        <h2>Core Concepts</h2>
-        <ul>
-          <li>Key idea #1 relevant to 5 Costly Calculator Mistakes.</li>
-          <li>Key idea #2 with a short explanation.</li>
-          <li>Key idea #3 with a tip or caution.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Walkthrough</h2>
-        <ol>
-          <li>Enter your inputs into the calculator.</li>
-          <li>Adjust settings to match your scenario.</li>
-          <li>Review outputs and compare alternatives.</li>
-        </ol>
-      </section>
-
-      <section>
-        <h2>Common Pitfalls</h2>
-        <ul>
-          <li>Avoid misinterpreting the base numbers or time horizon.</li>
-          <li>Make sure rates/percentages are entered correctly.</li>
-          <li>Remember taxes/fees or edge-case assumptions if applicable.</li>
-        </ul>
-      </section>
-
-      <section>
-        <CTAButton href="/?calc=roi">👉 Open the calculator again</CTAButton>
-      </section>
-
-      <section>
-        <h2>FAQs</h2>
-        <div className="not-prose divide-y divide-gray-200 rounded-xl border">
-          {faq.map((item, i) => (
-            <details key={i} className="p-4">
-              <summary className="cursor-pointer font-semibold text-brand-green">
-                {item.q}
-              </summary>
-              <p className="mt-2 text-gray-700">{item.a}</p>
-            </details>
-          ))}
+      {/* Content */}
+      <Section>
+        <div>
+          <H2>Mistake #1 — Mixing time bases (monthly vs yearly)</H2>
+          <p>
+            The most common error is entering revenue per year while expenses are
+            per month (or vice-versa). The totals look “about right,” but the math
+            is off by 12×. Mortgage, break-even, ROI, and employee cost
+            calculations all suffer from this.
+          </p>
+          <p>
+            <strong>Fix:</strong> Pick a single period for <em>all</em> inputs—either
+            monthly or yearly—and convert everything to that base before running the
+            numbers. Many fields list the expected period; when in doubt, convert
+            explicitly.
+          </p>
+          <List>
+            <li>Monthly ↔ Yearly: multiply or divide by 12.</li>
+            <li>Weekly ↔ Monthly: multiply or divide by ~4.33.</li>
+            <li>Daily ↔ Monthly: multiply or divide by 30 (or workdays used).</li>
+          </List>
         </div>
-      </section>
 
-      <section>
-        <h2>Related Guides</h2>
-        <ul>
-          <li>
-            <Link href="/guide/roi-vs-annualized-roi">
-              ROI vs Annualized ROI
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/break-even-made-simple">
-              Break-Even Made Simple
-            </Link>
-          </li>
-        </ul>
-      </section>
+        <div>
+          <H2>Mistake #2 — Percent vs decimal (and per-period rates)</H2>
+          <p>
+            Entering <code>7</code> when a field expects <code>0.07</code>, or using an
+            annual rate in a monthly column, skews interest, ROI, and discounting.
+            Labels like APR/APY and “per period” are easy to skip when moving fast.
+          </p>
+          <p>
+            <strong>Fix:</strong> Confirm whether a field expects a percentage or a
+            decimal and the <em>rate period</em>. If a model is monthly, use the
+            monthly rate (APR ÷ 12) unless it explicitly compounds differently.
+          </p>
+          <List>
+            <li>Percent → decimal: divide by 100 (7% → 0.07).</li>
+            <li>Annual → monthly rate: APR ÷ 12 (simple assumption).</li>
+            <li>Check compounding notes if precision matters.</li>
+          </List>
+        </div>
 
-      <div className="mt-6 not-prose">
-        <SocialShare url={pageUrl} title={String(metadata.title ?? "")} />
-        <title>
-          5 Costly Calculator Mistakes That Kill Your Accuracy—Avoid Them with
-          Our Tools
-        </title>
+        <div>
+          <H2>Mistake #3 — Ignoring “small” costs and fees</H2>
+          <p>
+            Payment processor fees, employer taxes/benefits, sales tax, shipping,
+            maintenance, and one-time setup costs look tiny alone but compound into
+            real money. Leaving them out inflates margins and ROI.
+          </p>
+          <p>
+            <strong>Fix:</strong> List every recurring and one-time cost, then add them
+            to your model. For employee cost, include payroll taxes, benefits, and
+            tools. For products, include freight, packaging, and returns. For SaaS,
+            include tiers after growth.
+          </p>
+          <List>
+            <li>Processors: % + fixed fee per transaction.</li>
+            <li>Employer burden: taxes, healthcare, PTO.</li>
+            <li>“Hidden” ops: shipping, chargebacks, refunds, support.</li>
+          </List>
+        </div>
+
+        <div>
+          <H2>Mistake #4 — No sensitivity or scenario testing</H2>
+          <p>
+            Using best-case inputs (perfect conversion, zero churn, stable prices)
+            makes any plan look great. Real life wanders. If one assumption moves,
+            your result might flip from profit to loss.
+          </p>
+          <p>
+            <strong>Fix:</strong> Stress-test the top drivers. Re-run the model at
+            −10% and +10–20% for the few inputs that move the outcome most (price,
+            conversion, utilization, rate). Save scenarios—Best / Base / Worst—and
+            decide with the full picture.
+          </p>
+        </div>
+
+        <div>
+          <H2>Mistake #5 — Comparing apples to oranges (no annualization)</H2>
+          <p>
+            A 6-month project with 8% total return can beat a 2-year project with
+            12% total return once you account for time. Comparing <em>totals</em> only
+            is misleading.
+          </p>
+          <p>
+            <strong>Fix:</strong> Use <em>annualized ROI</em> (or NPV/IRR when relevant)
+            to make durations comparable. When you must keep it simple, at least
+            note the time horizon next to the result.
+          </p>
+        </div>
+
+        <div>
+          <H2>Quick walkthrough (5 steps)</H2>
+          <List>
+            <li>Pick a single time base (monthly or yearly) and convert all inputs.</li>
+            <li>Confirm units (percent vs decimal) and rate period per field.</li>
+            <li>Add every relevant cost: fees, taxes, shipping, benefits, one-time.</li>
+            <li>Run Best / Base / Worst with ±10–20% on key drivers.</li>
+            <li>Compare options using annualized ROI (or NPV/IRR) when durations differ.</li>
+          </List>
+        </div>
+      </Section>
+
+      {/* CTA */}
+      <CTAWrap>
+        <OpenCalculatorButton slug="roi" className="mt-2" />
+        <HelperText>Free to use — open the ROI calculator and test your scenario.</HelperText>
+      </CTAWrap>
+
+      {/* Related */}
+      <RelatedSection title="Related">
+        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</RelatedLink>
+        <RelatedLink href="/guide/simple-vs-compound-interest" tag="Guide">
+          Simple vs. Compound Interest
+        </RelatedLink>
+        <RelatedLink href="/guide/break-even-calculator">Break-Even Made Simple</RelatedLink>
+      </RelatedSection>
+
+      {/* Share */}
+      <div className="mt-6">
+        <SocialShare url={pageUrl} title={shareTitle} />
       </div>
 
+      {/* Bottom nav */}
       <GuideNav
-        prev={{
-          href: "/guide/set-your-freelancer-rate-right",
-          title: "Set Your Freelancer Rate Right",
-        }}
-        next={{
-          href: "/guide/restaurant-tip-tab-split",
-          title: "Restaurant Tip & Tab Split",
-        }}
-      />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        prev={{ href: "/guide/restaurant-tips-tabs-split", title: "Restaurant Tips & Tabs Split" }}
+        next={{ href: "/guide/mortgage", title: "Mortgage Calculator Guide" }}
       />
     </main>
   );
-}
-
-export function NavText({ children }: { children: React.ReactNode }) {
-  return <p className="mb-4 text-sm">{children}</p>;
-}
-
-export function H1({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
-}
-
-export function Quote({ children }: { children: React.ReactNode }) {
-  return (
-    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-      {children}
-    </blockquote>
-  );
-}
-
-export function QuoteRef({ children }: { children: React.ReactNode }) {
-  return <span className="font-semibold">{children}</span>;
-}
-
-export function Section({ children }: { children: React.ReactNode }) {
-  return <section className="mt-8 space-y-8">{children}</section>;
-}
-
-export function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-2xl font-semibold">{children}</h2>;
-}
-
-export function List({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-6">{children}</ul>;
-}
-
-export function CTAWrap({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6">{children}</div>;
-}
-
-export function HelperText({ children }: { children: React.ReactNode }) {
-  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }
