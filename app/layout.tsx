@@ -45,33 +45,15 @@ function Header() {
           </span>
         </a>
         <nav className="hidden md:flex items-center gap-5 text-sm text-gray-700">
-          <a href="/" className="hover:text-emerald-800">
-            Home
-          </a>
-          <a href="/dashboard" className="hover:text-emerald-800">
-            Calculators
-          </a>
-          <a href="/pricing" className="hover:text-emerald-800">
-            Pricing
-          </a>
-          <a href="/guide" className="hover:text-emerald-800">
-            Guides
-          </a>
-          <a href="/blog" className="hover:text-emerald-800">
-            Blog
-          </a>
-          <a href="/about" className="hover:text-emerald-800">
-            About
-          </a>
-          <a href="/contact" className="hover:text-emerald-800">
-            Contact
-          </a>
-          <a href="/privacy" className="hover:text-emerald-800">
-            Privacy
-          </a>
-          <a href="/terms" className="hover:text-emerald-800">
-            Terms
-          </a>
+          <a href="/" className="hover:text-emerald-800">Home</a>
+          <a href="/dashboard" className="hover:text-emerald-800">Calculators</a>
+          <a href="/pricing" className="hover:text-emerald-800">Pricing</a>
+          <a href="/guide" className="hover:text-emerald-800">Guides</a>
+          <a href="/blog" className="hover:text-emerald-800">Blog</a>
+          <a href="/about" className="hover:text-emerald-800">About</a>
+          <a href="/contact" className="hover:text-emerald-800">Contact</a>
+          <a href="/privacy" className="hover:text-emerald-800">Privacy</a>
+          <a href="/terms" className="hover:text-emerald-800">Terms</a>
         </nav>
       </div>
     </header>
@@ -84,18 +66,10 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600 flex flex-wrap gap-4 items-center justify-between">
         <div>© {new Date().getFullYear()} Foster Wealth Ventures</div>
         <div className="flex flex-wrap gap-4">
-          <a className="hover:text-emerald-800" href="/about">
-            About
-          </a>
-          <a className="hover:text-emerald-800" href="/blog">
-            Blog
-          </a>
-          <a className="hover:text-emerald-800" href="/privacy">
-            Privacy
-          </a>
-          <a className="hover:text-emerald-800" href="/terms">
-            Terms
-          </a>
+          <a className="hover:text-emerald-800" href="/about">About</a>
+          <a className="hover:text-emerald-800" href="/blog">Blog</a>
+          <a className="hover:text-emerald-800" href="/privacy">Privacy</a>
+          <a className="hover:text-emerald-800" href="/terms">Terms</a>
         </div>
       </div>
     </footer>
@@ -140,14 +114,10 @@ function SidebarAds() {
 function AdFreeMessage({ plan: _plan }: { plan: Plan }) {
   return (
     <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
-      <div className="text-sm font-medium text-green-800">
-        🎉 Ad-Free Experience
-      </div>
+      <div className="text-sm font-medium text-green-800">🎉 Ad-Free Experience</div>
       <div className="text-xs text-green-600 mt-1">
-        <span>{"You're enjoying our pro plan."}</span>
-        <a href="/pricing" className="underline hover:text-green-800">
-          Manage plan
-        </a>
+        <span>{"You're enjoying our pro plan."}</span>{" "}
+        <a href="/pricing" className="underline hover:text-green-800">Manage plan</a>
       </div>
     </div>
   );
@@ -155,17 +125,22 @@ function AdFreeMessage({ plan: _plan }: { plan: Plan }) {
 
 function RootLayoutInner({ children, _plan }: { children: React.ReactNode; _plan: any }) {
   const plan = _plan;
-const showAds = plan === "free";
-const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-7798339637698835";
-const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
-const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT && showAds;
+  const showAds = plan === "free";
+
+  // --- AdSense env + client gates (script can load globally; units still free-only) ---
+  const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-7798339637698835";
+  const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+  const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT; // <- script loads everywhere for verification
+  // ------------------------------------------------------------------------------------
 
   return (
     <html lang="en" data-plan={plan}>
       <head>
         {/* Helpful for Google */}
-        <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
-        
+        {ADSENSE_CLIENT && (
+          <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
+        )}
+
         {/* Remove extension noise before hydration */}
         <script
           dangerouslySetInnerHTML={{
@@ -180,12 +155,12 @@ const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT && showAds;
             `,
           }}
         />
-        
-        {/* Google AdSense Script (env + plan gated) */}
+
+        {/* Google AdSense Script (env + client gated; loads early so crawler sees it) */}
         {canLoadAds && (
           <Script
             id="adsbygoogle-init"
-            strategy="afterInteractive"
+            strategy="beforeInteractive"
             async
             crossOrigin="anonymous"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
@@ -193,7 +168,6 @@ const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT && showAds;
             )}`}
           />
         )}
-
       </head>
 
       <body
@@ -202,9 +176,8 @@ const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT && showAds;
       >
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
-            {/* Client-side guarantee that the script exists */}
+            {/* Client-side helper to (re)mount units only when allowed */}
             <ClientAdsLoader enabled={canLoadAds} />
-
 
             <Header />
 
