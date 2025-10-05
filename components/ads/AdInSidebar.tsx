@@ -30,7 +30,7 @@ export default function AdInSidebar({
     if (!el) return;
 
     try {
-      const status = el.getAttribute("data-ad-status");
+      const status = el.getAttribute("data-adsbygoogle-status");
       if (!status) {
         window.adsbygoogle = window.adsbygoogle || [];
         window.adsbygoogle.push({});

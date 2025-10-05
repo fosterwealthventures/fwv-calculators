@@ -29,19 +29,23 @@ type Props = { slot?: string; className?: string };
 
 export default function AdFooter({ slot, className = "" }: Props) {
   const pushedRef = useRef(false);
+  const ref = useRef<HTMLDivElement | null>(null);
   const client = getAdsClient();
   const adSlot = slot ?? getFooterSlot();
   const isPaid = useIsPaidContext();
 
   useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') return;
     if (!client || !adSlot) return;
     if (pushedRef.current) return;
+    const el = ref.current?.querySelector('ins.adsbygoogle') as HTMLElement | null;
+    if (!el) return;
+    const status = el.getAttribute('data-adsbygoogle-status');
+    if (status && status === 'done') { pushedRef.current = true; return; }
     pushedRef.current = true;
     try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {
-      /* ignore */
-    }
+      (window.adsbygoogle = (window as any).adsbygoogle || []).push({});
+    } catch {/* ignore */}
   }, [client, adSlot]);
 
   const wrapper = `mt-8 flex justify-center ${className}`;
@@ -49,7 +53,7 @@ export default function AdFooter({ slot, className = "" }: Props) {
   return (
     <AdGateFreeOnly>
       {!client || !adSlot || isPaid ? (
-        <div className={wrapper} aria-label="Ad placeholder">
+        <div ref={ref} className={wrapper} aria-label="Ad placeholder">
           <div
             className="w-full max-w-6xl rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-4 text-center shadow-sm"
             style={{ minHeight: 120 }}
@@ -60,7 +64,7 @@ export default function AdFooter({ slot, className = "" }: Props) {
           </div>
         </div>
       ) : (
-        <div className={wrapper}>
+        <div ref={ref} className={wrapper}>
           <ins
             className="adsbygoogle"
             style={{ display: "block", textAlign: "center", minHeight: 120 }}

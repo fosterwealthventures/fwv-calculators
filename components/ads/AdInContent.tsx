@@ -44,7 +44,7 @@ export default function AdInContent({ slot, className = "" }: Props) {
 
     // Only push once per mount if not already initialized
     try {
-      const status = el.getAttribute("data-ad-status");
+      const status = el.getAttribute("data-adsbygoogle-status");
       if (!status) {
         window.adsbygoogle = window.adsbygoogle || [];
         window.adsbygoogle.push({});

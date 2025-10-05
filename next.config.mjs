@@ -46,6 +46,8 @@ const nextConfig = {
       // Scripts: AdSense, DoubleClick, GTM, GA, gstatic
       "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net",
 
+      "script-src-elem 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net",
+
       // XHR/fetch/WebSocket endpoints used by Ads/Analytics (incl. adtrafficquality)
       "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.adservice.google.com https://*.adtrafficquality.google",
 
