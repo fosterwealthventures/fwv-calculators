@@ -3,11 +3,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import React from "react";
-import Script from "next/script";
 import { cookies } from "next/headers";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import { PlanProvider } from "@/providers/PlanProvider";
 import AdSlot from "@/components/ads/AdSlot"; // ← safe slot
+import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
 
 export const dynamic = "force-dynamic";
 
@@ -90,8 +90,22 @@ function Sidebar({ showAds }: { showAds: boolean }) {
 
   return (
     <div className="space-y-4">
-      {SLOT1 && <AdSlot slot={SLOT1} />}
-      {SLOT2 && <AdSlot slot={SLOT2} />}
+      {SLOT1 && (
+        <div className="flex justify-center">
+          <AdSlot 
+            slot={SLOT1} 
+            style={{ width: 300, height: 250 }}
+          />
+        </div>
+      )}
+      {SLOT2 && (
+        <div className="flex justify-center">
+          <AdSlot 
+            slot={SLOT2} 
+            style={{ width: 300, height: 600 }}
+          />
+        </div>
+      )}
       {!SLOT1 && !SLOT2 && !isProd && (
         <div className="rounded-xl border border-dashed p-3 text-center text-xs text-gray-500">
           (dev) Set NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 / SLOT2
@@ -119,24 +133,14 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
             `,
           }}
         />
-
-        {/* Load AdSense after hydration so <ins> exists first */}
-        {showAds && (
-          <Script
-            id="adsbygoogle-init"
-            strategy="afterInteractive"
-            async
-            crossOrigin="anonymous"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
-              ADS_CLIENT
-            )}`}
-          />
-        )}
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
+            {/* Load AdSense script client-side */}
+            <ClientAdsLoader enabled={showAds} />
+            
             <Header />
             <div className="mx-auto max-w-6xl px-4 py-6 grid gap-6 lg:grid-cols-[1fr_300px]">
               <main>{children}</main>
