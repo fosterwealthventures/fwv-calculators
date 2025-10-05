@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-
 "use client";
 
 import React, { useState, useMemo, useCallback } from "react";
@@ -217,7 +215,7 @@ export default function ExpenseSplitDeluxeSuites() {
       if (ids.length === 0) continue;
 
       const base = toBase(e.amount, e.currency);
-      let shares: Record<string, number> = {};
+      const shares: Record<string, number> = {};
 
       if (e.method === "even") {
         const share = base / ids.length;
@@ -372,7 +370,7 @@ export default function ExpenseSplitDeluxeSuites() {
   };
 
   // Download report function
-  const downloadReport = () => {
+  const _downloadReport = () => {
     const rows: string[][] = [];
     const today = new Date().toLocaleDateString();
 
@@ -507,6 +505,9 @@ export default function ExpenseSplitDeluxeSuites() {
 
     downloadCSV(filename, rows);
   };
+
+  const _setRoundTo = setRoundTo; // rename setRoundTo → _setRoundTo
+  const _setFxRates = setFxRates; // rename setFxRates → _setFxRates
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-5">
@@ -962,4 +963,3 @@ export default function ExpenseSplitDeluxeSuites() {
     </div>
   );
 }
-/* eslint-enable react/no-unescaped-entities */

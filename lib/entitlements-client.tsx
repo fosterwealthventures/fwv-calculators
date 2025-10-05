@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 "use client";
 
 import React, {
@@ -54,7 +52,9 @@ function usePersistentState<T>(key: string, initial: T) {
       const raw =
         typeof window !== "undefined" ? window.localStorage.getItem(key) : null;
       if (raw != null) setValue(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
     setHydrated(true);
   }, [key]);
 
@@ -62,7 +62,9 @@ function usePersistentState<T>(key: string, initial: T) {
     if (!hydrated) return;
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
   }, [key, value, hydrated]);
 
   return [value, setValue, hydrated] as const;
@@ -163,7 +165,7 @@ export function Gate({
     canAccessCalculator,
   } = useEntitlements();
   const router = useRouter();
-  const pathname = usePathname();
+  const _pathname = usePathname();
 
   if (!hydrated) return <div className="p-4 text-center">Loading...</div>;
 
@@ -239,7 +241,7 @@ export function Gate({
    Hook for download capability
 ------------------------------------------------------------------------------------------------ */
 export function useDownloadPermission(calculatorKey?: CalcId) {
-  const { canDownloadReport, planId, proChoice } = useEntitlements();
+  const { canDownloadReport, planId } = useEntitlements();
 
   const canDownload = calculatorKey
     ? canDownloadReport(calculatorKey)
@@ -247,4 +249,4 @@ export function useDownloadPermission(calculatorKey?: CalcId) {
 
   return { canDownload };
 }
-/* eslint-enable react-hooks/exhaustive-deps */
+

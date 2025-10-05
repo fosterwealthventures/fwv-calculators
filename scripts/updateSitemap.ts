@@ -181,14 +181,10 @@ function buildXml(urls: UrlItem[]) {
   const xml = buildXml(unique);
   await fsp.writeFile(OUT_PATH, xml, "utf8");
 
-  // eslint-disable-next-line no-console
   console.log(`✅ sitemap.xml updated: ${OUT_PATH}`);
-  // eslint-disable-next-line no-console
   console.log(`   Base URL: ${SITE_URL}`);
-  // eslint-disable-next-line no-console
   console.log(`   URLs: ${unique.length}`);
 })().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error("💥 updateSitemap failed:", err);
   process.exit(1);
 });

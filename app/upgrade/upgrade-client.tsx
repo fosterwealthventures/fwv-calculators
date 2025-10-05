@@ -14,7 +14,9 @@ function setPlan(plan: "free" | "plus" | "pro" | "premium") {
     localStorage.setItem("fwv.planId", plan);
     localStorage.setItem("fwv-plan", plan);
     document.cookie = `fwv_plan=${plan}; path=/; max-age=31536000; samesite=lax`;
-  } catch {}
+  } catch {
+    // no-op (intentionally ignoring errors in upgrade flow)
+  }
 }
 
 function lockProChoiceIfProvided(calc: string | null) {
@@ -27,7 +29,9 @@ function lockProChoiceIfProvided(calc: string | null) {
   if (choice) {
     try {
       localStorage.setItem("fwv.selectChoice", JSON.stringify(choice));
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
   }
 }
 
@@ -83,7 +87,7 @@ export default function UpgradeClient({ calc, redirect }: Props) {
         >
           <h3 className="text-lg font-semibold">Pro</h3>
           <p className="mt-1 text-sm text-gray-600">
-            Choose 1 advanced calculator ({calc ?? "you’ll pick on first open"}
+            Choose 1 advanced calculator ({calc ?? "you'll pick on first open"}
             ).
           </p>
         </button>

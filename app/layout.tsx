@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
@@ -136,14 +137,14 @@ function SidebarAds() {
 }
 
 // Client component wrapper for the ad-free message
-function AdFreeMessage({ plan }: { plan: Plan }) {
+function AdFreeMessage({ plan: _plan }: { plan: Plan }) {
   return (
     <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
       <div className="text-sm font-medium text-green-800">
         🎉 Ad-Free Experience
       </div>
       <div className="text-xs text-green-600 mt-1">
-        <span>{"You’re enjoying our pro plan."}</span>
+        <span>{"You're enjoying our pro plan."}</span>
         <a href="/pricing" className="underline hover:text-green-800">
           Manage plan
         </a>
@@ -152,23 +153,19 @@ function AdFreeMessage({ plan }: { plan: Plan }) {
   );
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const plan = parsePlan(cookieStore.get("fwv_plan")?.value);
-  const showAds = plan === "free";
-  const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+function RootLayoutInner({ children, _plan }: { children: React.ReactNode; _plan: any }) {
+  const plan = _plan;
+const showAds = plan === "free";
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-7798339637698835";
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT && showAds;
 
   return (
     <html lang="en" data-plan={plan}>
       <head>
         {/* Helpful for Google */}
-        {ADSENSE_CLIENT ? (
-          <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
-        ) : null}
+        <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
+        
         {/* Remove extension noise before hydration */}
         <script
           dangerouslySetInnerHTML={{
@@ -183,8 +180,9 @@ export default async function RootLayout({
             `,
           }}
         />
-        {/* Server-side loader (still keep client fallback below) */}
-        {showAds && ADSENSE_CLIENT ? (
+        
+        {/* Google AdSense Script (env + plan gated) */}
+        {canLoadAds && (
           <Script
             id="adsbygoogle-init"
             strategy="afterInteractive"
@@ -194,7 +192,8 @@ export default async function RootLayout({
               ADSENSE_CLIENT,
             )}`}
           />
-        ) : null}
+        )}
+
       </head>
 
       <body
@@ -204,7 +203,8 @@ export default async function RootLayout({
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
             {/* Client-side guarantee that the script exists */}
-            <ClientAdsLoader enabled={showAds} />
+            <ClientAdsLoader enabled={canLoadAds} />
+
 
             <Header />
 
@@ -223,4 +223,15 @@ export default async function RootLayout({
       </body>
     </html>
   );
+}
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const plan = parsePlan(cookieStore.get("fwv_plan")?.value);
+
+  return <RootLayoutInner _plan={plan}>{children}</RootLayoutInner>;
 }

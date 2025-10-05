@@ -1,61 +1,75 @@
 // app/guide/savings-growth/page.tsx
 import Link from "next/link";
+import { OpenCalculatorButton, RelatedSection, RelatedLink } from "@/components/GuideLinks";
+import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/components/GuideTypography";
+import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
-  title: "Savings Growth Calculator Guide | Foster Wealth Ventures",
+  title: "Savings Growth Calculator — Guide | Foster Wealth Ventures",
   description:
-    "Learn how the Savings Growth Calculator turns diligent planning into real abundance with compounding over time.",
+    "How compounding grows your money and how to use the Savings Growth calculator the smart way.",
 };
 
 export default function SavingsGrowthGuide() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
-      <nav className="mb-4 text-sm">
+    <main>
+      <NavText>
         <Link href="/guide" className="underline hover:no-underline">
           ← Back to Guides
         </Link>
-      </nav>
+      </NavText>
 
-      <h1 className="heading-hero">Savings Growth Calculator — Guide</h1>
+      <H1>Savings Growth — Guide</H1>
 
-      <p className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-        <span className="font-semibold">Proverbs 21:5 —</span> “The plans of the
-        diligent lead surely to abundance, but everyone who is hasty comes only
-        to poverty.”
-      </p>
+      <Quote variant="paid">
+        "The plans of the diligent lead surely to abundance…" <span className="font-semibold">Proverbs 21:5</span>
+      </Quote>
 
-      <section className="mt-6 space-y-4">
-        <p>
-          The Savings Growth Calculator helps you see how consistent, diligent
-          contributions lead to long-term abundance. Enter your deposit amount,
-          frequency, interest rate, and time horizon to visualize how compound
-          growth works in your favor.
-        </p>
-        <p>
-          Use this guide to test scenarios: “What happens if I add $50/month?”
-          “How much faster if I raise the rate by 1%?” Build a plan you can
-          stick to and let time do the heavy lifting.
-        </p>
-      </section>
+      <Section>
+        <div>
+          <H2>What it does</H2>
+          <p>
+            Projects your balance over time with contributions and compound
+            interest. Test rates, contribution amounts, and frequency to see the
+            long-term impact.
+          </p>
+        </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          href="/pricing"
-          className="rounded-xl bg-brand-green px-4 py-2 font-semibold text-white hover:opacity-90"
-        >
-          Unlock with Plus ($4.99/mo)
-        </Link>
-        <Link
-          href="/calculators/savings"
-          className="rounded-xl border border-brand-green px-4 py-2 font-semibold text-brand-green hover:bg-brand-green/5"
-        >
-          Open Calculator
-        </Link>
-      </div>
+        <div>
+          <H2>How to use it</H2>
+          <ul className="list-disc pl-6">
+            <li>Enter starting balance and monthly contribution</li>
+            <li>Choose annual rate and years</li>
+            <li>Toggle compound frequency if available</li>
+            <li>Compare scenarios (e.g., +1% rate, +$50/month)</li>
+          </ul>
+        </div>
 
-      <footer className="mt-8 text-xs text-gray-500">
-        Powered by <span className="font-semibold">Foster Wealth Ventures</span>
-      </footer>
+        <div>
+          <H2>Reading results</H2>
+          <p>
+            Focus on final balance and total contributions. The gap between them
+            is compound growth—your money working for you.
+          </p>
+        </div>
+      </Section>
+
+      <CTAWrap>
+        <OpenCalculatorButton
+          slug="savings"
+          tier={(CALC_TIERS as any)["savings"]}
+          className="mt-2"
+        />
+        <HelperText>
+          If this calculator is gated on your plan, you'll be routed to upgrade.
+        </HelperText>
+      </CTAWrap>
+
+      <RelatedSection title="Related Guides">
+        <RelatedLink href="/guide/debt-payoff">Debt Payoff</RelatedLink>
+        <RelatedLink href="/guide/mortgage-payment-breakdown">Mortgage Payment</RelatedLink>
+        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI</RelatedLink>
+      </RelatedSection>
     </main>
   );
 }

@@ -1,16 +1,38 @@
+// components/ads/AdBannerTop.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient } from "./adEnv";
+import { getAdsClient, ADS_ENABLED } from "./adEnv";
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
+const PAID_GUIDE_SLUGS = new Set([
+  "savings-growth",
+  "debt-payoff",
+  "employee-cost",
+  "expense-split-deluxe",
+]);
+const PAID_CALC_SLUGS = new Set([
+  "savings",
+  "debt",
+  "employee",
+  "expense-split-deluxe",
+]); // update if your internal calc keys differ
+
+function useIsPaidContext() {
+  const pathname = usePathname();
+  const qp = useSearchParams();
+  const calc = qp?.get("calc");
+  if (calc && PAID_CALC_SLUGS.has(calc)) return true;
+  if (pathname?.startsWith("/guide/")) {
+    const slug = pathname.split("/")[2] || "";
+    if (PAID_GUIDE_SLUGS.has(slug)) return true;
   }
+  return false;
 }
 
 export default function AdBannerTop() {
+  const isPaid = useIsPaidContext();
   const insRef = useRef<HTMLModElement | null>(null);
   const client = getAdsClient();
 
@@ -19,9 +41,11 @@ export default function AdBannerTop() {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
-      /* ignore */
+      /* ignore adblock/no-fill */
     }
   }, [client]);
+
+  if (!ADS_ENABLED || isPaid) return null;
 
   return (
     <AdGateFreeOnly>
@@ -36,7 +60,7 @@ export default function AdBannerTop() {
           className="adsbygoogle"
           style={{ display: "block", width: "100%" }}
           data-ad-client={client || ""}
-          data-ad-slot="0000000000" // <- replace with your real slot id
+          data-ad-slot="0000000000" // ← replace with real slot id
           data-ad-format="auto"
           data-full-width-responsive="true"
         />

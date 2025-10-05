@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
+import React from "react";
 
 export const metadata: Metadata = {
   title:
@@ -30,24 +31,6 @@ export default function GuidePage() {
     "https://www.fosterwealthventures.com/guide/roi-vs-annualized-roi";
   const shareTitle = String(metadata.title ?? "");
 
-  const faq = [
-    {
-      q: "What’s the main takeaway from ROI vs Annualized ROI?",
-      a: "Use the paired calculator to apply concepts and avoid pitfalls we list in this guide.",
-    },
-    {
-      q: "How do I apply this in real life?",
-      a: "Follow the walkthrough below and then try the calculator with your own numbers.",
-    },
-  ];
-
-  const howToSteps = [
-    "Skim the Quick Summary.",
-    "Review formulas.",
-    "Follow walkthrough.",
-    "Click the calculator.",
-  ];
-
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -59,59 +42,68 @@ export default function GuidePage() {
     publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
   };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to apply ROI vs Annualized ROI",
-    step: howToSteps.map((n, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name: n,
-    })),
-  };
-
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
       <Breadcrumb />
 
       <GuideHero
         title="ROI vs Annualized ROI"
-        subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
+        subtitle="Understand raw return vs time‑adjusted growth so you can compare investments fairly."
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3–4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
 
       <section>
-        <CTAButton href="/?calc=roi">👉 Try the matching calculator</CTAButton>
+        <h2>What it does</h2>
+        <p>
+          Shows two views of an investment. Simple ROI is total gain; annualized ROI spreads that gain per year so you can compare things held for different lengths.
+        </p>
       </section>
 
       <section>
-        <h2>Related Guides</h2>
+        <h2>How to use it</h2>
+        <p>Enter starting amount, ending value, and time in years; the numbers update at once.</p>
         <ul>
-          <li>
-            <Link href="/guide/break-even-made-simple">
-              Break-Even Made Simple
-            </Link>
-          </li>
-          <li>
-            <Link href="/guide/mortgage-payment-breakdown">
-              Mortgage Payment Breakdown
-            </Link>
-          </li>
+          <li>Initial Investment</li>
+          <li>Final Value (today or sale)</li>
+          <li>Time (years, can be decimal)</li>
+          <li>Example: 10000 → 15000 in 2 years ≈ 50% ROI, lower annualized rate.</li>
         </ul>
+      </section>
+
+      <section>
+        <h2>When to use it</h2>
+        <p>
+          Use simple ROI for a quick check when holding times match. Use annualized ROI to compare deals or funds with different time lengths.
+        </p>
+      </section>
+
+      <section>
+        <h2>Interpreting results</h2>
+        <p>
+          Higher simple ROI means more total profit; higher annualized ROI means faster pace. A small quick gain can beat a large slow gain; weak annualized return vs similar risk may signal moving funds.
+        </p>
+      </section>
+
+      <section>
+        <CTAButton href="/?calc=roi" data-testid="try-matching-calc">
+          Open the ROI vs Annualized ROI calculator
+        </CTAButton>
+      </section>
+
+      <section>
+        <h2>Related</h2>
+        <p>
+          Continue exploring with the{" "}
+          <Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link>{" "}
+          guide or see long‑term payment structure detail in{" "}
+          <Link href="/guide/mortgage-payment-breakdown">
+            Mortgage Payment Breakdown
+          </Link>
+          . You can also browse every tool on the{" "}
+          <Link href="/dashboard">calculator dashboard</Link>.
+        </p>
       </section>
 
       <div className="mt-6 not-prose">
@@ -129,14 +121,46 @@ export default function GuidePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-      />
     </main>
   );
+}
+
+export function NavText({ children }: { children: React.ReactNode }) {
+  return <p className="mb-4 text-sm">{children}</p>;
+}
+
+export function H1({ children }: { children: React.ReactNode }) {
+  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
+}
+
+export function Quote({ children }: { children: React.ReactNode }) {
+  return (
+    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
+      {children}
+    </blockquote>
+  );
+}
+
+export function QuoteRef({ children }: { children: React.ReactNode }) {
+  return <span className="font-semibold">{children}</span>;
+}
+
+export function Section({ children }: { children: React.ReactNode }) {
+  return <section className="mt-8 space-y-8">{children}</section>;
+}
+
+export function H2({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-2xl font-semibold">{children}</h2>;
+}
+
+export function List({ children }: { children: React.ReactNode }) {
+  return <ul className="list-disc pl-6">{children}</ul>;
+}
+
+export function CTAWrap({ children }: { children: React.ReactNode }) {
+  return <div className="mt-6">{children}</div>;
+}
+
+export function HelperText({ children }: { children: React.ReactNode }) {
+  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }

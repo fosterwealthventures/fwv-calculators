@@ -1,8 +1,29 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient } from "./adEnv";
+import { getAdsClient, ADS_ENABLED } from "./adEnv";
+
+const PAID_GUIDE_SLUGS = new Set([
+  "savings-growth",
+  "debt-payoff",
+  "employee-cost",
+  "expense-split-deluxe",
+]);
+const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]); // update if your internal calc keys differ
+
+function useIsPaidContext() {
+  const pathname = usePathname();
+  const qp = useSearchParams();
+  const calc = qp?.get("calc");
+  if (calc && PAID_CALC_SLUGS.has(calc)) return true;
+  if (pathname?.startsWith("/guide/")) {
+    const slug = pathname.split("/")[2] || "";
+    if (PAID_GUIDE_SLUGS.has(slug)) return true;
+  }
+  return false;
+}
 
 /**
  * Responsive AdSense slot that self-gates to Free plan only.
@@ -18,6 +39,7 @@ export default function AdSlot({
   style?: React.CSSProperties;
   className?: string;
 }) {
+  const isPaid = useIsPaidContext();
   const ref = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const pushedRef = useRef(false);
@@ -51,6 +73,8 @@ export default function AdSlot({
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  if (!ADS_ENABLED || isPaid) return null;
 
   return (
     <AdGateFreeOnly calcId={calcId}>

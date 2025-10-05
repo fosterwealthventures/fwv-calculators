@@ -1,12 +1,34 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient, getInContentSlot } from "./adEnv";
+import { getAdsClient, getInContentSlot, ADS_ENABLED } from "./adEnv";
+
+const PAID_GUIDE_SLUGS = new Set([
+  "savings-growth",
+  "debt-payoff",
+  "employee-cost",
+  "expense-split-deluxe",
+]);
+const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]); // adjust if your calc keys differ
+
+function useIsPaidContext() {
+  const pathname = usePathname();
+  const qp = useSearchParams();
+  const calc = qp?.get("calc");
+  if (calc && PAID_CALC_SLUGS.has(calc)) return true;
+  if (pathname?.startsWith("/guide/")) {
+    const slug = pathname.split("/")[2] || "";
+    if (PAID_GUIDE_SLUGS.has(slug)) return true;
+  }
+  return false;
+}
 
 type Props = { slot?: string; className?: string };
 
 export default function AdInContent({ slot, className = "" }: Props) {
+  const isPaid = useIsPaidContext();
   const ref = useRef<HTMLDivElement>(null);
   const client = getAdsClient();
   const adSlot = slot ?? getInContentSlot();
@@ -31,6 +53,8 @@ export default function AdInContent({ slot, className = "" }: Props) {
       /* noop */
     }
   }, [client, adSlot]);
+
+  if (!ADS_ENABLED || isPaid) return null;
 
   const Placeholder = (
     <div

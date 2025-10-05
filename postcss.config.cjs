@@ -1,3 +1,5 @@
+/* eslint-env node */
+// filepath: c:\fwv-calculators\postcss.config.cjs
 /** @type {import('postcss-load-config').Config} */
 module.exports = {
   plugins: {

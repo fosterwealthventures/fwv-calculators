@@ -6,6 +6,8 @@
 import React from "react";
 import Link from "next/link";
 import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
+// app/guide/page.tsx
+import { getAllGuides } from "@/lib/guides";
 
 export default function Home() {
   return (

@@ -2,7 +2,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { type Plan } from "@/lib/plan";
 
 type Card = {
@@ -69,7 +68,9 @@ function activatePlan(plan: Exclude<Plan, "free">, calcSlug: string | null) {
   setCookie("fwv_plan", plan);
   try {
     localStorage.setItem("fwv-plan", plan);
-  } catch {}
+  } catch {
+    // no-op (intentionally ignoring errors in upgrade flow)
+  }
 
   // handle pro choice - UPDATED to match plan.ts types
   if (plan === "pro") {
@@ -82,20 +83,26 @@ function activatePlan(plan: Exclude<Plan, "free">, calcSlug: string | null) {
       setCookie("fwv_pro_choice", choice);
       try {
         localStorage.setItem("fwv-pro-choice", choice);
-      } catch {}
+      } catch {
+        // no-op (intentionally ignoring errors in upgrade flow)
+      }
     } else {
       // no slug context -> force chooser later
       clearCookie("fwv_pro_choice");
       try {
         localStorage.removeItem("fwv-pro-choice");
-      } catch {}
+      } catch {
+        // no-op (intentionally ignoring errors in upgrade flow)
+      }
     }
   } else {
     // non-pro plans don't need pro_choice
     clearCookie("fwv_pro_choice");
     try {
       localStorage.removeItem("fwv-pro-choice");
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
   }
 }
 

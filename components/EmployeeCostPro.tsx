@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import React, { useState } from "react";
@@ -866,4 +865,4 @@ Hourly Cost: ${formatCurrencyDetailed(employeeResults.hourlyCost)}
 };
 
 export default EmployeeCostPro;
-/* eslint-enable react/no-unescaped-entities */
+

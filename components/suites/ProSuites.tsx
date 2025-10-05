@@ -33,7 +33,9 @@ export default function ProSuite() {
       // persist selection so returning users land where they left off
       try {
         localStorage.setItem("fwv-pro-choice", queryChoice);
-      } catch {}
+      } catch {
+        // no-op (intentionally ignoring errors in upgrade flow)
+      }
       return;
     }
 
@@ -43,7 +45,9 @@ export default function ProSuite() {
       if (saved === "employee" || saved === "expense") {
         setChoice(saved);
       }
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
   }, [search]);
 
   // 2) Helper to set URL and state together (no full reload)
@@ -51,7 +55,9 @@ export default function ProSuite() {
     setChoice(val);
     try {
       localStorage.setItem("fwv-pro-choice", val);
-    } catch {}
+    } catch {
+      // no-op (intentionally ignoring errors in upgrade flow)
+    }
     const usp = new URLSearchParams(Array.from(search.entries()));
     usp.set("pro", val);
     router.replace(`?${usp.toString()}`);

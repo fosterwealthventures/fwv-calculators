@@ -23,8 +23,8 @@ const FosterWealthCalculators = () => {
   // =========================
   // SUITES & DEFAULTS (GATES)
   // =========================
-  const FREE_CALCS = new Set(["roi", "break-even", "mortgage"]);
-  const PRO_CALCS = new Set(["employee-cost", "savings", "debt-payoff"]);
+  const _FREE_CALCS = new Set(["roi", "break-even", "mortgage"]);
+  const _PRO_CALCS = new Set(["employee-cost", "savings", "debt-payoff"]);
 
   const [activeSuite, setActiveSuite] = useState<"business" | "financial">(
     "business",

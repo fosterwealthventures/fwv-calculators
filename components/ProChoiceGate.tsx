@@ -26,7 +26,9 @@ function getProChoice(): ProChoice {
       : null;
     if (cookieChoice && ["employee", "expense_split"].includes(cookieChoice))
       return cookieChoice;
-  } catch {}
+  } catch {
+    // no-op (intentionally ignoring errors in upgrade flow)
+  }
   return null;
 }
 
@@ -34,7 +36,9 @@ function setProChoice(choice: "employee" | "expense_split") {
   try {
     localStorage.setItem("fwv-pro-choice", choice);
     document.cookie = `fwv_pro_choice=${choice}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
-  } catch {}
+  } catch {
+    // no-op (intentionally ignoring errors in upgrade flow)
+  }
 }
 
 export default function ProChoiceGate({ want, redirect, children }: Props) {

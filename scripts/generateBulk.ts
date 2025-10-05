@@ -1,12 +1,19 @@
 // scripts/generateBulk.ts
 // Bulk content generator (CSV -> Markdown files)
 
+import "dotenv/config";                   // <-- loads .env/.env.local for Node
 import { promises as fs } from "fs";
 import path from "path";
-import yargs from "yargs/yargs";
+import OpenAI from "openai";
+import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { parse as parseCsv } from "csv-parse/sync";
-import OpenAI from "openai";
+
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error("OPENAI_API_KEY is missing. Add it to .env.local");
+}
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 type Row = {
   title?: string;
@@ -25,48 +32,43 @@ type Args = {
   section: "blog" | "guide" | "auto";
 };
 
-const argv = ((): Args => {
-  return yargs(hideBin(process.argv))
-    .option("input", {
-      type: "string",
-      alias: "i",
-      default: "scripts/bulk.csv",
-      describe: "Path to the CSV file (with headers).",
-    })
-    .option("out", {
-      type: "string",
-      alias: "o",
-      default: "content/auto",
-      describe: "Output folder for generated Markdown files.",
-    })
-    .option("limit", {
-      type: "number",
-      alias: "n",
-      default: 50,
-      describe: "Maximum number of rows to process.",
-    })
-    .option("dryRun", {
-      type: "boolean",
-      default: false,
-      describe: "Preview output without writing files.",
-    })
-    .option("force", {
-      type: "boolean",
-      default: false,
-      describe: "Overwrite existing files if present.",
-    })
-    .option("section", {
-      type: "string",
-      choices: ["blog", "guide", "auto"] as const,
-      default: "auto",
-      describe: "Frontmatter section.",
-    })
-    .strict()
-    .parseSync() as Args;
-})();
-
-const openaiKey = process.env.OPENAI_API_KEY ?? "";
-const openai = openaiKey ? new OpenAI({ apiKey: openaiKey }) : null;
+const argv = yargs(hideBin(process.argv))
+  .option("input", {
+    type: "string",
+    alias: "i",
+    default: "scripts/bulk.csv",
+    describe: "Path to the CSV file (with headers).",
+  })
+  .option("out", {
+    type: "string",
+    alias: "o",
+    default: "content/auto",
+    describe: "Output folder for generated Markdown files.",
+  })
+  .option("limit", {
+    type: "number",
+    alias: "n",
+    default: 50,
+    describe: "Maximum number of rows to process.",
+  })
+  .option("dryRun", {
+    type: "boolean",
+    default: false,
+    describe: "Preview output without writing files.",
+  })
+  .option("force", {
+    type: "boolean",
+    default: false,
+    describe: "Overwrite existing files if present.",
+  })
+  .option("section", {
+    type: "string",
+    choices: ["blog", "guide", "auto"] as const,
+    default: "auto",
+    describe: "Frontmatter section.",
+  })
+  .strict()
+  .parseSync() as Args;
 
 function toSlug(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
@@ -98,27 +100,32 @@ async function generateBody(row: Row): Promise<string> {
     `Write a concise article titled "${row.title ?? "Untitled"}" for a financial calculators site.
 Include practical tips and one simple example. Friendly, plain language.`;
 
-  if (!openai) {
+  try {
+    const res = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user", 
+          content: prompt
+        }
+      ],
+      max_tokens: 1500,
+      temperature: 0.7,
+    });
+    return res.choices[0]?.message?.content?.trim() || "Content generation returned empty text.";
+  } catch (error) {
+    console.warn(`Failed to generate content for "${row.title}":`, error);
     return [
       "## Overview",
       "",
-      "This is placeholder content (no OpenAI key).",
+      "Content generation failed. Please try again.",
       "",
       "## Key Takeaways",
-      "- Tip 1",
-      "- Tip 2",
-      "- Tip 3",
-      "",
-      "## Example",
-      "Walk through a simple example here.",
+      "- Add your content here",
+      "- Update this section",
+      "- Customize as needed",
     ].join("\n");
   }
-
-  const res = await openai.responses.create({
-    model: "gpt-4.1-mini",
-    input: prompt,
-  });
-  return res.output_text?.trim() || "Content generation returned empty text.";
 }
 
 async function main() {

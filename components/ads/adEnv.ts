@@ -21,3 +21,7 @@ export function getFooterSlot(): string | undefined {
     undefined
   );
 }
+
+// Clean env readers for client components
+export const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT || "";
+export const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true" && !!ADS_CLIENT;
