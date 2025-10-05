@@ -6,11 +6,17 @@ import React from "react";
 import Script from "next/script";
 import { cookies } from "next/headers";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
-import GoogleAd from "@/components/ads/GoogleAd";
-import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
 import { PlanProvider } from "@/providers/PlanProvider";
+import AdSlot from "@/components/ads/AdSlot"; // ← safe slot
 
 export const dynamic = "force-dynamic";
+
+type Plan = "free" | "plus" | "pro" | "premium";
+const isProd = process.env.NODE_ENV === "production";
+
+// AdSense env flags (set these in Vercel)
+const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";   // e.g. "ca-pub-xxxxxxxx"
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
 
 export const metadata: Metadata = {
   title: "Foster Wealth Calculators",
@@ -19,27 +25,17 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-type Plan = "free" | "plus" | "pro" | "premium";
-
-function parsePlan(v?: string | null): "free" | "plus" | "pro" | "premium" {
+function parsePlan(v?: string | null): Plan {
   const x = (v || "").toLowerCase().trim();
-  return x === "plus" || x === "pro" || x === "premium" ? (x as any) : "free";
+  return x === "plus" || x === "pro" || x === "premium" ? (x as Plan) : "free";
 }
-
-const isProd = process.env.NODE_ENV === "production";
 
 function Header() {
   return (
     <header className="w-full border-b bg-white/80 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
         <a href="/" className="flex items-center gap-3 shrink-0">
-          <img
-            src="/logo.png"
-            alt="Foster Wealth Ventures"
-            width={184}
-            height={100}
-            className="rounded-sm"
-          />
+          <img src="/logo.png" alt="Foster Wealth Ventures" width={184} height={100} className="rounded-sm" />
           <span className="text-lg md:text-xl font-semibold text-emerald-900">
             Foster Wealth Calculators
           </span>
@@ -76,121 +72,79 @@ function Footer() {
   );
 }
 
-function PlanDebug({ plan, showAds }: { plan: Plan; showAds: boolean }) {
-  if (isProd) return null;
-  return (
-    <div className="fixed bottom-3 right-3 z-50 rounded-md bg-black/70 px-2.5 py-1.5 text-xs text-white">
-      plan=<b>{plan}</b> | showAds=<b>{String(showAds)}</b>
-    </div>
-  );
-}
-
-function SidebarAds() {
+function Sidebar({ showAds }: { showAds: boolean }) {
+  // optional per-page slots via env
   const SLOT1 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || "";
   const SLOT2 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2 || "";
 
+  if (!showAds) {
+    return (
+      <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
+        <div className="text-sm font-medium text-green-800">🎉 Ad-Free Experience</div>
+        <div className="text-xs text-green-600 mt-1">
+          <a href="/pricing" className="underline hover:text-green-800">Manage plan</a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {SLOT1 ? (
-        <GoogleAd slot={SLOT1} />
-      ) : !isProd ? (
+      {SLOT1 && <AdSlot slot={SLOT1} />}
+      {SLOT2 && <AdSlot slot={SLOT2} />}
+      {!SLOT1 && !SLOT2 && !isProd && (
         <div className="rounded-xl border border-dashed p-3 text-center text-xs text-gray-500">
-          Set NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1
+          (dev) Set NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 / SLOT2
         </div>
-      ) : null}
-
-      {SLOT2 ? (
-        <GoogleAd slot={SLOT2} />
-      ) : !isProd ? (
-        <div className="rounded-xl border border-dashed p-3 text-center text-xs text-gray-500">
-          Set NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2
-        </div>
-      ) : null}
+      )}
     </div>
   );
 }
 
-// Client component wrapper for the ad-free message
-function AdFreeMessage({ plan: _plan }: { plan: Plan }) {
-  return (
-    <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
-      <div className="text-sm font-medium text-green-800">🎉 Ad-Free Experience</div>
-      <div className="text-xs text-green-600 mt-1">
-        <span>{"You're enjoying our pro plan."}</span>{" "}
-        <a href="/pricing" className="underline hover:text-green-800">Manage plan</a>
-      </div>
-    </div>
-  );
-}
-
-function RootLayoutInner({ children, _plan }: { children: React.ReactNode; _plan: any }) {
-  const plan = _plan;
-  const showAds = plan === "free";
-
-  // --- AdSense env + client gates (script can load globally; units still free-only) ---
-  const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-7798339637698835";
-  const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
-  const canLoadAds = ADS_ENABLED && !!ADSENSE_CLIENT; // <- script loads everywhere for verification
-  // ------------------------------------------------------------------------------------
+function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: Plan }) {
+  // Show ads only for FREE plan, in production, with env enabled + client set.
+  const showAds = plan === "free" && isProd && ADS_ENABLED && !!ADS_CLIENT;
 
   return (
     <html lang="en" data-plan={plan}>
       <head>
-        {/* Helpful for Google */}
-        {ADSENSE_CLIENT && (
-          <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
-        )}
+        {/* Helps Google verify ownership */}
+        {ADS_CLIENT && <meta name="google-adsense-account" content={ADS_CLIENT} />}
 
-        {/* Remove extension noise before hydration */}
+        {/* Remove noisy extension attributes before hydration (harmless noop) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function () {
-                try {
-                  var html = document.documentElement;
-                  var attrs = ['data-qb-installed','data-new-gr-c-s-check-loaded','data-gr-ext-installed'];
-                  for (var i=0;i<attrs.length;i++) if (html.hasAttribute(attrs[i])) html.removeAttribute(attrs[i]);
-                } catch (e) {}
-              })();
+              try{var h=document.documentElement;['data-qb-installed','data-new-gr-c-s-check-loaded','data-gr-ext-installed'].forEach(a=>h.removeAttribute(a));}catch(e){}
             `,
           }}
         />
 
-        {/* Google AdSense Script (env + client gated; loads early so crawler sees it) */}
-        {canLoadAds && (
+        {/* Load AdSense after hydration so <ins> exists first */}
+        {showAds && (
           <Script
             id="adsbygoogle-init"
-            strategy="beforeInteractive"
+            strategy="afterInteractive"
             async
             crossOrigin="anonymous"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
-              ADSENSE_CLIENT,
+              ADS_CLIENT
             )}`}
           />
         )}
       </head>
 
-      <body
-        className="min-h-screen bg-neutral-50 text-gray-900"
-        suppressHydrationWarning
-      >
+      <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
-            {/* Client-side helper to (re)mount units only when allowed */}
-            <ClientAdsLoader enabled={canLoadAds} />
-
             <Header />
-
-            {/* Always render the sidebar column so you SEE the space */}
             <div className="mx-auto max-w-6xl px-4 py-6 grid gap-6 lg:grid-cols-[1fr_300px]">
               <main>{children}</main>
               <aside className="sticky top-4 self-start">
-                {showAds ? <SidebarAds /> : <AdFreeMessage plan={plan} />}
+                <Sidebar showAds={showAds} />
               </aside>
             </div>
-
             <Footer />
-            <PlanDebug plan={plan} showAds={showAds} />
           </PlanProvider>
         </EntitlementsProvider>
       </body>
@@ -198,13 +152,8 @@ function RootLayoutInner({ children, _plan }: { children: React.ReactNode; _plan
   );
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const plan = parsePlan(cookieStore.get("fwv_plan")?.value);
-
-  return <RootLayoutInner _plan={plan}>{children}</RootLayoutInner>;
+  return <RootLayoutInner plan={plan}>{children}</RootLayoutInner>;
 }

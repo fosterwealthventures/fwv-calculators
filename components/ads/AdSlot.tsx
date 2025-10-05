@@ -1,104 +1,87 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient, ADS_ENABLED } from "./adEnv";
 
-const PAID_GUIDE_SLUGS = new Set([
-  "savings-growth",
-  "debt-payoff",
-  "employee-cost",
-  "expense-split-deluxe",
-]);
-const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]); // update if your internal calc keys differ
-
-function useIsPaidContext() {
-  const pathname = usePathname();
-  const qp = useSearchParams();
-  const calc = qp?.get("calc");
-  if (calc && PAID_CALC_SLUGS.has(calc)) return true;
-  if (pathname?.startsWith("/guide/")) {
-    const slug = pathname.split("/")[2] || "";
-    if (PAID_GUIDE_SLUGS.has(slug)) return true;
-  }
-  return false;
-}
+type Props = {
+  /** Numeric slot id from AdSense UI */
+  slot: string;
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 /**
- * Responsive AdSense slot that self-gates to Free plan only.
+ * Safe AdSense slot:
+ * - no global type redeclare (avoids conflict with ad.d.ts)
+ * - waits for hydration and viewport before push
+ * - pushes exactly once
+ * - no-op in dev or when ads are disabled
  */
-export default function AdSlot({
-  slot = "test-slot",
-  calcId = "free:slot",
-  style,
-  className = "",
-}: {
-  slot?: string;
-  calcId?: string;
-  style?: React.CSSProperties;
-  className?: string;
-}) {
-  const isPaid = useIsPaidContext();
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState(false);
+export default function AdSlot({ slot, className = "", style }: Props) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const insRef = useRef<HTMLModElement | null>(null);
+  const [mounted, setMounted] = useState(false);
   const pushedRef = useRef(false);
-  const client = getAdsClient();
+
+  const isProd = process.env.NODE_ENV === "production";
+  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
+  const enabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+  const canShow = isProd && enabled && !!client;
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    if (!canShow || !mounted || !containerRef.current || !insRef.current || pushedRef.current) return;
 
-    const tryPush = () => {
-      const width = el.getBoundingClientRect().width;
-      if (width && width > 0) {
-        setReady(true);
-        if (
-          !pushedRef.current &&
-          typeof window !== "undefined" &&
-          Array.isArray((window as any).adsbygoogle)
-        ) {
-          try {
-            (window as any).adsbygoogle.push({});
-            pushedRef.current = true;
-          } catch {
-            /* noop */
-          }
+    const el = containerRef.current;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting || pushedRef.current) return;
+        try {
+          const w = window as any;                 // ⬅ use any, no global redeclare
+          w.adsbygoogle = w.adsbygoogle || [];
+          w.adsbygoogle.push({});
+          pushedRef.current = true;
+          io.disconnect();
+        } catch {
+          /* swallow errors (e.g., ad blockers) */
         }
-      }
-    };
+      },
+      { rootMargin: "200px 0px", threshold: 0 }
+    );
 
-    tryPush();
-    const ro = new ResizeObserver(tryPush);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+    io.observe(el);
+    return () => io.disconnect();
+  }, [canShow, mounted]);
 
-  if (!ADS_ENABLED || isPaid) return null;
+  if (!canShow) {
+    // Dev placeholder to visualize layout
+    if (!isProd) {
+      return (
+        <div
+          className={`rounded-md border border-dashed p-4 text-center text-xs text-gray-500 ${className}`}
+          style={{ minHeight: 120, ...(style || {}) }}
+        >
+          (Ad placeholder) Set NEXT_PUBLIC_ADSENSE_CLIENT and NEXT_PUBLIC_ADSENSE_ENABLED=true
+        </div>
+      );
+    }
+    return null;
+  }
 
   return (
-    <AdGateFreeOnly calcId={calcId}>
-      <div
-        ref={ref}
-        data-testid="ad-slot"
-        className={className}
-        style={{
-          minHeight: 120,
-          width: "100%",
-          display: "block",
-          ...style,
-        }}
-      >
-        {ready ? (
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block", width: "100%", minHeight: 120 }}
-            data-ad-client={client || "ca-pub-0000000000000000"}
-            data-ad-slot={slot}
-            data-full-width-responsive="true"
-          />
-        ) : null}
-      </div>
-    </AdGateFreeOnly>
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ display: "block", width: "100%", ...(style || {}) }}
+    >
+      <ins
+        ref={insRef}
+        className="adsbygoogle"
+        style={{ display: "block", width: "100%", minHeight: 120 }}
+        data-ad-client={client}
+        data-ad-slot={slot}
+        data-full-width-responsive="true"
+      />
+    </div>
   );
 }
