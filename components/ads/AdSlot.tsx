@@ -3,22 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  /** Numeric slot id from AdSense UI */
   slot: string;
   className?: string;
   style?: React.CSSProperties;
 };
 
-/**
- * Safe AdSense slot:
- * - no global type redeclare (avoids conflict with ad.d.ts)
- * - waits for hydration and viewport before push
- * - pushes exactly once
- * - no-op in dev or when ads are disabled
- */
 export default function AdSlot({ slot, className = "", style }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const insRef = useRef<HTMLModElement | null>(null);
   const [mounted, setMounted] = useState(false);
   const pushedRef = useRef(false);
 
@@ -27,23 +18,39 @@ export default function AdSlot({ slot, className = "", style }: Props) {
   const enabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
   const canShow = isProd && enabled && !!client;
 
+  // Determine if this is a fixed-size ad or responsive
+  const isFixedSize = style?.width && style?.height;
+  const isSidebarAd = slot === process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || 
+                     slot === process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2;
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (!canShow || !mounted || !containerRef.current || !insRef.current || pushedRef.current) return;
+    if (!canShow || !mounted || !containerRef.current || pushedRef.current) return;
 
     const el = containerRef.current;
+    
+    // Check if this specific slot has already been processed
+    const insElement = el.querySelector('.adsbygoogle') as HTMLElement;
+    if (insElement?.getAttribute('data-adsbygoogle-status') === 'done') {
+      pushedRef.current = true;
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         if (!entries[0]?.isIntersecting || pushedRef.current) return;
         try {
-          const w = window as any;                 // ⬅ use any, no global redeclare
-          w.adsbygoogle = w.adsbygoogle || [];
-          w.adsbygoogle.push({});
-          pushedRef.current = true;
+          const w = window as any;
+          // Only push if not already marked
+          if (!insElement?.getAttribute('data-adsbygoogle-status')) {
+            w.adsbygoogle = w.adsbygoogle || [];
+            w.adsbygoogle.push({});
+            pushedRef.current = true;
+          }
           io.disconnect();
         } catch {
-          /* swallow errors (e.g., ad blockers) */
+          /* swallow errors */
         }
       },
       { rootMargin: "200px 0px", threshold: 0 }
@@ -51,17 +58,24 @@ export default function AdSlot({ slot, className = "", style }: Props) {
 
     io.observe(el);
     return () => io.disconnect();
-  }, [canShow, mounted]);
+  }, [canShow, mounted, slot]);
 
   if (!canShow) {
-    // Dev placeholder to visualize layout
     if (!isProd) {
       return (
         <div
           className={`rounded-md border border-dashed p-4 text-center text-xs text-gray-500 ${className}`}
-          style={{ minHeight: 120, ...(style || {}) }}
+          style={{ 
+            minHeight: isFixedSize ? undefined : 120, 
+            ...(style || {}) 
+          }}
         >
-          (Ad placeholder) Set NEXT_PUBLIC_ADSENSE_CLIENT and NEXT_PUBLIC_ADSENSE_ENABLED=true
+          (Ad placeholder) Slot: {slot}
+          {isFixedSize && (
+            <div className="text-gray-400 mt-1">
+              Fixed: {style?.width} × {style?.height}
+            </div>
+          )}
         </div>
       );
     }
@@ -72,15 +86,30 @@ export default function AdSlot({ slot, className = "", style }: Props) {
     <div
       ref={containerRef}
       className={className}
-      style={{ display: "block", width: "100%", ...(style || {}) }}
+      style={{ 
+        display: "block", 
+        ...(isFixedSize ? { 
+          width: style.width, 
+          height: style.height,
+          margin: '0 auto' // Center fixed-size ads
+        } : { 
+          width: "100%" 
+        }),
+        ...(style || {})
+      }}
     >
       <ins
-        ref={insRef}
         className="adsbygoogle"
-        style={{ display: "block", width: "100%", minHeight: 120 }}
+        style={{ 
+          display: isFixedSize ? "inline-block" : "block", 
+          width: isFixedSize ? style.width : "100%",
+          height: isFixedSize ? style.height : "auto",
+          minHeight: isFixedSize ? undefined : 120
+        }}
         data-ad-client={client}
         data-ad-slot={slot}
-        data-full-width-responsive="true"
+        data-ad-format={isFixedSize ? undefined : "auto"}
+        data-full-width-responsive={isFixedSize ? "false" : "true"}
       />
     </div>
   );
