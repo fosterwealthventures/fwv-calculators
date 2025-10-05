@@ -6,9 +6,9 @@ import React from "react";
 
 export const metadata: Metadata = {
   title:
-    "Simple vs Compound Interest—Which One Grows Your Money Faster? Try Our Calculator",
+    "Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency",
   description:
-    "Compare simple and compound interest to see which method accelerates your savings growth.",
+    "Learn how our updated Simple vs Compound Interest calculator works: add monthly contributions, choose compounding frequency, view real-time totals, and see a year-by-year breakdown.",
 };
 
 function Breadcrumb() {
@@ -34,11 +34,11 @@ export default function GuidePage() {
     "@context": "https://schema.org",
     "@type": "Article",
     headline:
-      "Simple vs Compound Interest—Which One Grows Your Money Faster? Try Our Calculator",
+      "Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency",
     description:
-      "Compare simple and compound interest to see which method accelerates your savings growth.",
+      "How to use our updated interest calculator: toggle Simple/Compound, add monthly contributions, pick compounding frequency (Annually→Daily), see real-time totals and a year-by-year table.",
     mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:27:38Z",
+    dateModified: "2025-10-05T12:00:00Z",
     publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
   };
 
@@ -48,75 +48,142 @@ export default function GuidePage() {
 
       <GuideHero
         title="Simple vs Compound Interest"
-        subtitle="A clear comparison of two growth methods and how to test them."
+        subtitle="Now supports monthly contributions, flexible compounding frequency, and a clear year-by-year breakdown."
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 2 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3 minutes</p>
 
-      {/* Concise, scannable rewrite */}
+      {/* What it does */}
       <section>
-        <h2>What it does</h2>
+        <h2>What this calculator does</h2>
         <p>
-          Shows side-by-side growth using simple interest (no reinvest) and
-          compound interest (earn on prior growth). Example: 10,000 at 5% for 10
-          years; compound ends higher because each year builds.
+          It compares <strong>Simple</strong> vs <strong>Compound</strong> interest growth
+          using the same set of inputs. You can:
         </p>
+        <ul>
+          <li><strong>Toggle modes</strong>: Simple or Compound.</li>
+          <li>
+            <strong>Add monthly contributions</strong> to see how regular deposits change the curve.
+          </li>
+          <li>
+            <strong>Pick a compounding frequency</strong> (Annually, Semi-Annually, Quarterly,
+            Monthly, or Daily) when in Compound mode.
+          </li>
+          <li>
+            See <strong>real-time totals</strong>: Final Amount, Total Interest, and
+            Total Contributed.
+          </li>
+          <li>
+            Review a <strong>year-by-year breakdown</strong> of starting balance, contributions,
+            interest, and ending balance.
+          </li>
+        </ul>
       </section>
 
+      {/* How to use it */}
       <section>
         <h2>How to use it</h2>
-        <p>Enter four inputs, then compare.</p>
-        <ul>
-          <li>Principal (starting amount)</li>
-          <li>Annual rate %</li>
-          <li>Years</li>
-          <li>Compounds per year (1, 4, 12, etc.)</li>
-          <li>Toggle Simple vs Compound</li>
-          <li>Adjust rate or years to test scenarios</li>
-        </ul>
+        <ol>
+          <li>
+            Enter your <strong>Principal ($)</strong>, <strong>Annual Rate (%)</strong>, and{" "}
+            <strong>Years</strong>.
+          </li>
+          <li>
+            (Optional) Add a <strong>Monthly Contribution ($)</strong>. We assume contributions happen at the{" "}
+            <em>end of each month</em>.
+          </li>
+          <li>
+            Choose a <strong>Compounding Frequency</strong> if you’re in <em>Compound</em> mode:
+            Annually, Semi-Annually, Quarterly, Monthly, or Daily.
+          </li>
+          <li>
+            Use the <strong>Simple / Compound</strong> toggle to compare outcomes instantly.
+          </li>
+        </ol>
         <p>
-          Switch modes to see how reinvesting changes the curve.
+          The <em>Results</em> panel updates immediately. Scroll down to the table to see how the balance
+          evolves year by year.
         </p>
       </section>
 
-      <section>
-        <h2>When to use it</h2>
-        <p>
-          Use when weighing accounts, savings plans, or start dates. It helps
-          decide where to park cash and how early to begin, especially for long
-          goals like college or retirement.
-        </p>
-      </section>
-
+      {/* Interpreting results */}
       <section>
         <h2>Interpreting results</h2>
+        <ul>
+          <li>
+            <strong>Final Amount</strong> — your ending balance at the end of the period.
+          </li>
+          <li>
+            <strong>Total Interest</strong> — the portion of your ending balance that came from growth.
+          </li>
+          <li>
+            <strong>Total Contributed</strong> — your principal plus all monthly deposits.
+          </li>
+        </ul>
         <p>
-          Final balance shows end value; interest earned shows growth portion.
-          Bigger gap over longer years or higher frequency means compounding
-          working harder; if numbers feel low, extend time or raise
-          contributions.
+          Over longer time horizons, <strong>Compound</strong> typically outpaces <strong>Simple</strong> because
+          interest earns interest. If the difference looks small, try increasing years, rate, or contribution size.
         </p>
       </section>
 
+      {/* Year-by-year breakdown */}
+      <section>
+        <h2>Year-by-year breakdown</h2>
+        <p>
+          The table shows each year’s <strong>starting balance</strong>, <strong>contributions</strong>,
+          <strong> interest</strong>, and <strong>ending balance</strong>. Monthly contributions post at the end
+          of each month, so they begin earning growth the following month.
+        </p>
+        <p>
+          In <strong>Compound</strong> mode, interest compounds at the chosen frequency (converted internally to an
+          equivalent monthly rate). In <strong>Simple</strong> mode, interest accrues on principal-to-date only —
+          <em>interest itself doesn’t earn interest</em>.
+        </p>
+      </section>
+
+      {/* Under the hood */}
+      <section>
+        <h2>Under the hood (formulas)</h2>
+        <ul>
+          <li>
+            <strong>Compound with monthly contributions:</strong>{" "}
+            monthly rate r<sub>m</sub> = (1 + r/n)<sup>n/12</sup> − 1. Each month:
+            <em> balance = balance × (1 + r<sub>m</sub>) + PMT</em>.
+          </li>
+          <li>
+            <strong>Simple with monthly contributions:</strong>{" "}
+            monthly interest = (principal to date) × (r/12). Contributions increase principal,
+            but interest does not compound.
+          </li>
+          <li>
+            <strong>Totals:</strong> “Total Contributed” = initial principal + all monthly deposits.
+          </li>
+        </ul>
+        <p className="text-sm text-gray-600">
+          Assumptions: constant nominal rate; contributions at end of month; frequency choice affects
+          compounding only in Compound mode.
+        </p>
+      </section>
+
+      {/* CTA */}
       <section>
         <CTAButton href="/?calc=interest">
-          Open the calculator (Simple vs Compound Interest)
+          Open the updated calculator (Simple / Compound Interest)
         </CTAButton>
       </section>
 
+      {/* Related */}
       <section>
         <h2>Related Guides</h2>
         <p>
-          Explore more with{" "}
-          <Link href="/guide/set-freelance-rate-right">
+          Keep building your plan with{" "}
+          <Link href="/guide/set-your-freelancer-rate-right">
             Set Your Freelancer Rate Right
           </Link>{" "}
           and fair bill sharing in{" "}
           <Link href="/guide/restaurant-tips-tabs-split">
-            Restaurant Tip & Tab Split
+            Restaurant Tip &amp; Tab Split
           </Link>
           . You can also browse every tool on the{" "}
           <Link href="/dashboard">calculator dashboard</Link>.
@@ -126,7 +193,7 @@ export default function GuidePage() {
       <div className="not-prose mt-6">
         <SocialShare
           url={pageUrl}
-          title="Simple vs Compound Interest—Which One Grows Your Money Faster? Try Our Calculator"
+          title="Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency"
         />
       </div>
 
@@ -149,12 +216,17 @@ export default function GuidePage() {
   );
 }
 
+/** Local helper components (kept for look & feel parity with other guides) */
 export function NavText({ children }: { children: React.ReactNode }) {
   return <p className="mb-4 text-sm">{children}</p>;
 }
 
 export function H1({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
+  return (
+    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+      {children}
+    </h1>
+  );
 }
 
 export function Quote({ children }: { children: React.ReactNode }) {
