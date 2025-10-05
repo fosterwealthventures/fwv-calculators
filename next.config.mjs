@@ -8,16 +8,14 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // Ignore ESLint during builds (you can re-enable later)
+  // Allow builds to pass even if ESLint has warnings; re-enable when ready
   eslint: { ignoreDuringBuilds: true },
 
-  // Nicer source maps in dev
   webpack: (config, { dev }) => {
     if (dev) config.devtool = "source-map";
     return config;
   },
 
-  // ✅ Redirects (unchanged)
   async redirects() {
     return [
       { source: "/guides", destination: "/guide", permanent: true },
@@ -35,28 +33,32 @@ const nextConfig = {
     ];
   },
 
-  // ✅ Security headers incl. CSP for AdSense + GA
   async headers() {
     if (isDev) return [];
 
-    // Allow the AdSense script and its ad iframes/XHRs while keeping a tight policy elsewhere.
+    // ✅ CSP that allows AdSense while staying strict elsewhere
     const csp = [
       "default-src 'self'",
-      // AdSense + GA: allow their script hosts (include 'unsafe-inline' for inlined bootstraps; add 'unsafe-eval' if you load 3rd libs that need it)
-      "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com",
-      "style-src 'self' 'unsafe-inline'",
-      // Images from anywhere over https plus data/blob; explicitly allow common AdSense/GA hosts
-      "img-src 'self' data: blob: https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://www.googletagmanager.com",
-      "font-src 'self' data:",
-      // 👇 This was the blocker: allow AdSense/XHR endpoints
-      "connect-src 'self' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
-      // Ad iframes
-      "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.youtube.com",
+      // Scripts: AdSense, DoubleClick, Tag Manager, GA
+      "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://www.googletagmanager.com https://*.google-analytics.com",
+      // Styles (inline needed for ads)
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      // Images from self + Google/DoubleClick + data/blob
+      "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.google-analytics.com https://www.googletagmanager.com",
+      // Connections/XHR/beacons used by AdSense & GA
+      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
+      // Iframes (ads)
+      "frame-src https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
+      // Fonts
+      "font-src 'self' https://fonts.gstatic.com data:",
+      // Media/workers (safe defaults)
       "media-src 'self' blob: data:",
+      "worker-src 'self' blob:",
+      // Lockdowns
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'self'",
+      "frame-ancestors 'self'"
     ].join("; ");
 
     return [
@@ -73,14 +75,14 @@ const nextConfig = {
     ];
   },
 
-  // ✅ Remote images (unchanged)
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "pagead2.googlesyndication.com" },
-      { protocol: "https", hostname: "tpc.googlesyndication.com" },
-      { protocol: "https", hostname: "www.google-analytics.com" },
-      { protocol: "https", hostname: "googleads.g.doubleclick.net" },
+      { protocol: "https", hostname: "*.googlesyndication.com" },
+      { protocol: "https", hostname: "*.doubleclick.net" },
+      { protocol: "https", hostname: "*.google.com" },
       { protocol: "https", hostname: "www.googletagmanager.com" },
+      { protocol: "https", hostname: "*.google-analytics.com" },
     ],
   },
 };
