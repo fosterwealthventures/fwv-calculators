@@ -180,6 +180,48 @@ const ToggleGroup: React.FC<{
   </div>
 );
 
+
+/** ---------- Small UI: ModeSwitch (slide toggle) ---------- */
+const ModeSwitch: React.FC<{
+  value: "simple" | "compound";
+  onChange: (v: "simple" | "compound") => void;
+}> = ({ value, onChange }) => {
+  const isCompound = value === "compound";
+  return (
+    <div className="inline-block">
+      <div
+        className="relative w-[300px] select-none rounded-full border border-neutral-300 bg-white p-1"
+        role="group"
+        aria-label="Interest mode"
+      >
+        {/* Sliding knob */}
+        <div
+          className={`absolute top-1 h-8 rounded-full bg-brand-green transition-all duration-200 ease-out
+                      ${isCompound ? "left-1 w-[calc(50%-0.25rem)]" : "left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]"}`}
+          aria-hidden
+        />
+        {/* Buttons */}
+        <button
+          type="button"
+          className={`relative z-10 w-1/2 py-2 text-sm font-medium ${isCompound ? "text-white" : "text-gray-700"}`}
+          onClick={() => onChange("compound")}
+          aria-pressed={isCompound}
+        >
+          Compound
+        </button>
+        <button
+          type="button"
+          className={`relative z-10 w-1/2 py-2 text-sm font-medium ${!isCompound ? "text-white" : "text-gray-700"}`}
+          onClick={() => onChange("simple")}
+          aria-pressed={!isCompound}
+        >
+          Simple
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ExplanationPanel: React.FC<{
   title: string;
   children: React.ReactNode;
@@ -225,58 +267,6 @@ const Header: React.FC<{ title: string }> = ({ title }) => (
     <h2 className="heading-section">{title}</h2>
   </div>
 );
-
-/** ----------------------------------------------------------------------------------------------
- *  Interest helpers (frequency map + table)
- * ---------------------------------------------------------------------------------------------- */
-const COMPOUND_OPTIONS = [
-  { value: "annually",       label: "Annually",       n: 1 },
-  { value: "semiannually",   label: "Semi-Annually",  n: 2 },
-  { value: "quarterly",      label: "Quarterly",      n: 4 },
-  { value: "monthly",        label: "Monthly",        n: 12 },
-  { value: "daily",          label: "Daily",          n: 365 },
-] as const;
-
-type CompoundValue = (typeof COMPOUND_OPTIONS)[number]["value"];
-const nFrom = (v: CompoundValue) => COMPOUND_OPTIONS.find(o => o.value === v)!.n;
-
-type YearRow = {
-  year: number;
-  start: number;
-  contributions: number;
-  interest: number;
-  end: number;
-};
-
-const YearBreakdownTable: React.FC<{ rows: YearRow[] }> = ({ rows }) => {
-  if (!rows.length) return null;
-  return (
-    <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
-      <table className="min-w-[720px] w-full text-sm">
-        <thead className="bg-neutral-50">
-          <tr className="text-left">
-            <th className="px-4 py-3 font-semibold">Year</th>
-            <th className="px-4 py-3 font-semibold">Starting Balance</th>
-            <th className="px-4 py-3 font-semibold">Contributions</th>
-            <th className="px-4 py-3 font-semibold">Interest</th>
-            <th className="px-4 py-3 font-semibold">Ending Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.year} className="odd:bg-white even:bg-neutral-50">
-              <td className="px-4 py-3">{r.year}</td>
-              <td className="px-4 py-3">{fmtUSD(r.start)}</td>
-              <td className="px-4 py-3">{fmtUSD(r.contributions)}</td>
-              <td className="px-4 py-3">{fmtUSD(r.interest)}</td>
-              <td className="px-4 py-3">{fmtUSD(r.end)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
 
 /** ----------------------------------------------------------------------------------------------
  *  Component
@@ -370,8 +360,7 @@ export default function FosterWealthCalculators({
     return { monthly, total: monthly * n };
   }, [mtgInputs]);
 
-  
-  /* ---------- Simple vs Compound Interest (enhanced) ---------- */
+  /* ---------- Simple vs Compound Interest ---------- */
   const [interestMode, setInterestMode] = useState<"simple" | "compound">(
     "compound",
   );
@@ -379,78 +368,23 @@ export default function FosterWealthCalculators({
     principal: "10000",
     annualRatePct: "5",
     years: "5",
-    monthlyContribution: "0",
-    frequency: "monthly" as CompoundValue, // used when mode = compound
+    compoundsPerYear: "12",
   });
   const interest = useMemo(() => {
-    const P = Math.max(parseFloat(intInputs.principal) || 0, 0);
-    const r = Math.max((parseFloat(intInputs.annualRatePct) || 0) / 100, 0);
-    const years = Math.max(parseFloat(intInputs.years) || 0, 0);
-    const PMT = Math.max(parseFloat(intInputs.monthlyContribution) || 0, 0);
-    const months = Math.round(years * 12);
-
-    if (months <= 0 || r < 0) {
-      const contributed = P + PMT * months;
-      const breakdown: YearRow[] = [];
-      return { amount: contributed, interest: 0, contributed, breakdown };
+    const P = parseFloat(intInputs.principal) || 0;
+    const r = (parseFloat(intInputs.annualRatePct) || 0) / 100;
+    const t = parseFloat(intInputs.years) || 0;
+    if (interestMode === "simple") {
+      const A = P * (1 + r * t);
+      return { amount: A, interest: A - P };
+    } else {
+      const n = Math.max(parseFloat(intInputs.compoundsPerYear) || 1, 1);
+      const A = P * Math.pow(1 + r / n, n * t);
+      return { amount: A, interest: A - P };
     }
-
-    let balance = P;
-    let cumPrincipal = P; // total principal so far (initial + contributions)
-    let totalInterest = 0;
-    let rows: YearRow[] = [];
-
-    let yearStartBal = balance;
-    let yearInterest = 0;
-    let yearContrib = 0;
-
-    const n = nFrom(intInputs.frequency);
-    // Convert chosen compounding frequency to an equivalent monthly rate:
-    // r_month_compound = (1 + r/n)^(n/12) - 1
-    const rMonthCompound = Math.pow(1 + r / n, n / 12) - 1;
-    const rMonthSimple = r / 12;
-
-    for (let m = 1; m <= months; m++) {
-      if (interestMode === "compound") {
-        const iM = balance * rMonthCompound; // interest on balance (compounds)
-        totalInterest += iM;
-        balance += iM;
-        balance += PMT;          // contribution at end of month
-        cumPrincipal += PMT;
-
-        yearInterest += iM;
-        yearContrib += PMT;
-      } else {
-        // SIMPLE: interest accrues on principal only (no compounding on interest)
-        const iM = cumPrincipal * rMonthSimple;
-        totalInterest += iM;
-
-        cumPrincipal += PMT;     // contribution at end of month
-        balance = cumPrincipal + totalInterest;
-
-        yearInterest += iM;
-        yearContrib += PMT;
-      }
-
-      if (m % 12 === 0 || m === months) {
-        const yearIndex = Math.ceil(m / 12);
-        rows.push({
-          year: yearIndex,
-          start: yearStartBal,
-          contributions: yearContrib,
-          interest: yearInterest,
-          end: balance,
-        });
-        yearStartBal = balance;
-        yearInterest = 0;
-        yearContrib = 0;
-      }
-    }
-
-    const contributed = P + PMT * months;
-    return { amount: balance, interest: totalInterest, contributed, breakdown: rows };
   }, [intInputs, interestMode]);
-/* --------------- Freelancer Rate --------------- */
+
+  /* --------------- Freelancer Rate --------------- */
   const [frInputs, setFrInputs] = useState({
     annualIncome: "120000",
     weeksOff: "4",
@@ -930,126 +864,103 @@ export default function FosterWealthCalculators({
         )}
 
         {/* Interest (Simple/Compound) */}
-        
-{activeCalc === "interest" && (
-  <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
-    <Header title="Interest Calculator (Simple / Compound)" />
-    <div className="p-6">
-      {/* Mode toggle */}
-      <div className="mb-4 flex gap-2">
-        <button
-          type="button"
-          onClick={() => setInterestMode("compound")}
-          className={`rounded-lg px-3 py-2 text-sm transition ${
-            interestMode === "compound"
-              ? "bg-brand-green text-white"
-              : "border border-neutral-300 hover:bg-neutral-100"
-          }`}
-        >
-          Compound
-        </button>
-        <button
-          type="button"
-          onClick={() => setInterestMode("simple")}
-          className={`rounded-lg px-3 py-2 text-sm transition ${
-            interestMode === "simple"
-              ? "bg-brand-green text-white"
-              : "border border-neutral-300 hover:bg-neutral-100"
-          }`}
-        >
-          Simple
-        </button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <InputsPanel title="Inputs">
-          <Input
-            id="int_principal"
-            label="Principal ($)"
-            value={intInputs.principal}
-            onChange={(v) => setIntInputs((s) => ({ ...s, principal: v }))}
-          />
-          <Input
-            id="int_rate"
-            label="Annual Rate (%)"
-            value={intInputs.annualRatePct}
-            onChange={(v) => setIntInputs((s) => ({ ...s, annualRatePct: v }))}
-          />
-          <Input
-            id="int_years"
-            label="Years"
-            value={intInputs.years}
-            onChange={(v) => setIntInputs((s) => ({ ...s, years: v }))}
-          />
-          <Input
-            id="int_monthly"
-            label="Monthly Contribution ($)"
-            value={intInputs.monthlyContribution}
-            onChange={(v) =>
-              setIntInputs((s) => ({ ...s, monthlyContribution: v }))
-            }
-          />
-          <div className={interestMode === "simple" ? "opacity-60 pointer-events-none" : ""}>
-            <span className="mb-1 block text-sm font-medium text-gray-700">
-              Compounding Frequency
-            </span>
-            <ToggleGroup
-              value={intInputs.frequency}
-              onChange={(v) =>
-                setIntInputs((s) => ({ ...s, frequency: v as CompoundValue }))
-              }
-              options={COMPOUND_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
-            />
-          </div>
-        </InputsPanel>
-
-        <ResultsPanel title="Results">
-          <KV label="Final Amount" value={fmtUSD(interest.amount)} />
-          <KV label="Total Interest" value={fmtUSD(interest.interest)} />
-          <KV label="Total Contributed" value={fmtUSD(interest.contributed)} />
-        </ResultsPanel>
-      </div>
-    </div>
-
-    {/* Year-by-year breakdown */}
-    <div className="px-6 pb-6">
-      <ExplanationPanel title="Year-by-Year Breakdown">
-        <p className="mb-3">
-          Contributions are posted at the <b>end of each month</b>. In <b>Compound</b> mode,
-          interest compounds at the selected frequency (converted to a monthly rate). In <b>Simple</b> mode,
-          interest accrues only on principal to date—interest itself does not earn interest.
-        </p>
-        <YearBreakdownTable rows={interest.breakdown} />
-      </ExplanationPanel>
-
-      <div className="mt-4">
-        <ExplanationPanel title="Formulas & Notes">
-          <ul className="ml-5 list-disc">
-            <li>
-              <b>Compound with monthly contributions:</b>
-              r<sub>m</sub> = (1 + r/n)<sup>n/12</sup> − 1; each month:
-              balance = balance × (1 + r<sub>m</sub>) + PMT.
-            </li>
-            <li>
-              <b>Simple with monthly contributions:</b>
-              monthly interest = (principal to date) × (r/12).
-            </li>
-            <li>
-              “Total Contributed” = initial principal + all monthly deposits.
-            </li>
-          </ul>
-          <p className="mt-2">
-            Learn more:{" "}
-            <Link className="text-brand-green underline" href="/guide/simple-vs-compound-interest">
-              Simple vs Compound Interest—Which One Grows Your Money Faster?
-            </Link>
-          </p>
-        </ExplanationPanel>
-      </div>
-    </div>
-  </section>
-)}
-
+        {activeCalc === "interest" && (
+          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
+            <Header title="Interest Calculator (Simple / Compound)" />
+            <div className="p-6">
+              <div className="mb-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setInterestMode("compound")}
+                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                    interestMode === "compound"
+                      ? "bg-brand-green text-white"
+                      : "border border-neutral-300 hover:bg-neutral-100"
+                  }`}
+                >
+                  Compound
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInterestMode("simple")}
+                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                    interestMode === "simple"
+                      ? "bg-brand-green text-white"
+                      : "border border-neutral-300 hover:bg-neutral-100"
+                  }`}
+                >
+                  Simple
+                </button>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                <InputsPanel title="Inputs">
+                  <Input
+                    id="int_principal"
+                    label="Principal ($)"
+                    value={intInputs.principal}
+                    onChange={(v) =>
+                      setIntInputs((s) => ({ ...s, principal: v }))
+                    }
+                  />
+                  <Input
+                    id="int_rate"
+                    label="Annual Rate (%)"
+                    value={intInputs.annualRatePct}
+                    onChange={(v) =>
+                      setIntInputs((s) => ({ ...s, annualRatePct: v }))
+                    }
+                  />
+                  <Input
+                    id="int_years"
+                    label="Years"
+                    value={intInputs.years}
+                    onChange={(v) => setIntInputs((s) => ({ ...s, years: v }))}
+                  />
+                  {interestMode === "compound" && (
+                    <Input
+                      id="int_n"
+                      label="Compounds / Year"
+                      value={intInputs.compoundsPerYear}
+                      onChange={(v) =>
+                        setIntInputs((s) => ({ ...s, compoundsPerYear: v }))
+                      }
+                    />
+                  )}
+                </InputsPanel>
+                <ResultsPanel title="Results">
+                  <KV label="Final Amount" value={fmtUSD(interest.amount)} />
+                  <KV
+                    label="Total Interest"
+                    value={fmtUSD(interest.interest)}
+                  />
+                </ResultsPanel>
+              </div>
+            </div>
+            <div className="px-6 pb-6">
+              <ExplanationPanel title="How this works">
+                <ul className="ml-5 list-disc">
+                  <li>
+                    <b>Simple:</b> A = P(1 + rt)
+                  </li>
+                  <li>
+                    <b>Compound:</b> A = P(1 + r/n)<sup>nt</sup>
+                  </li>
+                  <li>Use compound interest when earnings are reinvested.</li>
+                </ul>
+                <p className="mt-2">
+                  Learn more:{" "}
+                  <Link
+                    className="text-brand-green underline"
+                    href="/guide/simple-vs-compound-interest"
+                  >
+                    Simple vs Compound Interest—Which One Grows Your Money
+                    Faster?
+                  </Link>
+                </p>
+              </ExplanationPanel>
+            </div>
+          </section>
+        )}
 
         {/* Freelancer Rate */}
         {activeCalc === "freelancer-rate" && (
