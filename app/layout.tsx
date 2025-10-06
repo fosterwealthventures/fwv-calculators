@@ -8,6 +8,8 @@ import { EntitlementsProvider } from "@/lib/entitlements-client";
 import { PlanProvider } from "@/providers/PlanProvider";
 import AdSlot from "@/components/ads/AdSlot";
 import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
+import { ADS_CLIENT, ADS_ENABLED } from '@/lib/ads-config';
+
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +17,6 @@ type Plan = "free" | "plus" | "pro" | "premium";
 
 // Define config directly in layout to avoid import issues
 const isProd = process.env.NODE_ENV === 'production';
-const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '';
-const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true';
 
 export const metadata: Metadata = {
   title: "Foster Wealth Calculators",
@@ -128,10 +128,11 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
         {ADS_CLIENT && <meta name="google-adsense-account" content={ADS_CLIENT} />}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+        <meta name="google-adsense-account" content={ADS_CLIENT} />
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
-        <ClientAdsLoader enabled={adsBootstrapEnabled} />
+        <ClientAdsLoader enabled={ADS_ENABLED} /> 
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
             <Header />

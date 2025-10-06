@@ -1,58 +1,58 @@
-"use client";
+// components/ads/ClientAdsLoader.tsx
+'use client';
 
-import Script from "next/script";
-
-// Define config directly in component
-const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true';
-const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '';
+import Script from 'next/script';
+import { ADS_CLIENT, ADS_ENABLED } from '@/lib/ads-config';
 
 const PUSH_SHIM = `
 (function(){
   try{
     var w = window;
     w.adsbygoogle = w.adsbygoogle || [];
-    if (!w.__fwvPushShim) {
-      var _push = w.adsbygoogle.push.bind(w.adsbygoogle);
-      w.adsbygoogle.push = function(arg){
-        try{
-          // Allow Auto Ads config objects
-          if (arg && typeof arg === 'object' && 
-              ('google_ad_client' in arg || 'enable_page_level_ads' in arg)) {
-            return _push(arg);
-          }
-          
-          // For empty objects {}, only push if there are pending ads
-          if (!arg || (typeof arg === 'object' && Object.keys(arg).length === 0)) {
-            var pendingIns = document.querySelectorAll('ins.adsbygoogle:not([data-adsbygoogle-status="done"]):not([data-adsbygoogle-status="bound"])');
-            if (pendingIns.length === 0) {
-              return 0; // Silently skip if no pending ads
+    if (w.__fwvPushShim) return;
+
+    function install(){
+      try{
+        var q = w.adsbygoogle;
+        var orig = q.push.bind(q);
+        q.push = function(arg){
+          try{
+            // Allow Auto Ads config objects (if ever used)
+            if (arg && typeof arg === 'object' &&
+               ('google_ad_client' in arg || 'enable_page_level_ads' in arg)) {
+              return orig(arg);
             }
-          }
-          
-          return _push(arg);
-        } catch(e) { 
-          console.warn('[AdSense] Push error caught:', e);
-          return 0; 
-        }
-      };
-      w.__fwvPushShim = true;
+            // For standard {} pushes, only push if a pending <ins> exists
+            var pending = document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
+            if (!pending) return 0;
+            return orig(arg);
+          }catch(e){ return 0; }
+        };
+        q.push.__adsGuarded = true;
+      }catch(_){}
     }
-  } catch(e){
-    console.warn('[AdSense] Shim init error:', e);
-  }
+
+    // initial install + guard against the library overwriting push
+    install();
+    var iv = setInterval(function(){
+      try{
+        var q = w.adsbygoogle;
+        if (q && q.push && !q.push.__adsGuarded) install();
+      }catch(_){}
+    }, 250);
+
+    w.__fwvPushShim = true;
+  }catch(_){}
 })();
 `;
 
-type Props = { enabled?: boolean };
-
-export default function ClientAdsLoader({ enabled = true }: Props) {
-  if (!enabled || !ADS_ENABLED || !ADS_CLIENT) return null;
+export default function ClientAdsLoader({ enabled = true }: { enabled?: boolean }) {
+  const shouldLoad = enabled && ADS_ENABLED && !!ADS_CLIENT;
+  if (!shouldLoad) return null;
 
   return (
     <>
-      <Script id="fwv-ads-shim" strategy="beforeInteractive">
-        {PUSH_SHIM}
-      </Script>
+      <Script id="fwv-ads-shim" strategy="beforeInteractive">{PUSH_SHIM}</Script>
       <Script
         id="adsense-loader"
         strategy="afterInteractive"
