@@ -2,8 +2,9 @@
 'use client';
 
 import Script from 'next/script';
-import { ADS_CLIENT, ADS_ENABLED } from '@/lib/ads-config';
+import { ADS_CLIENT } from '@/lib/ads-config';
 
+// Global push guard: only push when a pending <ins.adsbygoogle> exists
 const PUSH_SHIM = `
 (function(){
   try{
@@ -17,12 +18,11 @@ const PUSH_SHIM = `
         var orig = q.push.bind(q);
         q.push = function(arg){
           try{
-            // Allow Auto Ads config objects (if ever used)
+            // allow Auto Ads config objects; otherwise require a pending <ins>
             if (arg && typeof arg === 'object' &&
                ('google_ad_client' in arg || 'enable_page_level_ads' in arg)) {
               return orig(arg);
             }
-            // For standard {} pushes, only push if a pending <ins> exists
             var pending = document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
             if (!pending) return 0;
             return orig(arg);
@@ -31,8 +31,6 @@ const PUSH_SHIM = `
         q.push.__adsGuarded = true;
       }catch(_){}
     }
-
-    // initial install + guard against the library overwriting push
     install();
     var iv = setInterval(function(){
       try{
@@ -47,11 +45,14 @@ const PUSH_SHIM = `
 `;
 
 export default function ClientAdsLoader({ enabled = true }: { enabled?: boolean }) {
-  const shouldLoad = enabled && ADS_ENABLED && !!ADS_CLIENT;
-  if (!shouldLoad) return null;
+  // In Preview we want the loader present even if gating flags are off.
+  // Only condition: we must have a client ID (we set a fallback in ads-config).
+  if (!ADS_CLIENT) return null;
 
+  // Optional: emit a tiny marker so we can confirm the component rendered
   return (
     <>
+      <span id="fwv-ads-marker" data-client={ADS_CLIENT} style={{ display: 'none' }} />
       <Script id="fwv-ads-shim" strategy="beforeInteractive">{PUSH_SHIM}</Script>
       <Script
         id="adsense-loader"
