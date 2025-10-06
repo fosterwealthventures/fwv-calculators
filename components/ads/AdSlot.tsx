@@ -1,82 +1,144 @@
-"use client";
+// components/ads/AdSlot.tsx
+'use client';
 
-import { CSSProperties, useEffect, useMemo, useRef } from "react";
-import { usePathname } from "next/navigation";
+import React, { useEffect, useRef } from 'react';
 
-type Props = {
-  slot: string;
-  enabled?: boolean;
-  style?: CSSProperties;
+type AdSlotProps = {
+  // Support both new and legacy prop names
+  slotId?: string;
+  slot?: string;
+
   className?: string;
-  format?: string;          // e.g. "auto"
-  responsive?: boolean;     // data-full-width-responsive="true"
+  style?: React.CSSProperties;
+  format?: 'auto' | 'fluid' | 'rectangle' | string;
+  layout?: string;
+  layoutKey?: string;
+  adTest?: boolean;
+
+  // new + legacy aliases
+  fullWidthResponsive?: boolean;
+  responsive?: boolean;
+
+  // legacy control
+  enabled?: boolean;
+
+  // render above-the-fold without IO wait
+  eager?: boolean;
 };
 
-const CLIENT  = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
-const ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
-const IS_PROD = process.env.NODE_ENV === "production";
-
 export default function AdSlot({
-  slot,
-  enabled = true,
-  style,
+  slotId: slotIdProp,
+  slot: slotLegacy,
   className,
-  format,
+  style,
+  format = 'auto',
+  layout,
+  layoutKey,
+  adTest,
+  fullWidthResponsive,
   responsive,
-}: Props) {
-  // <ins> is typed as HTMLModElement in lib.dom
-  const ref = useRef<HTMLModElement | null>(null);
-  const pathname = usePathname();
+  enabled = true,
+  eager = false,
+}: AdSlotProps) {
+  const slotId = slotIdProp ?? slotLegacy;
+  const fwr = fullWidthResponsive ?? responsive ?? true;
 
-  // Force a fresh <ins> on route change
-  const key = useMemo(() => `${slot}-${pathname}`, [slot, pathname]);
+  const insRef = useRef<HTMLElement | null>(null);
+  const pushedRef = useRef(false);
 
-  // local guard so Strict/re-renders don't double-push
-  const alreadyQueuedRef = useRef(false);
+  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const adTestEnv = process.env.NEXT_PUBLIC_ADSENSE_ADTEST === 'on';
+  const adTestEffective = adTest ?? adTestEnv;
 
   useEffect(() => {
-    if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot) return;
-    const el = ref.current as unknown as HTMLElement | null;
-    if (!el) return;
+    if (!enabled) return;
+    const ins = insRef.current;
+    if (!ins || !client || !slotId) return;
 
-    // If Google already touched this node, it will be 'reserved' then 'done'
-    const status = el.getAttribute("data-adsbygoogle-status");
-    if (status) return;
+    const already =
+      ins.getAttribute('data-adsbygoogle-status') === 'done' ||
+      ins.getAttribute('data-adsbygoogle-status') === 'bound' ||
+      pushedRef.current;
 
-    // If we already queued once for this instance, stop
-    if (alreadyQueuedRef.current || el.getAttribute("data-ad-init") === "1") return;
+    if (already) return;
 
-    // GLOBAL SAFETY: if there are no pending <ins> anywhere, skip push
-    // (prevents "All 'ins' elements ... already have ads" TagError)
-    const pending = document.querySelector(
-      'ins.adsbygoogle:not([data-adsbygoogle-status]):not([data-ad-init="1"])'
-    );
-    if (!pending) return;
+    const tryPush = () => {
+      const w = window as any;
+      if (!w.adsbygoogle) return;
 
-    try {
-      // mark BEFORE pushing so a second pass won't re-queue
-      alreadyQueuedRef.current = true;
-      el.setAttribute("data-ad-init", "1");
+      const nowInit =
+        ins.getAttribute('data-adsbygoogle-status') === 'done' ||
+        ins.getAttribute('data-adsbygoogle-status') === 'bound';
+      if (nowInit || pushedRef.current) return;
 
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
-    } catch {
-      /* ignore occasional hiccups */
+      // Only push if at least one pending <ins> exists; avoids TagError.
+      const pending = document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
+      if (!pending) return;
+
+      try {
+        (w.adsbygoogle = w.adsbygoogle || []).push({});
+        ins.setAttribute('data-adsbygoogle-status', 'bound');
+        pushedRef.current = true;
+      } catch (err: any) {
+        const msg = String(err?.message || err);
+        if (!msg.includes("All 'ins' elements in the DOM with class=adsbygoogle already have ads in them")) {
+          console.warn('[AdSlot] push error', err);
+        }
+      }
+    };
+
+    if (eager) {
+      if (!(window as any).adsbygoogle) {
+        const id = window.setInterval(() => {
+          if ((window as any).adsbygoogle) {
+            window.clearInterval(id);
+            tryPush();
+          }
+        }, 300);
+        return () => clearInterval(id);
+      }
+      tryPush();
+      return;
     }
-  }, [key, enabled, slot]);
 
-  if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot) return null;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) tryPush();
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(ins);
+
+    let id: number | undefined;
+    if (!(window as any).adsbygoogle) {
+      id = window.setInterval(() => {
+        if ((window as any).adsbygoogle) {
+          window.clearInterval(id);
+          tryPush();
+        }
+      }, 300);
+    }
+
+    return () => {
+      io.disconnect();
+      if (id) window.clearInterval(id);
+    };
+  }, [client, slotId, enabled, eager]);
+
+  if (!enabled) return null;
 
   return (
     <ins
-      key={key}
-      ref={ref as any}
-      className={`adsbygoogle ${className ?? ""}`}
-      style={style ?? { display: "block" }}
-      data-ad-client={CLIENT}
-      data-ad-slot={slot}
-      {...(format ? { "data-ad-format": format } : {})}
-      {...(responsive ? { "data-full-width-responsive": "true" } : {})}
+      ref={insRef as any}
+      className={`adsbygoogle ${className ?? ''}`}
+      style={style ?? { display: 'block' }}
+      data-ad-client={client ?? ''}
+      data-ad-slot={slotId ?? ''}
+      data-ad-format={format}
+      data-full-width-responsive={fwr ? 'true' : 'false'}
+      {...(layout ? { 'data-ad-layout': layout } : null)}
+      {...(layoutKey ? { 'data-ad-layout-key': layoutKey } : null)}
+      {...(adTestEffective ? { 'data-adtest': 'on' } : null)}
     />
   );
 }
