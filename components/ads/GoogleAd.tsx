@@ -1,139 +1,125 @@
 // components/ads/GoogleAd.tsx
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-/** Single ad unit:
- *  - Reserves visible space (so layout doesn't jump)
- *  - Pushes exactly once per <ins> node (even in React Strict Mode)
- *  - Retries a few times while the AdSense bootstrap finishes
- *  - Shows a friendly placeholder while loading/no-fill/dev
- */
 type Props = {
-  slot: string; // AdSense slot id
-  width?: number; // px if not fullWidth
-  height?: number; // min height in px (space reservation)
+  slot: string;
+  width?: number;
+  height?: number;
   format?: "auto" | "rectangle" | "horizontal" | "vertical";
-  fullWidth?: boolean; // 100% width container
-  className?: string; // extra classes for container
+  fullWidth?: boolean;
+  className?: string;
+  placeholder?: React.ReactNode;
 };
 
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+const CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
+
+/**
+ * IMPORTANT: This component does NOT inject the AdSense bootstrap script.
+ * Load it once globally (e.g., in ClientAdsLoader or app/layout.tsx).
+ * This component only initializes its own <ins> once when visible.
+ */
 export default function GoogleAd({
   slot,
-  width = 300,
+  width,
   height = 250,
   format = "auto",
   fullWidth = true,
   className = "",
+  placeholder,
 }: Props) {
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-
-  // Show test ads in dev automatically, or when explicitly toggled on
-  const isTest = useMemo(
-    () =>
-      process.env.NODE_ENV !== "production" ||
-      process.env.NEXT_PUBLIC_ADSENSE_TEST === "on",
-    [],
-  );
-
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "rendered" | "error"
-  >("idle");
+  const pushedRef = useRef(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "rendered" | "error">("idle");
 
   useEffect(() => {
-    if (!client || !slot) return;
-    if (!insRef.current) return;
+    if (process.env.NODE_ENV !== "production") return;
+    if (!ADS_ENABLED || !CLIENT || !slot) return;
+    if (!wrapperRef.current) return;
 
-    /** React 18 Strict Mode runs effects twice in dev.
-     *  Mark the node as pushed so we never push twice to the same <ins>.
-     */
-    const node = insRef.current as any;
-    if (node.__fwvPushed) {
+    const node = insRef.current as unknown as (HTMLElement & { __fwvPushed?: boolean }) | null;
+    if (!node) return;
+
+    const observe = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((e) => e.isIntersecting);
+        if (!isVisible) return;
+        // Try to init once visible
+        initOnce(node);
+      },
+      { rootMargin: "200px 0px" }
+    );
+    observe.observe(node);
+
+    return () => observe.disconnect();
+  }, [slot]);
+
+  function initOnce(node: HTMLElement & { __fwvPushed?: boolean }, attempt = 0) {
+    if (pushedRef.current || node.__fwvPushed) return;
+    const already = node.getAttribute("data-adsbygoogle-status") === "done";
+    if (already) {
+      pushedRef.current = true;
+      node.__fwvPushed = true;
       setStatus("rendered");
       return;
     }
 
-    // Ensure script exists (in case the loader hasn't injected it yet)
-    const ensureScript = () => {
-      const id = "adsbygoogle-js";
-      if (!document.getElementById(id)) {
-        const s = document.createElement("script");
-        s.id = id;
-        s.async = true;
-        s.crossOrigin = "anonymous";
-        s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
-          client,
-        )}`;
-        document.head.appendChild(s);
+    // Wait until the bootstrap created window.adsbygoogle
+    const w = window as any;
+    if (!w.adsbygoogle) {
+      if (attempt < 20) {
+        setStatus("loading");
+        setTimeout(() => initOnce(node, attempt + 1), 250);
+      } else {
+        setStatus("error");
       }
-    };
+      return;
+    }
 
-    const tryPush = (attempt = 0) => {
-      try {
-        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-        (window as any).adsbygoogle.push({});
-        node.__fwvPushed = true; // mark this <ins> as initialized
-        setStatus("rendered");
-      } catch {
-        if (attempt < 10) {
-          setStatus("loading");
-          setTimeout(() => tryPush(attempt + 1), 400);
-        } else {
-          setStatus("error");
-        }
+    try {
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+      pushedRef.current = true;
+      node.__fwvPushed = true;
+      setStatus("rendered");
+    } catch {
+      if (attempt < 10) {
+        setStatus("loading");
+        setTimeout(() => initOnce(node, attempt + 1), 300);
+      } else {
+        setStatus("error");
       }
-    };
+    }
+  }
 
-    ensureScript();
-    tryPush(0);
-  }, [client, slot]);
+  const style: React.CSSProperties = fullWidth
+    ? { display: "block", minHeight: `${height}px` }
+    : { display: "inline-block", width, height };
 
-  // If no client id, render nothing (avoids console noise in local dev)
-  if (!client) return null;
-
+  // Reserve space to avoid layout shift
   return (
-    <div
-      className={`relative ${className}`}
-      style={{
-        width: fullWidth ? "100%" : width,
-        minHeight: height, // reserve space so the box is visible even pre-fill
-      }}
-    >
-      {/* Real AdSense tag */}
-      <ins
-        ref={insRef as any}
-        className="adsbygoogle block"
-        style={{ display: "block", width: "100%" }}
-        data-ad-client={client}
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={fullWidth ? "true" : "false"}
-        {...(isTest ? { "data-adtest": "on" } : {})}
-      />
-
-      {/* Dev/No-fill placeholder overlay */}
-      {status !== "rendered" && (
+    <div ref={wrapperRef} className={className} aria-label="Ad placeholder">
+      {(!ADS_ENABLED || !CLIENT || process.env.NODE_ENV !== "production") && (
         <div
-          className="absolute inset-0 grid place-items-center rounded-lg"
-          style={{
-            border: "1px dashed #d1d5db",
-            background:
-              status === "error"
-                ? "repeating-linear-gradient(45deg, #fff, #fff 10px, #f9fafb 10px, #f9fafb 20px)"
-                : "#fff",
-          }}
+          className="grid place-items-center rounded-lg border border-dashed border-gray-300 bg-white text-[11px] text-gray-600"
+          style={{ minHeight: `${height}px` }}
         >
-          <div className="text-[11px] px-2 py-1 text-gray-600 text-center leading-snug">
-            {status === "error"
-              ? "Ad could not load (adblock/no-fill)."
-              : "Loading ad…"}
-            <br />
-            <span className="text-gray-400">
-              slot={slot} {isTest ? "• test on" : ""}
-            </span>
-          </div>
+          {placeholder ?? "Ad placeholder"}
         </div>
+      )}
+      {ADS_ENABLED && CLIENT && process.env.NODE_ENV === "production" && (
+        <ins
+          ref={insRef as any}
+          className="adsbygoogle"
+          style={style as any}
+          data-ad-client={CLIENT}
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={fullWidth ? "true" : "false"}
+        />
       )}
     </div>
   );

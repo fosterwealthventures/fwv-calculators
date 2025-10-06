@@ -36,43 +36,35 @@ const nextConfig = {
   async headers() {
     if (isDev) return [];
 
-    // ✅ CSP that allows AdSense/DoubleClick/GA (incl. adtrafficquality) & stays strict elsewhere
+    // ✅ CSP that allows AdSense while staying strict elsewhere
     const csp = [
       "default-src 'self'",
-      "base-uri 'self'",
-      "object-src 'none'",
-      "frame-ancestors 'self'",
-
-      // Scripts: AdSense, DoubleClick, GTM, GA, gstatic
-      "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net",
-
-      "script-src-elem 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net",
-
-      // XHR/fetch/WebSocket endpoints used by Ads/Analytics (incl. adtrafficquality)
-      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.adservice.google.com https://*.adtrafficquality.google",
-
-      // Images (ads/analytics beacons)
-      "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://www.google-analytics.com https://www.googletagmanager.com",
-
-      // Styles & fonts
+      // Scripts: AdSense, DoubleClick, Tag Manager, GA
+      "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://*.google.com https://www.googletagmanager.com https://*.google-analytics.com",
+      "script-src-elem 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://*.google.com https://www.googletagmanager.com https://*.google-analytics.com",
+      // Styles (inline needed for ads)
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
-
-      // iframes for ads
-      "frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net",
-
-      // Workers/Media (safe defaults)
-      "worker-src 'self' blob:",
+      // Images from self + Google/DoubleClick + data/blob
+      "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://*.google.com https://*.google-analytics.com https://www.googletagmanager.com",
+      // Connections/XHR/beacons used by AdSense & GA
+      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
+      // Iframes (ads)
+      "frame-src https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://*.google.com",
+      // Fonts
+      "font-src 'self' https://fonts.gstatic.com data:",
+      // Media/workers (safe defaults)
       "media-src 'self' blob: data:",
-
-      // Helpful
+      "worker-src 'self' blob:",
+      // Lockdowns
+      "object-src 'none'",
+      "base-uri 'self'",
       "form-action 'self'",
-      "upgrade-insecure-requests"
+      "frame-ancestors 'self'"
     ].join("; ");
 
     return [
       {
-        source: "/:path*",
+        source: "/(.*)",
         headers: [
           { key: "Content-Security-Policy", value: csp },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -87,12 +79,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "pagead2.googlesyndication.com" },
-      { protocol: "https", hostname: "tpc.googlesyndication.com" },
-      { protocol: "https", hostname: "securepubads.g.doubleclick.net" },
-      { protocol: "https", hostname: "googleads.g.doubleclick.net" },
       { protocol: "https", hostname: "*.googlesyndication.com" },
       { protocol: "https", hostname: "*.doubleclick.net" },
-      { protocol: "https", hostname: "*.g.doubleclick.net" },
       { protocol: "https", hostname: "*.google.com" },
       { protocol: "https", hostname: "www.googletagmanager.com" },
       { protocol: "https", hostname: "*.google-analytics.com" },

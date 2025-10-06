@@ -41,11 +41,9 @@ export default function AdFooter({ slot, className = "" }: Props) {
     const el = ref.current?.querySelector('ins.adsbygoogle') as HTMLElement | null;
     if (!el) return;
     const status = el.getAttribute('data-adsbygoogle-status');
-    if (status && status === 'done') { pushedRef.current = true; return; }
+    if (status === 'done') { pushedRef.current = true; return; }
     pushedRef.current = true;
-    try {
-      (window.adsbygoogle = (window as any).adsbygoogle || []).push({});
-    } catch {/* ignore */}
+    try { (window.adsbygoogle = (window as any).adsbygoogle || []).push({}); } catch {}
   }, [client, adSlot]);
 
   const wrapper = `mt-8 flex justify-center ${className}`;
