@@ -1,91 +1,31 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
 import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient, getInContentSlot, ADS_ENABLED } from "./adEnv";
+import AdSlot from "./AdSlot";
 
-const PAID_GUIDE_SLUGS = new Set([
-  "savings-growth",
-  "debt-payoff",
-  "employee-cost",
-  "expense-split-deluxe",
-]);
-const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]); // adjust if your calc keys differ
+type Props = {
+  enabled?: boolean;
+  className?: string;
+  /** Optional: override the default in-content slot via prop */
+  slot?: string;
+};
 
-function useIsPaidContext() {
-  const pathname = usePathname();
-  const qp = useSearchParams();
-  const calc = qp?.get("calc");
-  if (calc && PAID_CALC_SLUGS.has(calc)) return true;
-  if (pathname?.startsWith("/guide/")) {
-    const slug = pathname.split("/")[2] || "";
-    if (PAID_GUIDE_SLUGS.has(slug)) return true;
-  }
-  return false;
-}
+const ENV_SLOT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT || "";
 
-type Props = { slot?: string; className?: string };
-
-export default function AdInContent({ slot, className = "" }: Props) {
-  const isPaid = useIsPaidContext();
-  const ref = useRef<HTMLDivElement>(null);
-  const client = getAdsClient();
-  const adSlot = slot ?? getInContentSlot();
-
-  useEffect(() => {
-    if (process.env.NODE_ENV !== "production") return;
-    if (!client || !adSlot) return;
-
-    const el = ref.current?.querySelector(
-      "ins.adsbygoogle",
-    ) as HTMLElement | null;
-    if (!el) return;
-
-    // Only push once per mount if not already initialized
-    try {
-      const status = el.getAttribute("data-ad-status");
-      if (!status) {
-        window.adsbygoogle = window.adsbygoogle || [];
-        (function(){
-  const list = Array.from(document.querySelectorAll('ins.adsbygoogle')) as HTMLElement[];
-  const hasPending = list.some(n => n.getAttribute('data-adsbygoogle-status') !== 'done');
-  if (hasPending) {
-    (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-    (window as any).adsbygoogle.push({});
-  }
-})();
-      }
-    } catch {
-      /* noop */
-    }
-  }, [client, adSlot]);
-
-  if (!ADS_ENABLED || isPaid) return null;
-
-  const Placeholder = (
-    <div
-      className={`rounded-xl border bg-white p-4 text-sm text-gray-500 ${className}`}
-    >
-      Ad (in-content)
-    </div>
-  );
+export default function AdInContent({ enabled = true, className = "", slot }: Props) {
+  const resolvedSlot = slot || ENV_SLOT;
+  if (!resolvedSlot) return null;
 
   return (
     <AdGateFreeOnly>
-      {process.env.NODE_ENV !== "production" || !client || !adSlot ? (
-        <div ref={ref}>{Placeholder}</div>
-      ) : (
-        <div ref={ref} className={className}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client={client}
-            data-ad-slot={adSlot}
-            data-full-width-responsive="true"
-          />
-        </div>
-      )}
+      <AdSlot
+        slot={resolvedSlot}
+        enabled={enabled}
+        format="auto"
+        responsive
+        className={className}
+        style={{ display: "block", textAlign: "center", margin: "24px 0" }}
+      />
     </AdGateFreeOnly>
   );
 }

@@ -1,123 +1,63 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 type Props = {
   slot: string;
+  enabled?: boolean;                 // gate from parent (plan, etc.)
+  style?: CSSProperties;
   className?: string;
-  style?: React.CSSProperties;
+  format?: string;                   // e.g. "auto"
+  responsive?: boolean;              // sets data-full-width-responsive="true"
 };
 
-export default function AdSlot({ slot, className = "", style }: Props) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const pushedRef = useRef(false);
+const CLIENT  = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
+const ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+const IS_PROD = process.env.NODE_ENV === "production";
 
-  const isProd = process.env.NODE_ENV === "production";
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
-  const enabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
-  const canShow = isProd && enabled && !!client;
+export default function AdSlot({
+  slot,
+  enabled = true,
+  style,
+  className,
+  format,
+  responsive,
+}: Props) {
+  // <ins> is typed as HTMLModElement in the DOM lib
+  const ref = useRef<HTMLModElement | null>(null);
+  const pathname = usePathname();
 
-  // Determine if this is a fixed-size ad or responsive
-  const isFixedSize = style?.width && style?.height;
-  const isSidebarAd = slot === process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || 
-                     slot === process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2;
-
-  useEffect(() => setMounted(true), []);
+  // fresh <ins> per route so we never push into an already-"done" node
+  const key = useMemo(() => `${slot}-${pathname}`, [slot, pathname]);
 
   useEffect(() => {
-    if (!canShow || !mounted || !containerRef.current || pushedRef.current) return;
+    if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot || !ref.current) return;
 
-    const el = containerRef.current;
-    
-    // Check if this specific slot has already been processed
-    const insElement = el.querySelector('.adsbygoogle') as HTMLElement;
-    if (insElement?.getAttribute('data-adsbygoogle-status') === 'done') {
-      pushedRef.current = true;
-      return;
+    const el = ref.current as unknown as HTMLElement;
+    // If this node already has an ad, don't push again
+    if (el.getAttribute("data-adsbygoogle-status") === "done") return;
+
+    try {
+      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      (window as any).adsbygoogle.push({});
+    } catch {
+      // swallow occasional dev/strict hiccups
     }
+  }, [key, enabled, slot]);
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0]?.isIntersecting || pushedRef.current) return;
-        try {
-          const w = window as any;
-          // Only push if not already marked
-          if (!insElement?.getAttribute('data-adsbygoogle-status')) {
-            w.adsbygoogle = w.adsbygoogle || [];
-            (function(){
-  const list = Array.from(document.querySelectorAll('ins.adsbygoogle')) as HTMLElement[];
-  const hasPending = list.some(n => n.getAttribute('data-adsbygoogle-status') !== 'done');
-  if (hasPending) {
-    w.adsbygoogle = w.adsbygoogle || [];
-    w.adsbygoogle.push({});
-  }
-})();
-            pushedRef.current = true;
-          }
-          io.disconnect();
-        } catch {
-          /* swallow errors */
-        }
-      },
-      { rootMargin: "200px 0px", threshold: 0 }
-    );
-
-    io.observe(el);
-    return () => io.disconnect();
-  }, [canShow, mounted, slot]);
-
-  if (!canShow) {
-    if (!isProd) {
-      return (
-        <div
-          className={`rounded-md border border-dashed p-4 text-center text-xs text-gray-500 ${className}`}
-          style={{ 
-            minHeight: isFixedSize ? undefined : 120, 
-            ...(style || {}) 
-          }}
-        >
-          (Ad placeholder) Slot: {slot}
-          {isFixedSize && (
-            <div className="text-gray-400 mt-1">
-              Fixed: {style?.width} × {style?.height}
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
-  }
+  if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot) return null;
 
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      style={{ 
-        display: "block", 
-        ...(isFixedSize ? { 
-          width: style.width, 
-          height: style.height,
-          margin: '0 auto' // Center fixed-size ads
-        } : { 
-          width: "100%" 
-        }),
-        ...(style || {})
-      }}
-    >
-      <ins
-        className="adsbygoogle"
-        style={{ 
-          display: isFixedSize ? "inline-block" : "block", 
-          width: isFixedSize ? style.width : "100%",
-          height: isFixedSize ? style.height : "auto",
-          minHeight: isFixedSize ? undefined : 120
-        }}
-        data-ad-client={client}
-        data-ad-slot={slot}
-        data-ad-format={isFixedSize ? undefined : "auto"}
-        data-full-width-responsive={isFixedSize ? "false" : "true"}
-      />
-    </div>
+    <ins
+      key={key}
+      ref={ref as any}
+      className={`adsbygoogle ${className ?? ""}`}
+      style={style ?? { display: "block" }}
+      data-ad-client={CLIENT}
+      data-ad-slot={slot}
+      {...(format ? { "data-ad-format": format } : {})}
+      {...(responsive ? { "data-full-width-responsive": "true" } : {})}
+    />
   );
 }

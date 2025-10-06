@@ -1,75 +1,49 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient } from "./adEnv";
+import AdSlot from "./AdSlot";
 
 type Props = {
+  enabled?: boolean;
+  className?: string;
+  /** Optional sizing for the tall sidebar unit */
   width?: number;
   height?: number;
-  slot?: string;
-  className?: string;
+  /** Optional: override env slots */
+  slot1?: string;
+  slot2?: string;
 };
 
+const ENV_SLOT1 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || "";
+const ENV_SLOT2 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2 || "";
+
 export default function AdInSidebar({
+  enabled = true,
+  className = "",
   width = 300,
   height = 600,
-  slot,
-  className = "",
+  slot1,
+  slot2,
 }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const client = getAdsClient();
+  if (!enabled) return null;
 
-  useEffect(() => {
-    if (process.env.NODE_ENV !== "production") return;
-    if (!client || !slot) return;
-
-    const el = ref.current?.querySelector(
-      "ins.adsbygoogle",
-    ) as HTMLElement | null;
-    if (!el) return;
-
-    try {
-      const status = el.getAttribute("data-ad-status");
-      if (!status) {
-        window.adsbygoogle = window.adsbygoogle || [];
-        (function(){
-  const list = Array.from(document.querySelectorAll('ins.adsbygoogle')) as HTMLElement[];
-  const hasPending = list.some(n => n.getAttribute('data-adsbygoogle-status') !== 'done');
-  if (hasPending) {
-    (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-    (window as any).adsbygoogle.push({});
-  }
-})();
-      }
-    } catch {
-      /* noop */
-    }
-  }, [client, slot, width, height]);
-
-  const Placeholder = (
-    <div
-      className={`rounded-xl border bg-white p-4 text-sm text-gray-500 ${className}`}
-      style={{ width, height }}
-    >
-      Ad (sidebar {width}×{height})
-    </div>
-  );
+  const s1 = slot1 || ENV_SLOT1; // 300x250
+  const s2 = slot2 || ENV_SLOT2; // 300x600 (or whatever size you configured)
 
   return (
     <AdGateFreeOnly>
-      {process.env.NODE_ENV !== "production" || !client || !slot ? (
-        <div ref={ref}>{Placeholder}</div>
-      ) : (
-        <div ref={ref} className={className}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: "inline-block", width, height }}
-            data-ad-client={client}
-            data-ad-slot={slot}
-          />
-        </div>
-      )}
+      <div className={`space-y-4 ${className}`}>
+        {s1 && (
+          <div className="flex justify-center">
+            <AdSlot slot={s1} enabled style={{ width: 300, height: 250, display: "inline-block" }} />
+          </div>
+        )}
+        {s2 && (
+          <div className="flex justify-center">
+            <AdSlot slot={s2} enabled style={{ width, height, display: "inline-block" }} />
+          </div>
+        )}
+      </div>
     </AdGateFreeOnly>
   );
 }
