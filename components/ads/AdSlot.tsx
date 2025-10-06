@@ -45,7 +45,14 @@ export default function AdSlot({ slot, className = "", style }: Props) {
           // Only push if not already marked
           if (!insElement?.getAttribute('data-adsbygoogle-status')) {
             w.adsbygoogle = w.adsbygoogle || [];
-            w.adsbygoogle.push({});
+            (function(){
+  const list = Array.from(document.querySelectorAll('ins.adsbygoogle')) as HTMLElement[];
+  const hasPending = list.some(n => n.getAttribute('data-adsbygoogle-status') !== 'done');
+  if (hasPending) {
+    w.adsbygoogle = w.adsbygoogle || [];
+    w.adsbygoogle.push({});
+  }
+})();
             pushedRef.current = true;
           }
           io.disconnect();

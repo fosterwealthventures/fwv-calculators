@@ -44,10 +44,17 @@ export default function AdInContent({ slot, className = "" }: Props) {
 
     // Only push once per mount if not already initialized
     try {
-      const status = el.getAttribute("data-adsbygoogle-status");
+      const status = el.getAttribute("data-ad-status");
       if (!status) {
         window.adsbygoogle = window.adsbygoogle || [];
-        window.adsbygoogle.push({});
+        (function(){
+  const list = Array.from(document.querySelectorAll('ins.adsbygoogle')) as HTMLElement[];
+  const hasPending = list.some(n => n.getAttribute('data-adsbygoogle-status') !== 'done');
+  if (hasPending) {
+    (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+    (window as any).adsbygoogle.push({});
+  }
+})();
       }
     } catch {
       /* noop */
