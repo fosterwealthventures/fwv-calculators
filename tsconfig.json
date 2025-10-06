@@ -6,7 +6,9 @@
         "name": "next"
       }
     ],
-    "allowJs": false
+    "allowJs": false,
+    "lib": ["dom", "dom.iterable", "esnext"]
+
   },
   "include": [
     "**/*.d.ts",
