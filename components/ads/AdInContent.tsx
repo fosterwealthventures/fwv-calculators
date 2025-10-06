@@ -6,14 +6,12 @@ import AdSlot from "./AdSlot";
 type Props = {
   enabled?: boolean;
   className?: string;
-  /** Optional: override the default in-content slot via prop */
   slot?: string;
+  eager?: boolean;
 };
 
-const ENV_SLOT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT || "";
-
-export default function AdInContent({ enabled = true, className = "", slot }: Props) {
-  const resolvedSlot = slot || ENV_SLOT;
+export default function AdInContent({ enabled = true, className = "", slot, eager = false }: Props) {
+  const resolvedSlot = slot || process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT || "";
   if (!resolvedSlot) return null;
 
   return (
@@ -23,6 +21,7 @@ export default function AdInContent({ enabled = true, className = "", slot }: Pr
         enabled={enabled}
         format="auto"
         responsive
+        eager={eager}
         className={className}
         style={{ display: "block", textAlign: "center", margin: "24px 0" }}
       />
