@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import AdGateFreeOnly from "./AdGateFreeOnly";
-import { getAdsClient, getFooterSlot } from "./adEnv";
 import { usePathname, useSearchParams } from "next/navigation";
+import AdGateFreeOnly from "./AdGateFreeOnly";
+import AdSlot from "./AdSlot";
 
 const PAID_GUIDE_SLUGS = new Set([
   "savings-growth",
@@ -11,7 +10,8 @@ const PAID_GUIDE_SLUGS = new Set([
   "employee-cost",
   "expense-split-deluxe",
 ]);
-const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]); // update if your internal calc keys differ
+
+const PAID_CALC_SLUGS = new Set(["savings", "debt", "employee", "expense-split-deluxe"]);
 
 function useIsPaidContext() {
   const pathname = usePathname();
@@ -28,51 +28,21 @@ function useIsPaidContext() {
 type Props = { slot?: string; className?: string };
 
 export default function AdFooter({ slot, className = "" }: Props) {
-  const pushedRef = useRef(false);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const client = getAdsClient();
-  const adSlot = slot ?? getFooterSlot();
+  const adSlot = slot || process.env.NEXT_PUBLIC_ADSENSE_FOOTER_SLOT || "";
   const isPaid = useIsPaidContext();
 
-  useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') return;
-    if (!client || !adSlot) return;
-    if (pushedRef.current) return;
-    const el = ref.current?.querySelector('ins.adsbygoogle') as HTMLElement | null;
-    if (!el) return;
-    const status = el.getAttribute('data-adsbygoogle-status');
-    if (status === 'done') { pushedRef.current = true; return; }
-    pushedRef.current = true;
-    try { (window.adsbygoogle = (window as any).adsbygoogle || []).push({}); } catch {}
-  }, [client, adSlot]);
-
-  const wrapper = `mt-8 flex justify-center ${className}`;
+  if (!adSlot || isPaid) return null;
 
   return (
     <AdGateFreeOnly>
-      {!client || !adSlot || isPaid ? (
-        <div ref={ref} className={wrapper} aria-label="Ad placeholder">
-          <div
-            className="w-full max-w-6xl rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-4 text-center shadow-sm"
-            style={{ minHeight: 120 }}
-          >
-            <div className="text-sm text-gray-500">
-              Footer ad space — set your AdSense env vars.
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div ref={ref} className={wrapper}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block", textAlign: "center", minHeight: 120 }}
-            data-ad-client={client}
-            data-ad-slot={adSlot}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        </div>
-      )}
+      <div className={`mt-8 flex justify-center ${className}`}>
+        <AdSlot
+          slot={adSlot}
+          format="auto"
+          responsive
+          style={{ display: 'block', minHeight: 120 }}
+        />
+      </div>
     </AdGateFreeOnly>
   );
 }

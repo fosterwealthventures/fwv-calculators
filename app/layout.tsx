@@ -6,17 +6,17 @@ import React from "react";
 import { cookies } from "next/headers";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import { PlanProvider } from "@/providers/PlanProvider";
-import AdSlot from "@/components/ads/AdSlot"; // safe slot component
+import AdSlot from "@/components/ads/AdSlot";
 import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
 
 export const dynamic = "force-dynamic";
 
 type Plan = "free" | "plus" | "pro" | "premium";
-const isProd = process.env.NODE_ENV === "production";
 
-// AdSense env flags (set these in Vercel)
-const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";   // e.g. "ca-pub-xxxxxxxxxxxxxxxx"
-const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+// Define config directly in layout to avoid import issues
+const isProd = process.env.NODE_ENV === 'production';
+const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '';
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true';
 
 export const metadata: Metadata = {
   title: "Foster Wealth Calculators",
@@ -73,7 +73,6 @@ function Footer() {
 }
 
 function Sidebar({ showAds }: { showAds: boolean }) {
-  // optional per-page slots via env
   const SLOT1 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || "";
   const SLOT2 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2 || "";
 
@@ -94,7 +93,9 @@ function Sidebar({ showAds }: { showAds: boolean }) {
         <div className="flex justify-center">
           <AdSlot
             slot={SLOT1}
-            style={{ width: 300, height: 250 }}
+            style={{ width: 300, height: 250, display: 'block' }}
+            format="rectangle"
+            responsive={false}
           />
         </div>
       )}
@@ -102,7 +103,9 @@ function Sidebar({ showAds }: { showAds: boolean }) {
         <div className="flex justify-center">
           <AdSlot
             slot={SLOT2}
-            style={{ width: 300, height: 600 }}
+            style={{ width: 300, height: 600, display: 'block' }}
+            format="rectangle"
+            responsive={false}
           />
         </div>
       )}
@@ -116,35 +119,19 @@ function Sidebar({ showAds }: { showAds: boolean }) {
 }
 
 function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: Plan }) {
-  // Show ad *units* only for FREE plan; load the AdSense script for all plans so the queue exists.
   const showAds = plan === "free" && isProd && ADS_ENABLED && !!ADS_CLIENT;
   const adsBootstrapEnabled = isProd && ADS_ENABLED && !!ADS_CLIENT;
 
   return (
     <html lang="en" data-plan={plan}>
       <head>
-        {/* Google ownership / account hint */}
         {ADS_CLIENT && <meta name="google-adsense-account" content={ADS_CLIENT} />}
-
-        {/* Small perf win + helps Google fetch resources quickly */}
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="" />
-
-        {/* Remove noisy extension attributes before hydration (harmless noop) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try{var h=document.documentElement;['data-qb-installed','data-new-gr-c-s-check-loaded','data-gr-ext-installed'].forEach(a=>h.removeAttribute(a));}catch(e){}
-            `,
-          }}
-        />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
-        {/* 1) Bootstrap AdSense ONCE per page (even for paid users). 
-              No ads render unless <AdSlot/> is present (which we gate by plan). */}
         <ClientAdsLoader enabled={adsBootstrapEnabled} />
-
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
             <Header />
