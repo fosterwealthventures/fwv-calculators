@@ -180,48 +180,6 @@ const ToggleGroup: React.FC<{
   </div>
 );
 
-
-/** ---------- Small UI: ModeSwitch (slide toggle) ---------- */
-const ModeSwitch: React.FC<{
-  value: "simple" | "compound";
-  onChange: (v: "simple" | "compound") => void;
-}> = ({ value, onChange }) => {
-  const isCompound = value === "compound";
-  return (
-    <div className="inline-block">
-      <div
-        className="relative w-[300px] select-none rounded-full border border-neutral-300 bg-white p-1"
-        role="group"
-        aria-label="Interest mode"
-      >
-        {/* Sliding knob */}
-        <div
-          className={`absolute top-1 h-8 rounded-full bg-brand-green transition-all duration-200 ease-out
-                      ${isCompound ? "left-1 w-[calc(50%-0.25rem)]" : "left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]"}`}
-          aria-hidden
-        />
-        {/* Buttons */}
-        <button
-          type="button"
-          className={`relative z-10 w-1/2 py-2 text-sm font-medium ${isCompound ? "text-white" : "text-gray-700"}`}
-          onClick={() => onChange("compound")}
-          aria-pressed={isCompound}
-        >
-          Compound
-        </button>
-        <button
-          type="button"
-          className={`relative z-10 w-1/2 py-2 text-sm font-medium ${!isCompound ? "text-white" : "text-gray-700"}`}
-          onClick={() => onChange("simple")}
-          aria-pressed={!isCompound}
-        >
-          Simple
-        </button>
-      </div>
-    </div>
-  );
-};
-
 const ExplanationPanel: React.FC<{
   title: string;
   children: React.ReactNode;
@@ -267,6 +225,58 @@ const Header: React.FC<{ title: string }> = ({ title }) => (
     <h2 className="heading-section">{title}</h2>
   </div>
 );
+
+/** ----------------------------------------------------------------------------------------------
+ *  Interest helpers (frequency map + table)
+ * ---------------------------------------------------------------------------------------------- */
+const COMPOUND_OPTIONS = [
+  { value: "annually",       label: "Annually",       n: 1 },
+  { value: "semiannually",   label: "Semi-Annually",  n: 2 },
+  { value: "quarterly",      label: "Quarterly",      n: 4 },
+  { value: "monthly",        label: "Monthly",        n: 12 },
+  { value: "daily",          label: "Daily",          n: 365 },
+] as const;
+
+type CompoundValue = (typeof COMPOUND_OPTIONS)[number]["value"];
+const nFrom = (v: CompoundValue) => COMPOUND_OPTIONS.find(o => o.value === v)!.n;
+
+type YearRow = {
+  year: number;
+  start: number;
+  contributions: number;
+  interest: number;
+  end: number;
+};
+
+const YearBreakdownTable: React.FC<{ rows: YearRow[] }> = ({ rows }) => {
+  if (!rows.length) return null;
+  return (
+    <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+      <table className="min-w-[720px] w-full text-sm">
+        <thead className="bg-neutral-50">
+          <tr className="text-left">
+            <th className="px-4 py-3 font-semibold">Year</th>
+            <th className="px-4 py-3 font-semibold">Starting Balance</th>
+            <th className="px-4 py-3 font-semibold">Contributions</th>
+            <th className="px-4 py-3 font-semibold">Interest</th>
+            <th className="px-4 py-3 font-semibold">Ending Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.year} className="odd:bg-white even:bg-neutral-50">
+              <td className="px-4 py-3">{r.year}</td>
+              <td className="px-4 py-3">{fmtUSD(r.start)}</td>
+              <td className="px-4 py-3">{fmtUSD(r.contributions)}</td>
+              <td className="px-4 py-3">{fmtUSD(r.interest)}</td>
+              <td className="px-4 py-3">{fmtUSD(r.end)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 /** ----------------------------------------------------------------------------------------------
  *  Component
@@ -360,28 +370,85 @@ export default function FosterWealthCalculators({
     return { monthly, total: monthly * n };
   }, [mtgInputs]);
 
-  /* ---------- Simple vs Compound Interest ---------- */
+  
+  /* ---------- Simple vs Compound Interest (enhanced) ---------- */
   const [interestMode, setInterestMode] = useState<"simple" | "compound">(
     "compound",
   );
   const [intInputs, setIntInputs] = useState({
     principal: "10000",
     annualRatePct: "5",
-    years: "5",
-    compoundsPerYear: "12",
+    years: "10",
+    monthlyContribution: "0",
+    frequency: "monthly" as CompoundValue, // used when mode = compound
   });
   const interest = useMemo(() => {
-    const P = parseFloat(intInputs.principal) || 0;
-    const r = (parseFloat(intInputs.annualRatePct) || 0) / 100;
-    const t = parseFloat(intInputs.years) || 0;
-    if (interestMode === "simple") {
-      const A = P * (1 + r * t);
-      return { amount: A, interest: A - P };
-    } else {
-      const n = Math.max(parseFloat(intInputs.compoundsPerYear) || 1, 1);
-      const A = P * Math.pow(1 + r / n, n * t);
-      return { amount: A, interest: A - P };
+    const P = Math.max(parseFloat(intInputs.principal) || 0, 0);
+    const r = Math.max((parseFloat(intInputs.annualRatePct) || 0) / 100, 0);
+    const years = Math.max(parseFloat(intInputs.years) || 0, 0);
+    const PMT = Math.max(parseFloat(intInputs.monthlyContribution) || 0, 0);
+    const months = Math.round(years * 12);
+
+    if (months <= 0 || r < 0) {
+      const contributed = P + PMT * months;
+      const breakdown: YearRow[] = [];
+      return { amount: contributed, interest: 0, contributed, breakdown };
     }
+
+    let balance = P;
+    let cumPrincipal = P; // total principal so far (initial + contributions)
+    let totalInterest = 0;
+    let rows: YearRow[] = [];
+
+    let yearStartBal = balance;
+    let yearInterest = 0;
+    let yearContrib = 0;
+
+    const n = nFrom(intInputs.frequency);
+    // Convert chosen compounding frequency to an equivalent monthly rate:
+    // r_month_compound = (1 + r/n)^(n/12) - 1
+    const rMonthCompound = Math.pow(1 + r / n, n / 12) - 1;
+    const rMonthSimple = r / 12;
+
+    for (let m = 1; m <= months; m++) {
+      if (interestMode === "compound") {
+        const iM = balance * rMonthCompound; // interest on balance (compounds)
+        totalInterest += iM;
+        balance += iM;
+        balance += PMT;          // contribution at end of month
+        cumPrincipal += PMT;
+
+        yearInterest += iM;
+        yearContrib += PMT;
+      } else {
+        // SIMPLE: interest accrues on principal only (no compounding on interest)
+        const iM = cumPrincipal * rMonthSimple;
+        totalInterest += iM;
+
+        cumPrincipal += PMT;     // contribution at end of month
+        balance = cumPrincipal + totalInterest;
+
+        yearInterest += iM;
+        yearContrib += PMT;
+      }
+
+      if (m % 12 === 0 || m === months) {
+        const yearIndex = Math.ceil(m / 12);
+        rows.push({
+          year: yearIndex,
+          start: yearStartBal,
+          contributions: yearContrib,
+          interest: yearInterest,
+          end: balance,
+        });
+        yearStartBal = balance;
+        yearInterest = 0;
+        yearContrib = 0;
+      }
+    }
+
+    const contributed = P + PMT * months;
+    return { amount: balance, interest: totalInterest, contributed, breakdown: rows };
   }, [intInputs, interestMode]);
 
   /* --------------- Freelancer Rate --------------- */
@@ -523,7 +590,7 @@ export default function FosterWealthCalculators({
           })}
         </div>
 
-        {/* Top in-suite ad — show only for Free plan */}
+        {/* Top in-suite ad – show only for Free plan */}
         <div className="mt-3">{planId === "free" ? <AdBannerTop /> : null}</div>
       </div>
 
@@ -863,101 +930,195 @@ export default function FosterWealthCalculators({
           </section>
         )}
 
-        {/* Interest (Simple/Compound) */}
+        {/* Interest (Simple/Compound) - ENHANCED VERSION */}
         {activeCalc === "interest" && (
           <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
             <Header title="Interest Calculator (Simple / Compound)" />
             <div className="p-6">
-              <div className="mb-4 flex gap-2">
+              {/* Mode toggle */}
+              <div className="mb-6 flex gap-3">
                 <button
                   type="button"
                   onClick={() => setInterestMode("compound")}
-                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                     interestMode === "compound"
-                      ? "bg-brand-green text-white"
-                      : "border border-neutral-300 hover:bg-neutral-100"
+                      ? "bg-brand-green text-white shadow-md"
+                      : "border border-neutral-300 bg-white hover:bg-neutral-50"
                   }`}
                 >
-                  Compound
+                  Compound Interest
                 </button>
                 <button
                   type="button"
                   onClick={() => setInterestMode("simple")}
-                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                     interestMode === "simple"
-                      ? "bg-brand-green text-white"
-                      : "border border-neutral-300 hover:bg-neutral-100"
+                      ? "bg-brand-green text-white shadow-md"
+                      : "border border-neutral-300 bg-white hover:bg-neutral-50"
                   }`}
                 >
-                  Simple
+                  Simple Interest
                 </button>
               </div>
+
               <div className="grid gap-6 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="int_principal"
-                    label="Principal ($)"
+                    label="Initial Principal ($)"
                     value={intInputs.principal}
-                    onChange={(v) =>
-                      setIntInputs((s) => ({ ...s, principal: v }))
-                    }
+                    onChange={(v) => setIntInputs((s) => ({ ...s, principal: v }))}
+                    type="number"
                   />
                   <Input
                     id="int_rate"
-                    label="Annual Rate (%)"
+                    label="Annual Interest Rate (%)"
                     value={intInputs.annualRatePct}
-                    onChange={(v) =>
-                      setIntInputs((s) => ({ ...s, annualRatePct: v }))
-                    }
+                    onChange={(v) => setIntInputs((s) => ({ ...s, annualRatePct: v }))}
+                    type="number"
                   />
                   <Input
                     id="int_years"
-                    label="Years"
+                    label="Time Period (Years)"
                     value={intInputs.years}
                     onChange={(v) => setIntInputs((s) => ({ ...s, years: v }))}
+                    type="number"
                   />
+                  <Input
+                    id="int_monthly"
+                    label="Monthly Contribution ($)"
+                    value={intInputs.monthlyContribution}
+                    onChange={(v) =>
+                      setIntInputs((s) => ({ ...s, monthlyContribution: v }))
+                    }
+                    type="number"
+                    placeholder="Optional"
+                  />
+                  
                   {interestMode === "compound" && (
-                    <Input
-                      id="int_n"
-                      label="Compounds / Year"
-                      value={intInputs.compoundsPerYear}
-                      onChange={(v) =>
-                        setIntInputs((s) => ({ ...s, compoundsPerYear: v }))
-                      }
-                    />
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Compounding Frequency
+                      </label>
+                      <select
+                        value={intInputs.frequency}
+                        onChange={(e) =>
+                          setIntInputs((s) => ({ ...s, frequency: e.target.value as CompoundValue }))
+                        }
+                        className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-gray-900 shadow-sm
+                                   focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40"
+                      >
+                        {COMPOUND_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   )}
                 </InputsPanel>
+
                 <ResultsPanel title="Results">
-                  <KV label="Final Amount" value={fmtUSD(interest.amount)} />
-                  <KV
-                    label="Total Interest"
-                    value={fmtUSD(interest.interest)}
-                  />
+                  <div className="space-y-4">
+                    <div className="rounded-xl bg-gradient-to-br from-brand-green/10 to-brand-green/5 p-4 ring-1 ring-brand-green/20">
+                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-green/70">
+                        Final Amount
+                      </p>
+                      <p className="text-3xl font-bold text-brand-green">
+                        {fmtUSD(interest.amount)}
+                      </p>
+                    </div>
+                    
+                    <KV label="Total Interest Earned" value={fmtUSD(interest.interest)} />
+                    <KV label="Total Contributed" value={fmtUSD(interest.contributed)} />
+                    
+                    <div className="rounded-lg bg-neutral-50 p-3 text-sm">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-gray-600">Principal:</span>
+                        <span className="font-medium">{fmtUSD(parseFloat(intInputs.principal) || 0)}</span>
+                      </div>
+                      {parseFloat(intInputs.monthlyContribution) > 0 && (
+                        <div className="flex justify-between mb-1">
+                          <span className="text-gray-600">Monthly Deposits:</span>
+                          <span className="font-medium">
+                            {fmtUSD(parseFloat(intInputs.monthlyContribution) * parseFloat(intInputs.years) * 12)}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex justify-between pt-2 border-t border-gray-200">
+                        <span className="font-semibold text-gray-700">Interest:</span>
+                        <span className="font-semibold text-brand-green">{fmtUSD(interest.interest)}</span>
+                      </div>
+                    </div>
+                  </div>
                 </ResultsPanel>
               </div>
             </div>
+
+            {/* Year-by-year breakdown */}
             <div className="px-6 pb-6">
-              <ExplanationPanel title="How this works">
-                <ul className="ml-5 list-disc">
-                  <li>
-                    <b>Simple:</b> A = P(1 + rt)
-                  </li>
-                  <li>
-                    <b>Compound:</b> A = P(1 + r/n)<sup>nt</sup>
-                  </li>
-                  <li>Use compound interest when earnings are reinvested.</li>
-                </ul>
-                <p className="mt-2">
-                  Learn more:{" "}
-                  <Link
-                    className="text-brand-green underline"
-                    href="/guide/simple-vs-compound-interest"
-                  >
-                    Simple vs Compound Interest—Which One Grows Your Money
-                    Faster?
-                  </Link>
+              <ExplanationPanel title="Year-by-Year Breakdown">
+                <p className="mb-3 text-sm">
+                  {interestMode === "compound" ? (
+                    <>
+                      In <b>Compound Interest</b> mode, interest is calculated on both the principal and 
+                      accumulated interest at the selected frequency. Monthly contributions are added at the 
+                      end of each month and begin earning interest immediately.
+                    </>
+                  ) : (
+                    <>
+                      In <b>Simple Interest</b> mode, interest is calculated only on the principal amount 
+                      (initial deposit plus contributions). Interest does not compound—it stays separate 
+                      and doesn't earn additional interest.
+                    </>
+                  )}
                 </p>
+                <YearBreakdownTable rows={interest.breakdown} />
               </ExplanationPanel>
+
+              <div className="mt-4">
+                <ExplanationPanel title="How this works">
+                  <ul className="ml-5 list-disc space-y-2">
+                    {interestMode === "compound" ? (
+                      <>
+                        <li>
+                          <b>Compound Interest Formula:</b> The selected frequency is converted to a 
+                          monthly rate: r<sub>monthly</sub> = (1 + r/n)<sup>n/12</sup> − 1, where n is 
+                          the compounding frequency per year.
+                        </li>
+                        <li>
+                          Each month: balance = balance × (1 + r<sub>monthly</sub>) + monthly contribution
+                        </li>
+                        <li>
+                          This means your interest earns interest, leading to exponential growth over time.
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li>
+                          <b>Simple Interest Formula:</b> Interest = Principal × Rate × Time
+                        </li>
+                        <li>
+                          Monthly interest = (principal to date) × (annual rate / 12)
+                        </li>
+                        <li>
+                          Interest accumulates separately and doesn't compound, resulting in linear growth.
+                        </li>
+                      </>
+                    )}
+                    <li>
+                      "Total Contributed" includes your initial principal plus all monthly deposits over 
+                      the time period.
+                    </li>
+                  </ul>
+                  <p className="mt-3">
+                    Learn more:{" "}
+                    <Link className="text-brand-green underline" href="/guide/simple-vs-compound-interest">
+                      Simple vs Compound Interest—Which One Grows Your Money Faster?
+                    </Link>
+                  </p>
+                </ExplanationPanel>
+              </div>
             </div>
           </section>
         )}
@@ -1189,4 +1350,3 @@ export default function FosterWealthCalculators({
     </div>
   );
 }
-
