@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 
 type Props = {
   slot: string;
-  enabled?: boolean;                 // gate from parent (plan, etc.)
+  enabled?: boolean;
   style?: CSSProperties;
   className?: string;
-  format?: string;                   // e.g. "auto"
-  responsive?: boolean;              // sets data-full-width-responsive="true"
+  format?: string;          // e.g. "auto"
+  responsive?: boolean;     // data-full-width-responsive="true"
 };
 
 const CLIENT  = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
@@ -24,25 +24,44 @@ export default function AdSlot({
   format,
   responsive,
 }: Props) {
-  // <ins> is typed as HTMLModElement in the DOM lib
+  // <ins> is typed as HTMLModElement in lib.dom
   const ref = useRef<HTMLModElement | null>(null);
   const pathname = usePathname();
 
-  // fresh <ins> per route so we never push into an already-"done" node
+  // Force a fresh <ins> on route change
   const key = useMemo(() => `${slot}-${pathname}`, [slot, pathname]);
 
-  useEffect(() => {
-    if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot || !ref.current) return;
+  // local guard so Strict/re-renders don't double-push
+  const alreadyQueuedRef = useRef(false);
 
-    const el = ref.current as unknown as HTMLElement;
-    // If this node already has an ad, don't push again
-    if (el.getAttribute("data-adsbygoogle-status") === "done") return;
+  useEffect(() => {
+    if (!IS_PROD || !ENABLED || !CLIENT || !enabled || !slot) return;
+    const el = ref.current as unknown as HTMLElement | null;
+    if (!el) return;
+
+    // If Google already touched this node, it will be 'reserved' then 'done'
+    const status = el.getAttribute("data-adsbygoogle-status");
+    if (status) return;
+
+    // If we already queued once for this instance, stop
+    if (alreadyQueuedRef.current || el.getAttribute("data-ad-init") === "1") return;
+
+    // GLOBAL SAFETY: if there are no pending <ins> anywhere, skip push
+    // (prevents "All 'ins' elements ... already have ads" TagError)
+    const pending = document.querySelector(
+      'ins.adsbygoogle:not([data-adsbygoogle-status]):not([data-ad-init="1"])'
+    );
+    if (!pending) return;
 
     try {
+      // mark BEFORE pushing so a second pass won't re-queue
+      alreadyQueuedRef.current = true;
+      el.setAttribute("data-ad-init", "1");
+
       (window as any).adsbygoogle = (window as any).adsbygoogle || [];
       (window as any).adsbygoogle.push({});
     } catch {
-      // swallow occasional dev/strict hiccups
+      /* ignore occasional hiccups */
     }
   }, [key, enabled, slot]);
 
