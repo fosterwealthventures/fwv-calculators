@@ -1,33 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
 // app/layout.tsx
-import "./globals.css";
-import type { Metadata } from "next";
-import React from "react";
-import { cookies } from "next/headers";
-import { EntitlementsProvider } from "@/lib/entitlements-client";
-import { PlanProvider } from "@/providers/PlanProvider";
-import AdSlot from "@/components/ads/AdSlot";
-import ClientAdsLoader from "@/components/ads/ClientAdsLoader";
+import './globals.css';
+import type { Metadata } from 'next';
+import React from 'react';
+import { cookies } from 'next/headers';
+
+import { EntitlementsProvider } from '@/lib/entitlements-client';
+import { PlanProvider } from '@/providers/PlanProvider';
+import AdSlot from '@/components/ads/AdSlot';
+import ClientAdsLoader from '@/components/ads/ClientAdsLoader';
 import { ADS_CLIENT, ADS_ENABLED } from '@/lib/ads-config';
 
+export const dynamic = 'force-dynamic';
 
-export const dynamic = "force-dynamic";
-
-type Plan = "free" | "plus" | "pro" | "premium";
-
-// Define config directly in layout to avoid import issues
+type Plan = 'free' | 'plus' | 'pro' | 'premium';
 const isProd = process.env.NODE_ENV === 'production';
 
 export const metadata: Metadata = {
-  title: "Foster Wealth Calculators",
+  title: 'Foster Wealth Calculators',
   description:
-    "Free and premium financial calculators by Foster Wealth Ventures. Upgrade to unlock advanced calculators and an ad-free experience.",
-  icons: { icon: "/favicon.ico" },
+    'Free and premium financial calculators by Foster Wealth Ventures. Upgrade to unlock advanced calculators and an ad-free experience.',
+  icons: { icon: '/favicon.ico' },
 };
 
 function parsePlan(v?: string | null): Plan {
-  const x = (v || "").toLowerCase().trim();
-  return x === "plus" || x === "pro" || x === "premium" ? (x as Plan) : "free";
+  const x = (v || '').toLowerCase().trim();
+  return x === 'plus' || x === 'pro' || x === 'premium' ? (x as Plan) : 'free';
 }
 
 function Header() {
@@ -36,9 +34,7 @@ function Header() {
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
         <a href="/" className="flex items-center gap-3 shrink-0">
           <img src="/logo.png" alt="Foster Wealth Ventures" width={184} height={100} className="rounded-sm" />
-          <span className="text-lg md:text-xl font-semibold text-emerald-900">
-            Foster Wealth Calculators
-          </span>
+          <span className="text-lg md:text-xl font-semibold text-emerald-900">Foster Wealth Calculators</span>
         </a>
         <nav className="hidden md:flex items-center gap-5 text-sm text-gray-700">
           <a href="/" className="hover:text-emerald-800">Home</a>
@@ -73,8 +69,8 @@ function Footer() {
 }
 
 function Sidebar({ showAds }: { showAds: boolean }) {
-  const SLOT1 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || "";
-  const SLOT2 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2 || "";
+  const SLOT1 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 || '';
+  const SLOT2 = process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT2 || '';
 
   if (!showAds) {
     return (
@@ -119,8 +115,8 @@ function Sidebar({ showAds }: { showAds: boolean }) {
 }
 
 function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: Plan }) {
-  const showAds = plan === "free" && isProd && ADS_ENABLED && !!ADS_CLIENT;
-  const adsBootstrapEnabled = isProd && ADS_ENABLED && !!ADS_CLIENT;
+  // Show ads only for free plan in production, and only when Adsense is enabled+configured.
+  const showAds = plan === 'free' && isProd && ADS_ENABLED && !!ADS_CLIENT;
 
   return (
     <html lang="en" data-plan={plan}>
@@ -128,11 +124,12 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
         {ADS_CLIENT && <meta name="google-adsense-account" content={ADS_CLIENT} />}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
-        <meta name="google-adsense-account" content={ADS_CLIENT} />
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
-        <ClientAdsLoader enabled={ADS_ENABLED} /> 
+        {/* Single global loader */}
+        <ClientAdsLoader enabled={ADS_ENABLED} />
+
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
             <Header />
@@ -151,7 +148,9 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const plan = parsePlan(cookieStore.get("fwv_plan")?.value);
+  // In your Next version/types, cookies() returns a Promise
+  const cookieStore = await cookies();                 // <-- await here
+  const plan = parsePlan(cookieStore.get('fwv_plan')?.value);
+
   return <RootLayoutInner plan={plan}>{children}</RootLayoutInner>;
 }
