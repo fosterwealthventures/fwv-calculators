@@ -1,12 +1,13 @@
 // components/ads/ClientAdsLoader.tsx
 'use client';
 
-import Script from 'next/script';
 import { ADS_CLIENT } from '@/lib/ads-config';
 
 /**
- * Global push guard: only push when a pending <ins.adsbygoogle> exists.
- * Also re-installs itself if the Google lib overwrites push().
+ * Global push guard:
+ *  - Only allows adsbygoogle.push({}) when there is a pending <ins.adsbygoogle>
+ *  - Lets Auto Ads config objects through
+ *  - Re-installs itself if the Google lib overwrites push()
  */
 const PUSH_SHIM = `
 (function(){
@@ -27,7 +28,7 @@ const PUSH_SHIM = `
               return orig(arg);
             }
             var pending = document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
-            if (!pending) return 0;
+            if (!pending) return 0;      // no pending <ins> -> avoid TagError
             return orig(arg);
           }catch(e){ return 0; }
         };
@@ -36,6 +37,7 @@ const PUSH_SHIM = `
     }
 
     install();
+    // If the library overwrites push, put our guard back
     var iv = setInterval(function(){
       try{
         var q = w.adsbygoogle;
@@ -48,18 +50,25 @@ const PUSH_SHIM = `
 })();
 `;
 
-export default function ClientAdsLoader({ enabled = true }: { enabled?: boolean }) {
-  // Require a client id; we set a fallback in ads-config for safety.
+type Props = { enabled?: boolean };
+
+/**
+ * Single global AdSense loader.
+ * Uses raw <script> tags (no Next <Script>) to avoid the "data-nscript" warning.
+ * Place once near the top of <body> in app/layout.tsx: <ClientAdsLoader enabled />
+ */
+export default function ClientAdsLoader({ enabled = true }: Props) {
   if (!enabled || !ADS_CLIENT) return null;
 
   return (
     <>
-      {/* Use raw <script> for the shim to avoid the "data-nscript" console warning */}
+      {/* Raw shim first so any early pushes are guarded */}
       <script id="fwv-ads-shim" dangerouslySetInnerHTML={{ __html: PUSH_SHIM }} />
-      {/* Keep the official loader as Next <Script> for correct ordering & de-dup */}
-      <Script
+
+      {/* Official AdSense loader as a raw script (async, crossorigin) */}
+      <script
         id="adsense-loader"
-        strategy="afterInteractive"
+        async
         crossOrigin="anonymous"
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
           ADS_CLIENT
