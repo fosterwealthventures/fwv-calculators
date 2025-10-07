@@ -40,7 +40,7 @@ const nextConfig = {
 
     const allowVercelLive = isPreview ? ' https://vercel.live' : '';
 
-    // AdSense-friendly CSP (includes adtrafficquality.google and friends)
+    // AdSense- & CMP-friendly CSP
     const csp = [
       "default-src 'self'",
       "base-uri 'self'",
@@ -48,11 +48,11 @@ const nextConfig = {
       "frame-ancestors 'self'",
 
       // Scripts (add vercel.live only on preview)
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com" + allowVercelLive,
-      "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com" + allowVercelLive,
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://fundingchoicesmessages.google.com https://fcmp.fundingchoicesmessages.google.com" + allowVercelLive,
+      "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com https://fundingchoicesmessages.google.com https://fcmp.fundingchoicesmessages.google.com" + allowVercelLive,
 
-      // XHR/fetch/WebSocket endpoints used by Ads/Analytics
-      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.adservice.google.com https://*.adtrafficquality.google",
+      // XHR/fetch/WebSocket endpoints used by Ads/Analytics/CMP
+      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.adservice.google.com https://*.adtrafficquality.google https://fundingchoicesmessages.google.com https://fcmp.fundingchoicesmessages.google.com",
 
       // Beacons/pixels
       "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://www.google-analytics.com https://www.googletagmanager.com",
@@ -61,8 +61,8 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
 
-      // Ad iframes
-      "frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net",
+      // Ad iframes + CMP iframes
+      "frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://fundingchoicesmessages.google.com",
 
       // Misc
       "worker-src 'self' blob:",
