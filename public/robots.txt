@@ -1,0 +1,9 @@
+# Allow AdSense crawler explicitly
+User-agent: Mediapartners-Google
+Disallow:
+
+# General rule for everyone else
+User-agent: *
+Allow: /
+
+Sitemap: https://fosterwealthventures.store/sitemap.xml
