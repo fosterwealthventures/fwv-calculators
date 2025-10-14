@@ -1,71 +1,68 @@
-// app/api/blog/generate/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
-import fs from "fs";
-import path from "path";
+// app/api/blog/generator/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // server-only
-const BLOG_AUTOMATE_SECRET = process.env.BLOG_AUTOMATE_SECRET; // server-only
+export const runtime = 'nodejs';           // avoid edge quirks
+export const dynamic = 'force-dynamic';    // no accidental caching
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
-function savePost(slug: string, content: string) {
-  if (!fs.existsSync(BLOG_DIR)) fs.mkdirSync(BLOG_DIR, { recursive: true });
-  fs.writeFileSync(path.join(BLOG_DIR, `${slug}.mdx`), content, "utf8");
+function cors(res: NextResponse) {
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-automation-secret');
+  return res;
 }
 
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 60);
+function isLocal(req: NextRequest) {
+  const host = req.headers.get('host') || '';
+  return host.startsWith('localhost') || host.startsWith('127.0.0.1');
+}
+
+const REQUIRED_SECRET = (process.env.BLOG_AUTOMATION_SECRET || '').trim();
+
+export async function OPTIONS() {
+  return cors(new NextResponse(null, { status: 204 }));
+}
+
+export async function GET() {
+  return cors(NextResponse.json({ ok: true, route: '/api/blog/generator' }));
 }
 
 export async function POST(req: NextRequest) {
-  if (!OPENAI_API_KEY)
-    return NextResponse.json(
-      { error: "Missing OPENAI_API_KEY" },
-      { status: 500 },
-    );
-  if (req.headers.get("x-blog-secret") !== BLOG_AUTOMATE_SECRET)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Require secret outside localhost (keeps prod protected)
+  if (!isLocal(req) && REQUIRED_SECRET) {
+    const provided = (req.headers.get('x-automation-secret') || '').trim();
+    if (provided.length !== REQUIRED_SECRET.length || provided !== REQUIRED_SECRET) {
+      return cors(NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 }));
+    }
+  }
 
-  const { topic } = await req.json();
-  if (!topic)
-    return NextResponse.json({ error: "Missing topic" }, { status: 400 });
+  try {
+    const { topic, dryRun } = await req.json();
+    if (!topic || typeof topic !== 'string') {
+      return cors(NextResponse.json({ ok: false, error: 'Missing "topic"' }, { status: 400 }));
+    }
 
-  const prompt = `Write a concise, practical blog post in Markdown with this frontmatter:
----
+    // TODO: plug in your enrich/validators/brand flow here
+    const slug = topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+    const markdown =
+`---
 title: "${topic}"
 date: "${new Date().toISOString()}"
-excerpt: "A short teaser about the topic."
+excerpt: "Preview for ${topic}."
 ---
-Focus on actionable finance insights and how to use calculators effectively. Use H2/H3 headings, short paragraphs, and a conclusion.`;
 
-  // Call OpenAI (no client lib needed)
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-    }),
-  });
-  if (!res.ok)
-    return NextResponse.json({ error: await res.text() }, { status: 500 });
+# ${topic}
 
-  const data = await res.json();
-  const md = data.choices?.[0]?.message?.content ?? "";
-  const slug = slugify(topic);
+This is a preview post generated locally.`;
 
-  savePost(slug, md);
-  revalidatePath("/blog");
-  revalidatePath(`/blog/${slug}`);
-
-  return NextResponse.json({ ok: true, slug });
+    return cors(NextResponse.json({
+      ok: true,
+      saved: !dryRun,
+      slug,
+      title: topic,
+      excerpt: `Preview for ${topic}.`,
+      markdown,
+    }));
+  } catch (e: any) {
+    return cors(NextResponse.json({ ok: false, error: e?.message || 'Unknown error' }, { status: 500 }));
+  }
 }

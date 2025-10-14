@@ -1,75 +1,62 @@
 // middleware.ts
-import { NextResponse, type NextRequest } from "next/server";
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-const PLAN_COOKIE = "fwv_plan";
-const VALID = new Set(["free", "plus", "pro", "premium"] as const);
+// Only run on actual app/API routes; skip static assets & robots
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|og-image|apple-touch-icon.png).*)',
+  ],
+};
 
-function normalizePlan(value: string | undefined): "free" | "plus" | "pro" | "premium" {
-  if (!value) return "free";
-  const v = value.toLowerCase();
-  return (VALID.has(v as any) ? (v as any) : "free");
+function isLocal(req: NextRequest) {
+  const host = req.headers.get('host') || '';
+  return host.startsWith('localhost') || host.startsWith('127.0.0.1');
 }
+
+// e.g. https://fosterwealthventures.store (no trailing slash)
+const PROD_URL = (process.env.PRODUCTION_SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || '').replace(
+  /\/+$/,
+  ''
+);
+// just the hostname, e.g. fosterwealthventures.store
+const PROD_HOST = PROD_URL.replace(/^https?:\/\//, '').replace(/\/.*/, '');
 
 export function middleware(req: NextRequest) {
-  const { pathname, searchParams } = req.nextUrl;
-  const current = normalizePlan(req.cookies.get(PLAN_COOKIE)?.value);
+  const url = req.nextUrl;
+  const path = url.pathname;
 
-  // ?reset=1 => force free
-  if (searchParams.get("reset") === "1") {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("reset");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(PLAN_COOKIE, "free", { path: "/", httpOnly: false, sameSite: "lax" });
-    return res;
+  // 0) Always allow preflight
+  if (req.method === 'OPTIONS') {
+    return NextResponse.next();
   }
 
-  // ?plan=free|plus|pro|premium => preview a plan
-  const planParam = searchParams.get("plan");
-  if (planParam && VALID.has(planParam.toLowerCase() as any)) {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("plan");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(PLAN_COOKIE, planParam.toLowerCase(), { path: "/", httpOnly: false, sameSite: "lax" });
-    return res;
+  // 1) Always allow localhost/dev
+  if (isLocal(req)) {
+    return NextResponse.next();
   }
 
-  // Passthrough (and normalize cookie)
-  const res = NextResponse.next();
-  if (current !== req.cookies.get(PLAN_COOKIE)?.value) {
-    res.cookies.set(PLAN_COOKIE, current, { path: "/", httpOnly: false, sameSite: "lax" });
+  // 2) Never canonicalize/redirect sensitive consoles or their APIs
+  //    (prevents breaking your admin UI and blog generator)
+  if (
+    path.startsWith('/admin') ||
+    path.startsWith('/api/admin') ||
+    path.startsWith('/api/blog') // <- keep generator/api free of host redirects
+  ) {
+    return NextResponse.next();
   }
 
-  // Gating
-  if (pathname.startsWith("/plus")) {
-    if (!(current === "plus" || current === "pro" || current === "premium")) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
+  // 3) Canonical host redirect for everything else (prod only)
+  if (PROD_HOST) {
+    const currentHost = req.headers.get('host') || '';
+    if (currentHost !== PROD_HOST) {
+      const target = new URL(url.href);
+      target.protocol = 'https:'; // force https in prod
+      target.hostname = PROD_HOST; // set canonical host
+      target.port = ''; // IMPORTANT: drop any port
+      return NextResponse.redirect(target, 308);
     }
   }
 
-  if (pathname.startsWith("/pro")) {
-    if (!(current === "pro" || current === "premium")) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/premium")) {
-    if (current !== "premium") {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  return res;
+  return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
-};
