@@ -1,75 +1,25 @@
 // middleware.ts
-import { NextResponse, type NextRequest } from "next/server";
-
-const PLAN_COOKIE = "fwv_plan";
-const VALID = new Set(["free", "plus", "pro", "premium"] as const);
-
-function normalizePlan(value: string | undefined): "free" | "plus" | "pro" | "premium" {
-  if (!value) return "free";
-  const v = value.toLowerCase();
-  return (VALID.has(v as any) ? (v as any) : "free");
-}
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const { pathname, searchParams } = req.nextUrl;
-  const current = normalizePlan(req.cookies.get(PLAN_COOKIE)?.value);
+  const { nextUrl } = req;
 
-  // ?reset=1 => force free
-  if (searchParams.get("reset") === "1") {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("reset");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(PLAN_COOKIE, "free", { path: "/", httpOnly: false, sameSite: "lax" });
-    return res;
+  // Only guard admin & its APIs
+  const isAdmin = nextUrl.pathname.startsWith("/admin");
+  const isAdminApi = nextUrl.pathname.startsWith("/api/admin");
+  if (!isAdmin && !isAdminApi) return NextResponse.next();
+
+  // FULL BYPASS on localhost/127.0.0.1
+  const host = nextUrl.hostname; // reliable
+  if (host === "localhost" || host === "127.0.0.1") {
+    return NextResponse.next();
   }
 
-  // ?plan=free|plus|pro|premium => preview a plan
-  const planParam = searchParams.get("plan");
-  if (planParam && VALID.has(planParam.toLowerCase() as any)) {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("plan");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(PLAN_COOKIE, planParam.toLowerCase(), { path: "/", httpOnly: false, sameSite: "lax" });
-    return res;
-  }
-
-  // Passthrough (and normalize cookie)
-  const res = NextResponse.next();
-  if (current !== req.cookies.get(PLAN_COOKIE)?.value) {
-    res.cookies.set(PLAN_COOKIE, current, { path: "/", httpOnly: false, sameSite: "lax" });
-  }
-
-  // Gating
-  if (pathname.startsWith("/plus")) {
-    if (!(current === "plus" || current === "pro" || current === "premium")) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/pro")) {
-    if (!(current === "pro" || current === "premium")) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/premium")) {
-    if (current !== "premium") {
-      const url = req.nextUrl.clone();
-      url.pathname = "/upgrade";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  return res;
+  // In prod you can decide later (404 or auth); for now just 404.
+  return NextResponse.rewrite(new URL("/not-found", req.url));
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
+  matcher: ["/admin/:path*","/api/admin/:path*"],
 };
