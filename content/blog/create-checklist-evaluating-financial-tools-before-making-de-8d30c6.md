@@ -2,7 +2,7 @@
 title: "Create a checklist for evaluating financial tools before making a decision — Complete Guide"
 date: "2025-10-15T03:21:00.932Z"
 excerpt: "A practical, step-by-step walkthrough of “Create a checklist for evaluating financial tools before making a decision”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["create", "checklist", "for", "evaluating", "financial", "tools", "before", "making"]
 ---
@@ -133,7 +133,7 @@ By following this checklist and utilizing the recommended calculators from foste
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:20:37.590Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

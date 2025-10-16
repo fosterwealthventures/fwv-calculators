@@ -2,7 +2,7 @@
 title: "Offer a guide to splitting vacation expenses fairly among friends or family — Complete Guide"
 date: "2025-10-15T03:28:42.021Z"
 excerpt: "A practical, step-by-step walkthrough of “Offer a guide to splitting vacation expenses fairly among friends or family”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["offer", "guide", "splitting", "vacation", "expenses", "fairly", "among", "friends"]
 ---
@@ -107,7 +107,7 @@ If one family member covers flights and accommodation ($2000), their balance
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:28:28.374Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

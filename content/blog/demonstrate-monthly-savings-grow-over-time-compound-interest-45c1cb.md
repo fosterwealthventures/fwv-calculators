@@ -2,7 +2,7 @@
 title: "Demonstrate how monthly savings grow over time with compound interest — Complete Guide"
 date: "2025-10-15T03:36:40.224Z"
 excerpt: "A practical, step-by-step walkthrough of “Demonstrate how monthly savings grow over time with compound interest”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["demonstrate", "how", "monthly", "savings", "grow", "over", "time", "with"]
 ---
@@ -182,7 +182,7 @@ A: Look for accounts that offer competitive interest rates, typically above the 
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:35:58.279Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

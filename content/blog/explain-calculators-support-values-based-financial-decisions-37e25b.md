@@ -2,7 +2,7 @@
 title: "Explain how calculators support values-based financial decisions — Complete Guide"
 date: "2025-10-15T03:21:04.491Z"
 excerpt: "A practical, step-by-step walkthrough of “Explain how calculators support values-based financial decisions”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["explain", "how", "calculators", "support", "values-based", "financial", "decisions"]
 ---
@@ -159,7 +159,7 @@ In conclusion, calculators are indispensable tools for making values-based finan
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:20:37.971Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

@@ -2,7 +2,7 @@
 title: "Help co-parents track and split shared child-related expenses — Complete Guide"
 date: "2025-10-15T03:28:42.622Z"
 excerpt: "A practical, step-by-step walkthrough of “Help co-parents track and split shared child-related expenses”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["help", "co-parents", "track", "and", "split", "shared", "child-related", "expenses"]
 ---
@@ -132,7 +132,7 @@ A2
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:28:27.832Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

@@ -2,7 +2,7 @@
 title: "Show how mortgage payments change based on interest rate, term, and down payment — Complete Guide"
 date: "2025-10-15T03:39:52.524Z"
 excerpt: "A practical, step-by-step walkthrough of “Show how mortgage payments change based on interest rate, term, and down payment”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Real Estate"
 tags: ["show", "how", "mortgage", "payments", "change", "based", "interest", "rate"]
 ---
@@ -122,7 +122,7 @@ If the interest rate increases to 5%, let's see how it affects your monthly paym
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:39:38.678Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

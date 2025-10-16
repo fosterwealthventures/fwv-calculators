@@ -2,7 +2,7 @@
 title: "Explain how to calculate ROI and annualized ROI for small business investments — Complete Guide"
 date: "2025-10-15T03:43:34.524Z"
 excerpt: "A practical, step-by-step walkthrough of “Explain how to calculate ROI and annualized ROI for small business investments”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Investing"
 tags: ["explain", "how", "calculate", "roi", "and", "annualized", "for"]
 ---
@@ -162,7 +162,7 @@ Understanding ROI and Annualized ROI is fundamental for any small business owner
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:43:03.562Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

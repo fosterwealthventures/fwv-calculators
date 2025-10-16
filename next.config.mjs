@@ -97,6 +97,8 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.google.com' },
       { protocol: 'https', hostname: 'www.googletagmanager.com' },
       { protocol: 'https', hostname: '*.google-analytics.com' },
+      // Allow all remote images for blog content
+      { protocol: 'https', hostname: '**' },
     ],
   },
 };

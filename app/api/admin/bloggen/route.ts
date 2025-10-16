@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,26 +24,26 @@ type Body = {
 
 function betterSlugify(s: string) {
   // lowercase, strip non-word, collapse spaces to hyphens, drop stopwords, trim to ~60 chars
-  const stop = new Set(['the','a','an','and','or','of','for','to','in','on','with','how','what','why','vs','by']);
-  const words = s.toLowerCase().replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(w=>w && !stop.has(w));
-  let slug = words.join('-').replace(/-+/g,'-');
-  if (slug.length > 60) slug = slug.slice(0,60).replace(/-+$/,'');
+  const stop = new Set(['the', 'a', 'an', 'and', 'or', 'of', 'for', 'to', 'in', 'on', 'with', 'how', 'what', 'why', 'vs', 'by']);
+  const words = s.toLowerCase().replace(/[^a-z0-9\s-]/g, '').split(/\s+/).filter(w => w && !stop.has(w));
+  let slug = words.join('-').replace(/-+/g, '-');
+  if (slug.length > 60) slug = slug.slice(0, 60).replace(/-+$/, '');
   return slug || 'post';
 }
 
 function readExistingPostsMeta() {
   // read titles/tags from front matter (very simple parser)
-  const dir = path.join(process.cwd(), 'content','blog');
+  const dir = path.join(process.cwd(), 'content', 'blog');
   if (!fs.existsSync(dir)) return [];
-  const files = fs.readdirSync(dir).filter(f=>f.endsWith('.md'));
-  const meta: Array<{slug:string; title:string; tags:string[]}> = [];
+  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
+  const meta: Array<{ slug: string; title: string; tags: string[] }> = [];
   for (const f of files) {
-    const p = path.join(dir,f);
-    const raw = fs.readFileSync(p,'utf8');
+    const p = path.join(dir, f);
+    const raw = fs.readFileSync(p, 'utf8');
     const fm = /^---\n([\s\S]*?)\n---/.exec(raw)?.[1] || '';
-    const title = /title:\s*"?([^"\n]+)"?/.exec(fm)?.[1] || f.replace(/\.md$/,'');
-    const tags = /tags:\s*\[([^\]]*)\]/.exec(fm)?.[1]?.split(',').map(s=>s.replace(/["']/g,'').trim()).filter(Boolean) || [];
-    meta.push({ slug: f.replace(/\.md$/,''), title, tags });
+    const title = /title:\s*"?([^"\n]+)"?/.exec(fm)?.[1] || f.replace(/\.md$/, '');
+    const tags = /tags:\s*\[([^\]]*)\]/.exec(fm)?.[1]?.split(',').map(s => s.replace(/["']/g, '').trim()).filter(Boolean) || [];
+    meta.push({ slug: f.replace(/\.md$/, ''), title, tags });
   }
   return meta;
 }
@@ -58,7 +58,7 @@ function suggestCategoriesAndTags(topic: string): { categories: string[]; tags: 
   if (!categories.length) categories.push('Finance');
 
   const words = Array.from(new Set(
-    t.replace(/[^a-z0-9\s-]/g,'').split(/\s+/).filter(w=>w.length>2).slice(0,8)
+    t.replace(/[^a-z0-9\s-]/g, '').split(/\s+/).filter(w => w.length > 2).slice(0, 8)
   ));
   const tags = words;
 
@@ -66,7 +66,7 @@ function suggestCategoriesAndTags(topic: string): { categories: string[]; tags: 
 }
 
 function imageIdeas(topic: string) {
-  const base = topic.replace(/"/g,'');
+  const base = topic.replace(/"/g, '');
   return [
     { title: `${base} — simple chart`, alt: 'Line chart illustrating ROI trend' },
     { title: `${base} — formula card`, alt: 'ROI formula card with inputs and outputs' },
@@ -90,17 +90,17 @@ export async function POST(req: Request) {
       console.log('Parsed body successfully:', { topic: body.topic?.substring(0, 50), dryRun: body.dryRun, optionsKeys: Object.keys(body.options || {}) });
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      return NextResponse.json({ ok:false, error:`Invalid JSON in request body: ${parseError}` }, { status:400 });
+      return NextResponse.json({ ok: false, error: `Invalid JSON in request body: ${parseError}` }, { status: 400 });
     }
 
     const { topic = '', dryRun = true, options = {} } = body;
-    if (!topic.trim()) return NextResponse.json({ ok:false, error:'Topic is required' }, { status:400 });
+    if (!topic.trim()) return NextResponse.json({ ok: false, error: 'Topic is required' }, { status: 400 });
 
     // knobs
     const lengthText =
       options.wordCountHint === 'short' ? '~700 words, concise, scannable'
-      : options.wordCountHint === 'long' ? '~1,800 words, comprehensive but no filler'
-      : '~1,200 words, balanced';
+        : options.wordCountHint === 'long' ? '~1,800 words, comprehensive but no filler'
+          : '~1,200 words, balanced';
     const templateOutline = {
       'howto': `# Title\nIntro\n## Steps\n## Common mistakes\n## Example\n## FAQs`,
       'listicle': `# Title\nIntro\n## 7 Key Points\n## Examples\n## FAQs`,
@@ -122,14 +122,14 @@ export async function POST(req: Request) {
     const related = existing
       .map(p => ({ ...p, score: p.tags.filter(t => tags.includes(t.toLowerCase())).length }))
       .filter(p => p.score > 0)
-      .sort((a,b)=>b.score-a.score)
-      .slice(0,3)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
       .map(p => ({ title: p.title, slug: p.slug }));
 
     // internal links
     const internalLinksBlock =
       options.internalLinks && Array.isArray(options.targetCalculators) && options.targetCalculators.length
-        ? `\n\n### Try our calculators\n${options.targetCalculators.slice(0,5).map(n=>`- [${n}](/calculators)`).join('\n')}\n`
+        ? `\n\n### Try our calculators\n${options.targetCalculators.slice(0, 5).map(n => `- [${n}](/calculators)`).join('\n')}\n`
         : '';
 
     const ctaBlock = options.cta
@@ -138,14 +138,14 @@ export async function POST(req: Request) {
 
     const schemaBlock = options.schema ? `\n\n<script type="application/ld+json">
 ${JSON.stringify({
-  '@context':'https://schema.org',
-  '@type':'Article',
-  headline: title,
-  description: excerpt,
-  author: { '@type':'Organization', name:'Foster Wealth Ventures' },
-  datePublished: new Date().toISOString(),
-  image: '/logo.png',
-}, null, 2)}
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description: excerpt,
+      author: { '@type': 'Organization', name: 'Foster Wealth Ventures' },
+      datePublished: new Date().toISOString(),
+      image: '/fwv-logo-gold.svg',
+    }, null, 2)}
 </script>\n` : '';
 
     const faqBlock = options.faqSchema ? `\n\n<script type="application/ld+json">
@@ -261,9 +261,9 @@ Make it immediately useful for someone searching for "${topic}". Include specifi
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
-tags: [${tags.map(t=>`"${t}"`).join(', ')}]
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
 ---
 
 ${generatedContent}
@@ -275,9 +275,9 @@ ${internalLinksBlock}${ctaBlock}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
-tags: [${tags.map(t=>`"${t}"`).join(', ')}]
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
 ---
 
 ${generatedContent}
@@ -292,15 +292,15 @@ ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
       };
 
       if (dryRun) {
-        return NextResponse.json({ ok:true, saved:false, slug, title, excerpt, markdown, meta });
+        return NextResponse.json({ ok: true, saved: false, slug, title, excerpt, markdown, meta });
       }
 
       // Save to content/blog/{slug}.md (use full version with schema blocks)
-      const outDir = path.join(process.cwd(), 'content','blog');
+      const outDir = path.join(process.cwd(), 'content', 'blog');
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(path.join(outDir, `${slug}.md`), fullMarkdown, 'utf8');
 
-      return NextResponse.json({ ok:true, saved:true, slug, title, excerpt, markdown, meta });
+      return NextResponse.json({ ok: true, saved: true, slug, title, excerpt, markdown, meta });
 
     } catch (error) {
       console.error('OpenAI API error:', error);
@@ -310,9 +310,9 @@ ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
-tags: [${tags.map(t=>`"${t}"`).join(', ')}]
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
 ---
 
 # ${title}
@@ -348,9 +348,9 @@ ${internalLinksBlock}${ctaBlock}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
-tags: [${tags.map(t=>`"${t}"`).join(', ')}]
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
 ---
 
 # ${title}
@@ -392,16 +392,16 @@ ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
     };
 
     if (dryRun) {
-      return NextResponse.json({ ok:true, saved:false, slug, title, excerpt, markdown, meta });
+      return NextResponse.json({ ok: true, saved: false, slug, title, excerpt, markdown, meta });
     }
 
     // Save to content/blog/{slug}.md (use full version with schema blocks)
-    const outDir = path.join(process.cwd(), 'content','blog');
+    const outDir = path.join(process.cwd(), 'content', 'blog');
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, `${slug}.md`), fullMarkdown, 'utf8');
 
-    return NextResponse.json({ ok:true, saved:true, slug, title, excerpt, markdown, meta });
-  } catch (err:any) {
-    return NextResponse.json({ ok:false, error: err?.message || 'Server error' }, { status:500 });
+    return NextResponse.json({ ok: true, saved: true, slug, title, excerpt, markdown, meta });
+  } catch (err: any) {
+    return NextResponse.json({ ok: false, error: err?.message || 'Server error' }, { status: 500 });
   }
 }

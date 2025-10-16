@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 // app/layout.tsx
-import './globals.css';
 import type { Metadata } from 'next';
-import React from 'react';
 import { cookies } from 'next/headers';
+import React from 'react';
+import './globals.css';
 
-import { EntitlementsProvider } from '@/lib/entitlements-client';
-import { PlanProvider } from '@/providers/PlanProvider';
 import AdSlot from '@/components/ads/AdSlot';
 import ClientAdsLoader from '@/components/ads/ClientAdsLoader';
 import { ADS_CLIENT, ADS_ENABLED } from '@/lib/ads-config';
+import { EntitlementsProvider } from '@/lib/entitlements-client';
+import { PlanProvider } from '@/providers/PlanProvider';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,22 +30,22 @@ function parsePlan(v?: string | null): Plan {
 
 function Header() {
   return (
-    <header className="w-full border-b bg-white/80 backdrop-blur">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
-        <a href="/" className="flex items-center gap-3 shrink-0">
-          <img src="/logo.png" alt="Foster Wealth Ventures" width={184} height={100} className="rounded-sm" />
-          <span className="text-lg md:text-xl font-semibold text-emerald-900">Foster Wealth Calculators</span>
+    <header className="header-regal">
+      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-6">
+        <a href="/" className="logo-ring-regal flex items-center gap-3 shrink-0 transition-transform hover:scale-105">
+          <img src="/fwv-logo-gold.svg" alt="Foster Wealth Ventures" width={184} height={100} className="rounded-sm" />
+          <span className="text-lg md:text-xl font-semibold text-white">Foster Wealth Calculators</span>
         </a>
-        <nav className="hidden md:flex items-center gap-5 text-sm text-gray-700">
-          <a href="/" className="hover:text-emerald-800">Home</a>
-          <a href="/dashboard" className="hover:text-emerald-800">Calculators</a>
-          <a href="/pricing" className="hover:text-emerald-800">Pricing</a>
-          <a href="/guide" className="hover:text-emerald-800">Guides</a>
-          <a href="/blog" className="hover:text-emerald-800">Blog</a>
-          <a href="/about" className="hover:text-emerald-800">About</a>
-          <a href="/contact" className="hover:text-emerald-800">Contact</a>
-          <a href="/privacy" className="hover:text-emerald-800">Privacy</a>
-          <a href="/terms" className="hover:text-emerald-800">Terms</a>
+        <nav className="hidden md:flex items-center gap-5">
+          <a className="nav-link-regal" href="/">Home</a>
+          <a className="nav-link-regal" href="/dashboard">Calculators</a>
+          <a className="nav-link-regal" href="/pricing">Pricing</a>
+          <a className="nav-link-regal" href="/guide">Guides</a>
+          <a className="nav-link-regal" href="/blog">Blog</a>
+          <a className="nav-link-regal" href="/about">About</a>
+          <a className="nav-link-regal" href="/contact">Contact</a>
+          <a className="nav-link-regal" href="/privacy">Privacy</a>
+          <a className="nav-link-regal" href="/terms">Terms</a>
         </nav>
       </div>
     </header>
@@ -54,14 +54,18 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="w-full border-t mt-10">
-      <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600 flex flex-wrap gap-4 items-center justify-between">
-        <div>© {new Date().getFullYear()} Foster Wealth Ventures</div>
-        <div className="flex flex-wrap gap-4">
-          <a className="hover:text-emerald-800" href="/about">About</a>
-          <a className="hover:text-emerald-800" href="/blog">Blog</a>
-          <a className="hover:text-emerald-800" href="/privacy">Privacy</a>
-          <a className="hover:text-emerald-800" href="/terms">Terms</a>
+    <footer className="w-full border-t border-plum-200/60 bg-plum-50/30 dark:bg-plum-900/20 mt-10">
+      <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-plum-600 dark:text-plum-300 flex flex-wrap gap-4 items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span>© {new Date().getFullYear()} Foster Wealth Ventures</span>
+          <span className="text-plum-400">•</span>
+          <span className="text-plum-500 dark:text-plum-400">Professional Financial Tools</span>
+        </div>
+        <div className="flex flex-wrap gap-6">
+          <a className="link-regal" href="/about">About</a>
+          <a className="link-regal" href="/blog">Blog</a>
+          <a className="nav-link-regal" href="/privacy">Privacy</a>
+          <a className="nav-link-regal" href="/terms">Terms</a>
         </div>
       </div>
     </footer>
@@ -74,10 +78,10 @@ function Sidebar({ showAds }: { showAds: boolean }) {
 
   if (!showAds) {
     return (
-      <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
-        <div className="text-sm font-medium text-green-800">🎉 Ad-Free Experience</div>
-        <div className="text-xs text-green-600 mt-1">
-          <a href="/pricing" className="underline hover:text-green-800">Manage plan</a>
+      <div className="card-regal p-4 text-center">
+        <div className="text-sm font-medium text-plum-800">🎉 Ad-Free Experience</div>
+        <div className="text-xs text-plum-600 mt-1">
+          <a href="/pricing" className="link-regal">Manage plan</a>
         </div>
       </div>
     );
@@ -106,7 +110,7 @@ function Sidebar({ showAds }: { showAds: boolean }) {
         </div>
       )}
       {!SLOT1 && !SLOT2 && !isProd && (
-        <div className="rounded-xl border border-dashed p-3 text-center text-xs text-gray-500">
+        <div className="card-regal p-3 text-center text-xs text-plum-500">
           (dev) Set NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT1 / SLOT2
         </div>
       )}
@@ -119,26 +123,33 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
   const showAds = plan === 'free' && isProd && ADS_ENABLED && !!ADS_CLIENT;
 
   return (
-    <html lang="en" data-plan={plan}>
+    <html lang="en" className="dark" data-plan={plan}>
       <head>
         {ADS_CLIENT && <meta name="google-adsense-account" content={ADS_CLIENT} />}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
       </head>
 
-      <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
+      <body className="min-h-dvh" suppressHydrationWarning>
+        <div className="fixed inset-0 -z-10 page-bg-regal" />
         {/* Single global loader */}
         <ClientAdsLoader enabled={ADS_ENABLED} />
 
         <EntitlementsProvider>
           <PlanProvider initialPlan={plan}>
             <Header />
-            <div className="mx-auto max-w-6xl px-4 py-6 grid gap-6 lg:grid-cols-[1fr_300px]">
-              <main>{children}</main>
-              <aside className="sticky top-4 self-start">
-                <Sidebar showAds={showAds} />
-              </aside>
-            </div>
+            <main className="min-h-screen">
+              <div className="mx-auto max-w-6xl px-4 py-8">
+                <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+                  <div className="animate-fade-in">
+                    {children}
+                  </div>
+                  <aside className="sticky top-4 self-start animate-slide-up">
+                    <Sidebar showAds={showAds} />
+                  </aside>
+                </div>
+              </div>
+            </main>
             <Footer />
           </PlanProvider>
         </EntitlementsProvider>

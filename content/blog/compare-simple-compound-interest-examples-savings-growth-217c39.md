@@ -2,7 +2,7 @@
 title: "Compare simple vs compound interest with examples of savings growth — Complete Guide"
 date: "2025-10-15T03:39:57.872Z"
 excerpt: "A practical, step-by-step walkthrough of “Compare simple vs compound interest with examples of savings growth”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["compare", "simple", "compound", "interest", "with", "examples", "savings", "growth"]
 ---
@@ -147,7 +147,7 @@ SI = 1000 \times 0.03 \times 5 = 150
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:39:39.048Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

@@ -1,11 +1,11 @@
 // app/guide/[slug]/page.tsx
-import Link from "next/link";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import GuideNav from "@/components/GuideNav";
-import AdInSidebar from "@/components/ads/AdInSidebar";
 import AdBannerTop from "@/components/ads/AdBannerTop";
+import AdInSidebar from "@/components/ads/AdInSidebar";
 import HtmlWithAutoAd from "@/components/ads/HtmlWithAutoAd";
 import AutoToc from "@/components/toc/AutoToc";
 
@@ -75,8 +75,8 @@ function getCTA(userPlan: Plan, required: Plan, calc: string, slug: string) {
   };
 }
 
-export default async function GuidePage({ params }: { params: { slug: string } }) {
-  const incoming = params.slug;
+export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: incoming } = await params;
   const slug = resolveSlug(incoming);
 
   // If we don't recognize the slug at all, send people to /guide index (no 404).

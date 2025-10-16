@@ -1,5 +1,5 @@
 // app/blog/page.tsx
-import Link from "next/link";
+import BlogCard from "@/components/BlogCard";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata = {
@@ -14,21 +14,17 @@ export default function BlogIndex() {
   const posts = (getAllPosts?.() ?? []) as Post[];
 
   return (
-    <main className="mx-auto max-w-7xl px-6 md:px-10 py-10">
+    <main className="mx-auto w-full max-w-6xl lg:max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Blog</h1>
       {!posts.length ? (
         <p className="mt-6 text-sm text-neutral-600">
           No posts yet. Add <code>.md</code>/<code>.mdx</code> files to <code>content/blog</code>.
         </p>
       ) : (
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((p) => (
-            <li key={p.slug} className="rounded-xl border p-4 hover:shadow">
-              <Link href={`/blog/${p.slug}`} className="underline hover:no-underline font-medium">
-                {p.title}
-              </Link>
-              {p.date ? <p className="mt-1 text-xs text-neutral-500">{p.date}</p> : null}
-              {p.excerpt ? <p className="mt-2 text-sm text-neutral-700">{p.excerpt}</p> : null}
+            <li key={p.slug}>
+              <BlogCard slug={p.slug} title={p.title} date={p.date} excerpt={p.excerpt} />
             </li>
           ))}
         </ul>

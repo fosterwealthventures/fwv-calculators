@@ -1,0 +1,29 @@
+{
+  // Turn off generic CSS validation (Tailwind uses custom at-rules)
+  "css.validate": false,
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+
+  // Make VS Code parse .css with Tailwind grammar
+  "files.associations": { "*.css": "tailwindcss" },
+
+  // Help Tailwind IntelliSense across file types
+  "tailwindCSS.includeLanguages": { "plaintext": "html" },
+  "tailwindCSS.emmetCompletions": true,
+  "editor.quickSuggestions": { "strings": true },
+
+  // Format & code actions on save
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    // Use strings per new schema ("explicit" runs on manual save; avoids auto-runs on format)
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // ESLint file types
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  // Formatter (set to null to use VS Code's default formatter)
+  "editor.defaultFormatter": null
+}

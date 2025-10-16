@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import {
-  TrendingUp,
-  DollarSign,
-  Users,
-  PiggyBank,
-  Home,
   BarChart3,
+  DollarSign,
+  Home,
+  PiggyBank,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { AdBannerTop } from "@/components/ads";
+import PremiumResultCard from "@/components/ui/PremiumResultCard";
+import ProfessionalCard from "@/components/ui/ProfessionalCard";
+import ProfessionalInput from "@/components/ui/ProfessionalInput";
 import { Gate, useEntitlements } from "@/lib/entitlements-client";
 
 /** ----------------------------------------------------------------------------------------------
@@ -123,8 +126,8 @@ const ChipButton: React.FC<{
     className={[
       "inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm shadow-sm",
       active
-        ? "border-brand-green ring-2 ring-brand-green/30"
-        : "border-neutral-300 hover:border-brand-green",
+        ? "border-aure-400 bg-aure-50 text-plum-800 ring-2 ring-aure-400/30"
+        : "border-plum-300 hover:border-aure-400 text-plum-700 hover:text-plum-800",
     ].join(" ")}
   >
     {children}
@@ -139,21 +142,15 @@ const Input: React.FC<{
   type?: string;
   placeholder?: string;
 }> = ({ id, label, value, onChange, type = "text", placeholder }) => (
-  <div className="space-y-1">
-    <label htmlFor={id} className="text-sm font-medium text-gray-700">
-      {label}
-    </label>
-    <input
-      id={id}
-      type={type === "number" ? "number" : "text"}
-      inputMode={type === "number" ? "decimal" : undefined}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-gray-900 shadow-sm
-                 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40"
-    />
-  </div>
+  <ProfessionalInput
+    id={id}
+    label={label}
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    type={type === "number" ? "number" : "text"}
+    inputMode={type === "number" ? "decimal" : undefined}
+    placeholder={placeholder}
+  />
 );
 
 const ToggleGroup: React.FC<{
@@ -161,7 +158,7 @@ const ToggleGroup: React.FC<{
   value: string;
   onChange: (v: string) => void;
 }> = ({ options, value, onChange }) => (
-  <div className="inline-flex overflow-hidden rounded-lg border border-neutral-300">
+  <div className="inline-flex overflow-hidden rounded-lg border border-plum-300">
     {options.map((o) => (
       <button
         key={o.value}
@@ -170,8 +167,8 @@ const ToggleGroup: React.FC<{
         className={[
           "px-3 py-2 text-sm",
           value === o.value
-            ? "bg-brand-green text-white"
-            : "bg-white hover:bg-neutral-50",
+            ? "bg-plum-600 text-white"
+            : "bg-white hover:bg-plum-50 text-plum-700",
         ].join(" ")}
       >
         {o.label}
@@ -184,9 +181,9 @@ const ExplanationPanel: React.FC<{
   title: string;
   children: React.ReactNode;
 }> = ({ title, children }) => (
-  <div className="rounded-xl border border-dashed border-gray-300 bg-white p-4">
-    <h3 className="mb-2 text-sm font-semibold text-brand-green">{title}</h3>
-    <div className="prose prose-sm max-w-none text-gray-700">{children}</div>
+  <div className="card-regal p-4">
+    <h3 className="mb-2 text-sm font-semibold text-plum-700">{title}</h3>
+    <div className="prose prose-sm max-w-none text-plum-700">{children}</div>
   </div>
 );
 
@@ -194,8 +191,8 @@ const InputsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
 }) => (
-  <div className="rounded-xl border border-brand-gold/30 bg-brand-gold/10 p-5">
-    <h3 className="mb-4 text-sm font-semibold text-brand-green">{title}</h3>
+  <div className="card-regal p-5">
+    <h3 className="mb-4 text-sm font-semibold text-plum-700">{title}</h3>
     <div className="space-y-4">{children}</div>
   </div>
 );
@@ -204,8 +201,8 @@ const ResultsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
 }) => (
-  <div className="rounded-xl border border-brand-green/25 bg-brand-green/5 p-5">
-    <h3 className="mb-4 text-sm font-semibold text-brand-green">{title}</h3>
+  <div className="card-regal p-5">
+    <h3 className="mb-4 text-sm font-semibold text-plum-700">{title}</h3>
     <div className="space-y-3">{children}</div>
   </div>
 );
@@ -214,15 +211,16 @@ const KV: React.FC<{ label: string; value: React.ReactNode }> = ({
   label,
   value,
 }) => (
-  <div className="flex justify-between rounded-lg bg-white px-4 py-3 shadow-sm ring-1 ring-gray-200">
-    <span>{label}</span>
-    <span className="font-semibold">{value}</span>
-  </div>
+  <PremiumResultCard
+    title={label}
+    value={value}
+    variant="default"
+  />
 );
 
 const Header: React.FC<{ title: string }> = ({ title }) => (
-  <div className="border-b border-neutral-100 px-4 py-3">
-    <h2 className="heading-section">{title}</h2>
+  <div className="border-b border-plum-200 bg-plum-50/50 px-4 py-3">
+    <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-plum-800">{title}</h2>
   </div>
 );
 
@@ -230,11 +228,11 @@ const Header: React.FC<{ title: string }> = ({ title }) => (
  *  Interest helpers (frequency map + table)
  * ---------------------------------------------------------------------------------------------- */
 const COMPOUND_OPTIONS = [
-  { value: "annually",       label: "Annually",       n: 1 },
-  { value: "semiannually",   label: "Semi-Annually",  n: 2 },
-  { value: "quarterly",      label: "Quarterly",      n: 4 },
-  { value: "monthly",        label: "Monthly",        n: 12 },
-  { value: "daily",          label: "Daily",          n: 365 },
+  { value: "annually", label: "Annually", n: 1 },
+  { value: "semiannually", label: "Semi-Annually", n: 2 },
+  { value: "quarterly", label: "Quarterly", n: 4 },
+  { value: "monthly", label: "Monthly", n: 12 },
+  { value: "daily", label: "Daily", n: 365 },
 ] as const;
 
 type CompoundValue = (typeof COMPOUND_OPTIONS)[number]["value"];
@@ -251,9 +249,9 @@ type YearRow = {
 const YearBreakdownTable: React.FC<{ rows: YearRow[] }> = ({ rows }) => {
   if (!rows.length) return null;
   return (
-    <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+    <div className="mt-4 overflow-x-auto rounded-xl border border-plum-200 bg-white/80 backdrop-blur">
       <table className="min-w-[720px] w-full text-sm">
-        <thead className="bg-neutral-50">
+        <thead className="bg-plum-50/80">
           <tr className="text-left">
             <th className="px-4 py-3 font-semibold">Year</th>
             <th className="px-4 py-3 font-semibold">Starting Balance</th>
@@ -358,7 +356,7 @@ export default function FosterWealthCalculators({
   const mtg = useMemo(() => {
     const loan = Math.max(
       (parseFloat(mtgInputs.loanAmount) || 0) -
-        (parseFloat(mtgInputs.downPayment) || 0),
+      (parseFloat(mtgInputs.downPayment) || 0),
       0,
     );
     const annualRate = (parseFloat(mtgInputs.interestRate) || 0) / 100;
@@ -370,7 +368,7 @@ export default function FosterWealthCalculators({
     return { monthly, total: monthly * n };
   }, [mtgInputs]);
 
-  
+
   /* ---------- Simple vs Compound Interest (enhanced) ---------- */
   const [interestMode, setInterestMode] = useState<"simple" | "compound">(
     "compound",
@@ -598,202 +596,208 @@ export default function FosterWealthCalculators({
       <main className="fwv-container mt-6 flex-grow space-y-10 pb-12">
         {/* ROI */}
         {activeCalc === "roi" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
-            <Header title="ROI Calculator" />
-            <div className="grid gap-4 p-4 md:grid-cols-2">
-              <InputsPanel title="Inputs">
-                <Input
-                  id="roi_initial"
-                  label="Initial Investment"
-                  value={roiInputs.initialInvestment}
-                  onChange={(v) =>
-                    setRoiInputs((s) => ({ ...s, initialInvestment: v }))
-                  }
-                />
-                <Input
-                  id="roi_final"
-                  label="Final Value"
-                  value={roiInputs.finalValue}
-                  onChange={(v) =>
-                    setRoiInputs((s) => ({ ...s, finalValue: v }))
-                  }
-                />
-                <Input
-                  id="roi_time"
-                  label="Time Horizon (years)"
-                  value={roiInputs.timeHorizon}
-                  onChange={(v) =>
-                    setRoiInputs((s) => ({ ...s, timeHorizon: v }))
-                  }
-                />
-              </InputsPanel>
-              <ResultsPanel title="Results">
-                <KV label="Total ROI" value={fmtPct(roi.total)} />
-                <KV label="Annualized ROI" value={fmtPct(roi.annual)} />
-              </ResultsPanel>
-            </div>
-            <div className="px-6 pb-5">
-              <ExplanationPanel title="How this works">
-                <ul className="ml-5 list-disc">
-                  <li>
-                    <b>ROI:</b> (Final − Initial) ÷ Initial
-                  </li>
-                  <li>
-                    <b>Annualized:</b> (Final ÷ Initial)<sup>1/years</sup> − 1
-                  </li>
-                  <li>
-                    Annualizing lets you compare across different time horizons
-                    fairly.
-                  </li>
-                </ul>
-                <p className="mt-2">
-                  Learn more:{" "}
-                  <Link
-                    className="text-brand-green underline"
-                    href="/guide/roi-vs-annualized-roi"
-                  >
-                    ROI vs Annualized ROI—How to Read Them & Boost Your
-                    Investment Strategy
-                  </Link>
-                </p>
-              </ExplanationPanel>
-            </div>
+          <section>
+            <ProfessionalCard>
+              <Header title="ROI Calculator" />
+              <div className="grid gap-4 p-4 md:grid-cols-2">
+                <InputsPanel title="Inputs">
+                  <Input
+                    id="roi_initial"
+                    label="Initial Investment"
+                    value={roiInputs.initialInvestment}
+                    onChange={(v) =>
+                      setRoiInputs((s) => ({ ...s, initialInvestment: v }))
+                    }
+                  />
+                  <Input
+                    id="roi_final"
+                    label="Final Value"
+                    value={roiInputs.finalValue}
+                    onChange={(v) =>
+                      setRoiInputs((s) => ({ ...s, finalValue: v }))
+                    }
+                  />
+                  <Input
+                    id="roi_time"
+                    label="Time Horizon (years)"
+                    value={roiInputs.timeHorizon}
+                    onChange={(v) =>
+                      setRoiInputs((s) => ({ ...s, timeHorizon: v }))
+                    }
+                  />
+                </InputsPanel>
+                <ResultsPanel title="Results">
+                  <KV label="Total ROI" value={fmtPct(roi.total)} />
+                  <KV label="Annualized ROI" value={fmtPct(roi.annual)} />
+                </ResultsPanel>
+              </div>
+              <div className="px-6 pb-5">
+                <ExplanationPanel title="How this works">
+                  <ul className="ml-5 list-disc">
+                    <li>
+                      <b>ROI:</b> (Final − Initial) ÷ Initial
+                    </li>
+                    <li>
+                      <b>Annualized:</b> (Final ÷ Initial)<sup>1/years</sup> − 1
+                    </li>
+                    <li>
+                      Annualizing lets you compare across different time horizons
+                      fairly.
+                    </li>
+                  </ul>
+                  <p className="mt-2">
+                    Learn more:{" "}
+                    <Link
+                      className="text-brand-600 underline hover:text-brand-700 transition-colors"
+                      href="/guide/roi-vs-annualized-roi"
+                    >
+                      ROI vs Annualized ROI—How to Read Them & Boost Your
+                      Investment Strategy
+                    </Link>
+                  </p>
+                </ExplanationPanel>
+              </div>
+            </ProfessionalCard>
           </section>
         )}
 
         {/* Break-Even */}
         {activeCalc === "break-even" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
-            <Header title="Break-Even Calculator" />
-            <div className="grid gap-6 p-6 md:grid-cols-2">
-              <InputsPanel title="Inputs">
-                <Input
-                  id="be_fixed"
-                  label="Fixed Costs"
-                  value={beInputs.fixedCosts}
-                  onChange={(v) =>
-                    setBeInputs((s) => ({ ...s, fixedCosts: v }))
-                  }
-                />
-                <Input
-                  id="be_var"
-                  label="Variable Cost per Unit"
-                  value={beInputs.variableCostPerUnit}
-                  onChange={(v) =>
-                    setBeInputs((s) => ({ ...s, variableCostPerUnit: v }))
-                  }
-                />
-                <Input
-                  id="be_price"
-                  label="Price per Unit"
-                  value={beInputs.pricePerUnit}
-                  onChange={(v) =>
-                    setBeInputs((s) => ({ ...s, pricePerUnit: v }))
-                  }
-                />
-              </InputsPanel>
-              <ResultsPanel title="Results">
-                <KV
-                  label="Break-Even (units)"
-                  value={isFinite(breakEvenUnits) ? breakEvenUnits : "N/A"}
-                />
-              </ResultsPanel>
-            </div>
-            <div className="px-6 pb-6">
-              <ExplanationPanel title="How this works">
-                <ul className="ml-5 list-disc">
-                  <li>Units = Fixed Costs ÷ (Price − Variable Cost).</li>
-                  <li>
-                    If price ≤ variable cost, break-even isn't achievable.
-                  </li>
-                </ul>
-                <p className="mt-2">
-                  Learn more:{" "}
-                  <Link
-                    className="text-brand-green underline"
-                    href="/guide/break-even-made-simple"
-                  >
-                    Break-Even Made Simple—Use Our Calculator to Master Costs &
-                    Profit Margins
-                  </Link>
-                </p>
-              </ExplanationPanel>
-            </div>
+          <section>
+            <ProfessionalCard>
+              <Header title="Break-Even Calculator" />
+              <div className="grid gap-6 p-6 md:grid-cols-2">
+                <InputsPanel title="Inputs">
+                  <Input
+                    id="be_fixed"
+                    label="Fixed Costs"
+                    value={beInputs.fixedCosts}
+                    onChange={(v) =>
+                      setBeInputs((s) => ({ ...s, fixedCosts: v }))
+                    }
+                  />
+                  <Input
+                    id="be_var"
+                    label="Variable Cost per Unit"
+                    value={beInputs.variableCostPerUnit}
+                    onChange={(v) =>
+                      setBeInputs((s) => ({ ...s, variableCostPerUnit: v }))
+                    }
+                  />
+                  <Input
+                    id="be_price"
+                    label="Price per Unit"
+                    value={beInputs.pricePerUnit}
+                    onChange={(v) =>
+                      setBeInputs((s) => ({ ...s, pricePerUnit: v }))
+                    }
+                  />
+                </InputsPanel>
+                <ResultsPanel title="Results">
+                  <KV
+                    label="Break-Even (units)"
+                    value={isFinite(breakEvenUnits) ? breakEvenUnits : "N/A"}
+                  />
+                </ResultsPanel>
+              </div>
+              <div className="px-6 pb-6">
+                <ExplanationPanel title="How this works">
+                  <ul className="ml-5 list-disc">
+                    <li>Units = Fixed Costs ÷ (Price − Variable Cost).</li>
+                    <li>
+                      If price ≤ variable cost, break-even isn't achievable.
+                    </li>
+                  </ul>
+                  <p className="mt-2">
+                    Learn more:{" "}
+                    <Link
+                      className="text-brand-600 underline hover:text-brand-700 transition-colors"
+                      href="/guide/break-even-made-simple"
+                    >
+                      Break-Even Made Simple—Use Our Calculator to Master Costs &
+                      Profit Margins
+                    </Link>
+                  </p>
+                </ExplanationPanel>
+              </div>
+            </ProfessionalCard>
           </section>
         )}
 
         {/* Mortgage */}
         {activeCalc === "mortgage" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
-            <Header title="Mortgage Calculator" />
-            <div className="grid gap-6 p-6 md:grid-cols-2">
-              <InputsPanel title="Inputs">
-                <Input
-                  id="mtg_loan"
-                  label="Home Price / Loan Amount"
-                  value={mtgInputs.loanAmount}
-                  onChange={(v) =>
-                    setMtgInputs((s) => ({ ...s, loanAmount: v }))
-                  }
-                />
-                <Input
-                  id="mtg_down"
-                  label="Down Payment"
-                  value={mtgInputs.downPayment}
-                  onChange={(v) =>
-                    setMtgInputs((s) => ({ ...s, downPayment: v }))
-                  }
-                />
-                <Input
-                  id="mtg_rate"
-                  label="Interest Rate (%)"
-                  value={mtgInputs.interestRate}
-                  onChange={(v) =>
-                    setMtgInputs((s) => ({ ...s, interestRate: v }))
-                  }
-                />
-                <Input
-                  id="mtg_term"
-                  label="Loan Term (years)"
-                  value={mtgInputs.loanTerm}
-                  onChange={(v) => setMtgInputs((s) => ({ ...s, loanTerm: v }))}
-                />
-              </InputsPanel>
-              <ResultsPanel title="Results">
-                <KV label="Monthly Payment" value={fmtUSD(mtg.monthly)} />
-                <KV label="Total Paid" value={fmtUSD(mtg.total)} />
-              </ResultsPanel>
-            </div>
-            <div className="px-6 pb-6">
-              <ExplanationPanel title="How this works">
-                <ul className="ml-5 list-disc">
-                  <li>
-                    Monthly payment uses p = rL / (1 − (1+r)<sup>−n</sup>),
-                    where r=rate/12, n=months.
-                  </li>
-                  <li>
-                    Higher rates/longer terms increase total interest paid.
-                  </li>
-                  <li>Extra principal payments reduce total interest.</li>
-                </ul>
-                <p className="mt-2">
-                  Learn more:{" "}
-                  <Link
-                    className="text-brand-green underline"
-                    href="/guide/mortgage-payment-breakdown"
-                  >
-                    Mortgage Payment Breakdown—Use Our Calculator to See What
-                    Impacts Your Monthly Cost
-                  </Link>
-                </p>
-              </ExplanationPanel>
-            </div>
+          <section>
+            <ProfessionalCard>
+              <Header title="Mortgage Calculator" />
+              <div className="grid gap-6 p-6 md:grid-cols-2">
+                <InputsPanel title="Inputs">
+                  <Input
+                    id="mtg_loan"
+                    label="Home Price / Loan Amount"
+                    value={mtgInputs.loanAmount}
+                    onChange={(v) =>
+                      setMtgInputs((s) => ({ ...s, loanAmount: v }))
+                    }
+                  />
+                  <Input
+                    id="mtg_down"
+                    label="Down Payment"
+                    value={mtgInputs.downPayment}
+                    onChange={(v) =>
+                      setMtgInputs((s) => ({ ...s, downPayment: v }))
+                    }
+                  />
+                  <Input
+                    id="mtg_rate"
+                    label="Interest Rate (%)"
+                    value={mtgInputs.interestRate}
+                    onChange={(v) =>
+                      setMtgInputs((s) => ({ ...s, interestRate: v }))
+                    }
+                  />
+                  <Input
+                    id="mtg_term"
+                    label="Loan Term (years)"
+                    value={mtgInputs.loanTerm}
+                    onChange={(v) => setMtgInputs((s) => ({ ...s, loanTerm: v }))}
+                  />
+                </InputsPanel>
+                <ResultsPanel title="Results">
+                  <KV label="Monthly Payment" value={fmtUSD(mtg.monthly)} />
+                  <KV label="Total Paid" value={fmtUSD(mtg.total)} />
+                </ResultsPanel>
+              </div>
+              <div className="px-6 pb-6">
+                <ExplanationPanel title="How this works">
+                  <ul className="ml-5 list-disc">
+                    <li>
+                      Monthly payment uses p = rL / (1 − (1+r)<sup>−n</sup>),
+                      where r=rate/12, n=months.
+                    </li>
+                    <li>
+                      Higher rates/longer terms increase total interest paid.
+                    </li>
+                    <li>Extra principal payments reduce total interest.</li>
+                  </ul>
+                  <p className="mt-2">
+                    Learn more:{" "}
+                    <Link
+                      className="text-brand-600 underline hover:text-brand-700 transition-colors"
+                      href="/guide/mortgage-payment-breakdown"
+                    >
+                      Mortgage Payment Breakdown—Use Our Calculator to See What
+                      Impacts Your Monthly Cost
+                    </Link>
+                  </p>
+                </ExplanationPanel>
+              </div>
+            </ProfessionalCard>
           </section>
         )}
 
         {/* Tip & Tab Split */}
         {activeCalc === "tip-split" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
+          <section className="card-regal">
             <Header title="Restaurant Tip & Tab Split Calculator" />
             <div className="grid gap-6 p-6 md:grid-cols-2">
               <InputsPanel title="Inputs">
@@ -932,7 +936,7 @@ export default function FosterWealthCalculators({
 
         {/* Interest (Simple/Compound) - ENHANCED VERSION */}
         {activeCalc === "interest" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
+          <section className="card-regal">
             <Header title="Interest Calculator (Simple / Compound)" />
             <div className="p-6">
               {/* Mode toggle */}
@@ -940,22 +944,20 @@ export default function FosterWealthCalculators({
                 <button
                   type="button"
                   onClick={() => setInterestMode("compound")}
-                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                    interestMode === "compound"
-                      ? "bg-brand-green text-white shadow-md"
-                      : "border border-neutral-300 bg-white hover:bg-neutral-50"
-                  }`}
+                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${interestMode === "compound"
+                      ? "bg-plum-600 text-white shadow-md"
+                      : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
+                    }`}
                 >
                   Compound Interest
                 </button>
                 <button
                   type="button"
                   onClick={() => setInterestMode("simple")}
-                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                    interestMode === "simple"
-                      ? "bg-brand-green text-white shadow-md"
-                      : "border border-neutral-300 bg-white hover:bg-neutral-50"
-                  }`}
+                  className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${interestMode === "simple"
+                      ? "bg-plum-600 text-white shadow-md"
+                      : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
+                    }`}
                 >
                   Simple Interest
                 </button>
@@ -994,7 +996,7 @@ export default function FosterWealthCalculators({
                     type="number"
                     placeholder="Optional"
                   />
-                  
+
                   {interestMode === "compound" && (
                     <div>
                       <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -1005,8 +1007,8 @@ export default function FosterWealthCalculators({
                         onChange={(e) =>
                           setIntInputs((s) => ({ ...s, frequency: e.target.value as CompoundValue }))
                         }
-                        className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-gray-900 shadow-sm
-                                   focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40"
+                        className="h-11 w-full rounded-lg border border-plum-300 bg-white/80 px-3 text-plum-900 shadow-sm
+                                   focus:border-aure-400 focus:outline-none focus:ring-2 focus:ring-aure-400/40"
                       >
                         {COMPOUND_OPTIONS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -1020,34 +1022,34 @@ export default function FosterWealthCalculators({
 
                 <ResultsPanel title="Results">
                   <div className="space-y-4">
-                    <div className="rounded-xl bg-gradient-to-br from-brand-green/10 to-brand-green/5 p-4 ring-1 ring-brand-green/20">
-                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-green/70">
+                    <div className="rounded-xl bg-gradient-to-br from-aure-100/50 to-plum-100/30 p-4 ring-1 ring-aure-300/30">
+                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-plum-700">
                         Final Amount
                       </p>
-                      <p className="text-3xl font-bold text-brand-green">
+                      <p className="text-3xl font-bold text-plum-800">
                         {fmtUSD(interest.amount)}
                       </p>
                     </div>
-                    
+
                     <KV label="Total Interest Earned" value={fmtUSD(interest.interest)} />
                     <KV label="Total Contributed" value={fmtUSD(interest.contributed)} />
-                    
-                    <div className="rounded-lg bg-neutral-50 p-3 text-sm">
+
+                    <div className="rounded-lg bg-plum-50/50 p-3 text-sm">
                       <div className="flex justify-between mb-1">
-                        <span className="text-gray-600">Principal:</span>
+                        <span className="text-plum-600">Principal:</span>
                         <span className="font-medium">{fmtUSD(parseFloat(intInputs.principal) || 0)}</span>
                       </div>
                       {parseFloat(intInputs.monthlyContribution) > 0 && (
                         <div className="flex justify-between mb-1">
-                          <span className="text-gray-600">Monthly Deposits:</span>
+                          <span className="text-plum-600">Monthly Deposits:</span>
                           <span className="font-medium">
                             {fmtUSD(parseFloat(intInputs.monthlyContribution) * parseFloat(intInputs.years) * 12)}
                           </span>
                         </div>
                       )}
                       <div className="flex justify-between pt-2 border-t border-gray-200">
-                        <span className="font-semibold text-gray-700">Interest:</span>
-                        <span className="font-semibold text-brand-green">{fmtUSD(interest.interest)}</span>
+                        <span className="font-semibold text-plum-700">Interest:</span>
+                        <span className="font-semibold text-aure-600">{fmtUSD(interest.interest)}</span>
                       </div>
                     </div>
                   </div>
@@ -1061,14 +1063,14 @@ export default function FosterWealthCalculators({
                 <p className="mb-3 text-sm">
                   {interestMode === "compound" ? (
                     <>
-                      In <b>Compound Interest</b> mode, interest is calculated on both the principal and 
-                      accumulated interest at the selected frequency. Monthly contributions are added at the 
+                      In <b>Compound Interest</b> mode, interest is calculated on both the principal and
+                      accumulated interest at the selected frequency. Monthly contributions are added at the
                       end of each month and begin earning interest immediately.
                     </>
                   ) : (
                     <>
-                      In <b>Simple Interest</b> mode, interest is calculated only on the principal amount 
-                      (initial deposit plus contributions). Interest does not compound—it stays separate 
+                      In <b>Simple Interest</b> mode, interest is calculated only on the principal amount
+                      (initial deposit plus contributions). Interest does not compound—it stays separate
                       and doesn't earn additional interest.
                     </>
                   )}
@@ -1082,8 +1084,8 @@ export default function FosterWealthCalculators({
                     {interestMode === "compound" ? (
                       <>
                         <li>
-                          <b>Compound Interest Formula:</b> The selected frequency is converted to a 
-                          monthly rate: r<sub>monthly</sub> = (1 + r/n)<sup>n/12</sup> − 1, where n is 
+                          <b>Compound Interest Formula:</b> The selected frequency is converted to a
+                          monthly rate: r<sub>monthly</sub> = (1 + r/n)<sup>n/12</sup> − 1, where n is
                           the compounding frequency per year.
                         </li>
                         <li>
@@ -1107,13 +1109,13 @@ export default function FosterWealthCalculators({
                       </>
                     )}
                     <li>
-                      "Total Contributed" includes your initial principal plus all monthly deposits over 
+                      "Total Contributed" includes your initial principal plus all monthly deposits over
                       the time period.
                     </li>
                   </ul>
                   <p className="mt-3">
                     Learn more:{" "}
-                    <Link className="text-brand-green underline" href="/guide/simple-vs-compound-interest">
+                    <Link className="link-regal" href="/guide/simple-vs-compound-interest">
                       Simple vs Compound Interest—Which One Grows Your Money Faster?
                     </Link>
                   </p>
@@ -1125,82 +1127,84 @@ export default function FosterWealthCalculators({
 
         {/* Freelancer Rate */}
         {activeCalc === "freelancer-rate" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft">
-            <Header title="Freelancer Rate Calculator" />
-            <div className="grid gap-6 p-6 md:grid-cols-2">
-              <InputsPanel title="Inputs">
-                <Input
-                  id="fr_income"
-                  label="Desired Annual Income ($)"
-                  value={frInputs.annualIncome}
-                  onChange={(v) =>
-                    setFrInputs((s) => ({ ...s, annualIncome: v }))
-                  }
-                />
-                <Input
-                  id="fr_weeks"
-                  label="Weeks Off"
-                  value={frInputs.weeksOff}
-                  onChange={(v) => setFrInputs((s) => ({ ...s, weeksOff: v }))}
-                />
-                <Input
-                  id="fr_hours"
-                  label="Billable Hours / Week"
-                  value={frInputs.hoursPerWeek}
-                  onChange={(v) =>
-                    setFrInputs((s) => ({ ...s, hoursPerWeek: v }))
-                  }
-                />
-                <Input
-                  id="fr_oh"
-                  label="Overhead (%)"
-                  value={frInputs.overheadPct}
-                  onChange={(v) =>
-                    setFrInputs((s) => ({ ...s, overheadPct: v }))
-                  }
-                />
-              </InputsPanel>
-              <ResultsPanel title="Results">
-                <KV
-                  label="Weeks Worked"
-                  value={
-                    frInputs.weeksOff
-                      ? `${freelancer.weeksWorked}`
-                      : freelancer.weeksWorked
-                  }
-                />
-                <KV
-                  label="Billable Hours"
-                  value={freelancer.billableHours.toFixed(0)}
-                />
-                <KV label="Target Gross" value={fmtUSD(freelancer.target)} />
-                <KV
-                  label="Required Hourly Rate"
-                  value={fmtUSD(freelancer.hourly)}
-                />
-              </ResultsPanel>
-            </div>
-            <div className="px-6 pb-6">
-              <ExplanationPanel title="How this works">
-                <ul className="ml-5 list-disc">
-                  <li>Hourly = (Income × (1 + overhead)) ÷ billable hours.</li>
-                  <li>Consider buffer for admin, marketing, revisions.</li>
-                  <li>
-                    Account for vacations, holidays, and non-billable time.
-                  </li>
-                </ul>
-                <p className="mt-2">
-                  Learn more:{" "}
-                  <Link
-                    className="text-brand-green underline"
-                    href="/guide/set-your-freelancer-rate-right"
-                  >
-                    Set Your Freelancer Rate Right—Use Our Calculator to Avoid
-                    Undervaluing Your Time
-                  </Link>
-                </p>
-              </ExplanationPanel>
-            </div>
+          <section>
+            <ProfessionalCard>
+              <Header title="Freelancer Rate Calculator" />
+              <div className="grid gap-6 p-6 md:grid-cols-2">
+                <InputsPanel title="Inputs">
+                  <Input
+                    id="fr_income"
+                    label="Desired Annual Income ($)"
+                    value={frInputs.annualIncome}
+                    onChange={(v) =>
+                      setFrInputs((s) => ({ ...s, annualIncome: v }))
+                    }
+                  />
+                  <Input
+                    id="fr_weeks"
+                    label="Weeks Off"
+                    value={frInputs.weeksOff}
+                    onChange={(v) => setFrInputs((s) => ({ ...s, weeksOff: v }))}
+                  />
+                  <Input
+                    id="fr_hours"
+                    label="Billable Hours / Week"
+                    value={frInputs.hoursPerWeek}
+                    onChange={(v) =>
+                      setFrInputs((s) => ({ ...s, hoursPerWeek: v }))
+                    }
+                  />
+                  <Input
+                    id="fr_oh"
+                    label="Overhead (%)"
+                    value={frInputs.overheadPct}
+                    onChange={(v) =>
+                      setFrInputs((s) => ({ ...s, overheadPct: v }))
+                    }
+                  />
+                </InputsPanel>
+                <ResultsPanel title="Results">
+                  <KV
+                    label="Weeks Worked"
+                    value={
+                      frInputs.weeksOff
+                        ? `${freelancer.weeksWorked}`
+                        : freelancer.weeksWorked
+                    }
+                  />
+                  <KV
+                    label="Billable Hours"
+                    value={freelancer.billableHours.toFixed(0)}
+                  />
+                  <KV label="Target Gross" value={fmtUSD(freelancer.target)} />
+                  <KV
+                    label="Required Hourly Rate"
+                    value={fmtUSD(freelancer.hourly)}
+                  />
+                </ResultsPanel>
+              </div>
+              <div className="px-6 pb-6">
+                <ExplanationPanel title="How this works">
+                  <ul className="ml-5 list-disc">
+                    <li>Hourly = (Income × (1 + overhead)) ÷ billable hours.</li>
+                    <li>Consider buffer for admin, marketing, revisions.</li>
+                    <li>
+                      Account for vacations, holidays, and non-billable time.
+                    </li>
+                  </ul>
+                  <p className="mt-2">
+                    Learn more:{" "}
+                    <Link
+                      className="text-brand-600 underline hover:text-brand-700 transition-colors"
+                      href="/guide/set-your-freelancer-rate-right"
+                    >
+                      Set Your Freelancer Rate Right—Use Our Calculator to Avoid
+                      Undervaluing Your Time
+                    </Link>
+                  </p>
+                </ExplanationPanel>
+              </div>
+            </ProfessionalCard>
           </section>
         )}
 
@@ -1208,7 +1212,7 @@ export default function FosterWealthCalculators({
 
         {/* Savings (Plus) */}
         {!freeOnly && activeCalc === "savings" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft relative">
+          <section className="card-regal relative">
             <Header title="Savings Growth Calculator" />
             {/* Gate will allow for plus/pro/premium; show upgrade card otherwise */}
             <Gate calc="savings">
@@ -1270,7 +1274,7 @@ export default function FosterWealthCalculators({
 
         {/* Debt Payoff (Plus) */}
         {!freeOnly && activeCalc === "debt-payoff" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft relative">
+          <section className="card-regal relative">
             <Header title="Debt Payoff Calculator" />
             <Gate calc="debt-payoff">
               <div className="grid gap-6 p-6 md:grid-cols-2">
@@ -1324,7 +1328,7 @@ export default function FosterWealthCalculators({
 
         {/* Employee Cost (Pro choice via Gate) */}
         {!freeOnly && activeCalc === "employee-cost" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft relative">
+          <section className="card-regal relative">
             <Header title="Employee Cost Calculator" />
             {/* Gate calc id maps to entitlements-client ("employee_cost") */}
             <Gate calc="employee-cost">
@@ -1337,7 +1341,7 @@ export default function FosterWealthCalculators({
 
         {/* Expense Split Deluxe (Pro / Premium via Gate) */}
         {!freeOnly && activeCalc === "expense-split-deluxe" && (
-          <section className="rounded-2xl border border-neutral-200 bg-white shadow-soft relative">
+          <section className="card-regal relative">
             <Header title="Expense Split Deluxe" />
             <Gate calc="expense-split-deluxe">
               <div className="p-4 md:p-6">

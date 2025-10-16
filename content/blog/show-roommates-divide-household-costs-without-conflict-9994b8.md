@@ -2,7 +2,7 @@
 title: "Show roommates how to divide household costs without conflict — Complete Guide"
 date: "2025-10-15T03:28:43.068Z"
 excerpt: "A practical, step-by-step walkthrough of “Show roommates how to divide household costs without conflict”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["show", "roommates", "how", "divide", "household", "costs", "without", "conflict"]
 ---
@@ -129,7 +129,7 @@ Consider a tiered system
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:28:28.265Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

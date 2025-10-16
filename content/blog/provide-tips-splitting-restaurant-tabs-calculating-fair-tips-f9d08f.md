@@ -2,7 +2,7 @@
 title: "Provide tips for splitting restaurant tabs and calculating fair tips in groups — Complete Guide"
 date: "2025-10-15T03:36:38.100Z"
 excerpt: "A practical, step-by-step walkthrough of “Provide tips for splitting restaurant tabs and calculating fair tips in groups”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["provide", "tips", "for", "splitting", "restaurant", "tabs", "and", "calculating"]
 ---
@@ -167,7 +167,7 @@ Remember to always use our calculators available at [fosterwealthventures.store]
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:35:57.839Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

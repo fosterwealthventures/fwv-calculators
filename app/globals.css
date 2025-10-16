@@ -5,8 +5,7 @@
 /* ------------------ Base & Brand ------------------ */
 @layer base {
   :root {
-    --brand-green: #064e3b; /* FWV green */
-    --brand-gold: #d4af37; /* FWV gold  */
+    --brand-green: #10b981; /* Emerald green */
     --header-h: 72px; /* keep header height reference */
   }
 
@@ -16,7 +15,7 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-slate-50 text-slate-900 antialiased;
     /* If you're using next/font with Inter in layout, it sets --font-sans.
        This line uses it when present, with sensible fallbacks. */
     font-family:
@@ -34,7 +33,7 @@
   }
 
   a {
-    @apply text-gray-800 hover:text-[color:var(--brand-green)] transition-colors;
+    @apply text-slate-700 hover:text-brand-700 transition-colors;
   }
 }
 
@@ -43,11 +42,22 @@
   /* Unified containers (keep legacy .fwv-container for now) */
   .container-page,
   .fwv-container {
-    max-width: 72rem; /* ≈ Tailwind max-w-6xl */
+    width: 100%;
+    max-width: 72rem; /* max-w-6xl */
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem; /* px-4 */
     padding-right: 1rem;
+  }
+
+  /* Responsive container for wider layouts */
+  @media (min-width: 1024px) {
+    .container-page,
+    .fwv-container {
+      max-width: 80rem; /* lg:max-w-7xl */
+      padding-left: 2rem; /* lg:px-8 */
+      padding-right: 2rem;
+    }
   }
 
   /* Consistent top rhythm for page content */
@@ -57,15 +67,13 @@
 
   /* Brand typography helpers */
   .heading-hero {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
-    color: var(--brand-green);
+    @apply text-3xl md:text-4xl font-bold tracking-tight text-brand-700;
   }
   .heading-section {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
-    color: var(--brand-green);
+    @apply text-2xl md:text-3xl font-semibold tracking-tight text-brand-700;
   }
   .lead {
-    @apply text-base md:text-lg text-gray-600;
+    @apply text-base md:text-lg text-slate-600;
   }
 
   /* Soft elevation used on cards */
@@ -85,11 +93,79 @@
     min-height: 10rem;
     border-radius: 0.75rem;
   }
+  
+  /* Responsive adjustment for ad slot height */
+  @media (min-width: 768px) {
+    .ad-slot {
+      min-height: 12rem;
+    }
+  }
 }
 
 /* Responsive adjustment for ad slot height */
 @media (min-width: 768px) {
   .ad-slot {
     min-height: 12rem;
+  }
+}
+
+/* ------------------ Regal Theme Component Classes ------------------ */
+@layer components {
+  .header-regal {
+    @apply bg-plum-900 text-white border-b border-plum-700;
+  }
+  .nav-link-regal {
+    @apply text-white/90 hover:text-aure-300 transition;
+  }
+  .logo-ring-regal {
+    @apply ring-2 ring-transparent hover:ring-aure-400/40 rounded-lg transition;
+  }
+
+  .card-regal {
+    @apply bg-white/80 dark:bg-plum-900/35 border border-plum-200/60 dark:border-plum-700 rounded-2xl shadow-sm backdrop-blur;
+  }
+
+  .btn-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-plum-600 hover:bg-plum-700 text-white shadow-sm hover:shadow-regalGlow transition;
+  }
+  .btn-ghost-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium border border-plum-300/60 text-plum-800 dark:text-plum-100 hover:bg-plum-50/60 dark:hover:bg-plum-900/40 transition;
+  }
+  .btn-accent-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-aure-500 hover:bg-aure-600 text-plum-900 shadow-sm transition;
+  }
+
+  .focus-regal {
+    @apply ring-2 ring-aure-400/60 ring-offset-2 ring-offset-white dark:ring-offset-plum-900 outline-none;
+  }
+
+  .chip-regal {
+    @apply inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm border-aure-300/70 text-plum-800 dark:text-aure-100 bg-white/70 dark:bg-plum-900/40;
+  }
+
+  .link-regal {
+    @apply text-aure-500 hover:text-aure-400 underline decoration-aure-300/60 underline-offset-4 transition;
+  }
+  .article > * + * { @apply mt-5 md:mt-6; }
+  .article h1 { @apply mt-10 font-extrabold tracking-tight; }
+  .article h2 { @apply mt-9 font-bold; }
+  .article h3 { @apply mt-7 font-semibold; }
+
+  .article img, .article video { @apply my-6 rounded-xl; }
+  .article figure { @apply my-6; }
+  .article figcaption { @apply mt-2 text-sm opacity-80; }
+
+  .article table { @apply w-full my-6 rounded-lg overflow-hidden; }
+  .article thead th { @apply bg-plum-900/20 p-3 text-left; }
+  .article tbody td { @apply border-t border-white/10 p-3; }
+
+  .article blockquote { @apply my-6 pl-4 border-l-4 border-aure-400/60; }
+  .article ul, .article ol { @apply pl-6; }
+  .article a { @apply underline underline-offset-4 text-aure-400 hover:text-aure-300; }
+}
+
+@layer utilities {
+  .page-bg-regal {
+    @apply bg-regal-tint dark:bg-regal-tint-dark;
   }
 }

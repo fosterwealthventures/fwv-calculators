@@ -2,7 +2,7 @@
 title: "Help users estimate how much to save monthly to reach a financial goal — Complete Guide"
 date: "2025-10-15T03:33:25.877Z"
 excerpt: "A practical, step-by-step walkthrough of “Help users estimate how much to save monthly to reach a financial goal”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["help", "users", "estimate", "how", "much", "save", "monthly", "reach"]
 ---
@@ -151,7 +151,7 @@ By following these steps and utilizing the right tools, you can confidently esti
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:33:05.771Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

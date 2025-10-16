@@ -2,7 +2,7 @@
 title: "Show how using calculators improves clarity in financial planning — Complete Guide"
 date: "2025-10-15T03:21:15.223Z"
 excerpt: "A practical, step-by-step walkthrough of “Show how using calculators improves clarity in financial planning”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["show", "how", "using", "calculators", "improves", "clarity", "financial", "planning"]
 ---
@@ -211,7 +211,7 @@ You have $20,000 to invest in a coffee shop, and you want to determine if it’s
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:20:37.996Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 

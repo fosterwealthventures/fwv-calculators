@@ -2,7 +2,7 @@
 title: "Compare debt payoff strategies: snowball vs avalanche method — Complete Guide"
 date: "2025-10-15T03:36:26.037Z"
 excerpt: "A practical, step-by-step walkthrough of “Compare debt payoff strategies: snowball vs avalanche method”."
-image: "/logo.png"
+image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["compare", "debt", "payoff", "strategies", "snowball", "avalanche", "method"]
 ---
@@ -125,7 +125,7 @@ If you're ready to take action, start tracking your debts and payments today! Us
     "name": "Foster Wealth Ventures"
   },
   "datePublished": "2025-10-15T03:35:58.417Z",
-  "image": "/logo.png"
+  "image": "/fwv-logo-gold.svg"
 }
 </script>
 
