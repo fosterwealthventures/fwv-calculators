@@ -12,8 +12,8 @@ export default function Home() {
     <main className="fwv-container py-6">
       {/* Heading + intro */}
       <section className="space-y-2">
-        <h1 className="text-4xl font-extrabold text-plum-800 dark:text-plum-100">Foster Wealth Calculators</h1>
-        <p className="mt-2 text-plum-900/80 dark:text-plum-100/80 max-w-2xl">
+        <h1 className="text-4xl font-extrabold text-purple-title">Foster Wealth Calculators</h1>
+        <p className="mt-2 text-plum-900 dark:text-plum-100/80 max-w-2xl">
           Start with the free calculators below. Upgrade any time to unlock
           Savings, Debt Payoff, Employee Cost, and Expense Split Deluxe.
         </p>
@@ -37,12 +37,12 @@ export default function Home() {
 
       {/* Scripture */}
       <section className="mt-4">
-        <div className="card-regal">
-          <blockquote className="italic text-plum-700 dark:text-plum-200">
+        <div className="card-regal p-5 shadow-md">
+          <blockquote className="text-base md:text-lg font-semibold italic text-plum-800 dark:text-plum-100">
             "The plans of the diligent lead surely to abundance, but everyone who
             is hasty comes only to poverty."
           </blockquote>
-          <div className="mt-1 text-aure-600 dark:text-aure-400 font-medium">— Proverbs 21:5</div>
+          <div className="mt-2 text-base font-bold text-aure-600 dark:text-aure-400">— Proverbs 21:5</div>
         </div>
       </section>
 

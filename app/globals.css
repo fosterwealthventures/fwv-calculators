@@ -6,6 +6,8 @@
 @layer base {
   :root {
     --brand-green: #10b981; /* Emerald green */
+    --brand-gold: #d4af37; /* Gold */
+    --brand-purple-900: #3B1663; /* Dark purple for titles */
     --header-h: 72px; /* keep header height reference */
   }
 
@@ -167,5 +169,23 @@
 @layer utilities {
   .page-bg-regal {
     @apply bg-regal-tint dark:bg-regal-tint-dark;
+  }
+
+  /* Gradient gold for header title */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #f4e4a8 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Dark purple titles for light mode */
+  .text-purple-title {
+    color: var(--brand-purple-900);
+  }
+
+  /* Dark mode purple titles (keep readable) */
+  .dark .text-purple-title {
+    color: #f3e8ff; /* Light purple for dark mode */
   }
 }

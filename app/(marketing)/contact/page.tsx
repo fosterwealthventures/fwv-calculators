@@ -15,7 +15,7 @@ export default function ContactPage() {
         <span className="text-gray-500">Contact</span>
       </nav>
 
-      <h1 className="heading-hero">Contact</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Contact</h1>
       <p className="lead mt-2">
         Have a question, found a bug, or want to suggest a new calculator? We’d
         love to hear from you.

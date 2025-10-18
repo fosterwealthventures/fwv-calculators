@@ -1,8 +1,8 @@
 // app/pricing/price-client.tsx — CLIENT component
 "use client";
 
-import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 type PlanKey = "free" | "plus" | "pro" | "premium";
 
@@ -55,7 +55,7 @@ export default function PriceClient() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="heading-hero">Plans &amp; Pricing</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Plans &amp; Pricing</h1>
       <p className="mt-2 text-gray-600">
         Pick the plan that fits today. You can always upgrade later.
       </p>

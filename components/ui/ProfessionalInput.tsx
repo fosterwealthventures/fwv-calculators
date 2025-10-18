@@ -32,7 +32,8 @@ export default function ProfessionalInput({
           id={inputId}
           className={clsx(
             'block w-full rounded-xl border bg-white/80 dark:bg-plum-900/40 px-4 py-3 text-sm transition-colors',
-            'border-plum-200/70 dark:border-plum-700 placeholder:text-plum-400 focus-regal',
+            'text-plum-900 dark:text-white font-medium',
+            'border-plum-200/70 dark:border-plum-700 placeholder:text-plum-400 dark:placeholder:text-plum-500 focus-regal',
             error && 'border-red-300 focus:border-red-500 focus:ring-red-500',
             className
           )}

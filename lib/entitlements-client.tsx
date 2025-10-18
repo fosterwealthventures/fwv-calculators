@@ -1,5 +1,7 @@
 "use client";
 
+import { Plan, ProChoice, canDownload, planAllows } from "@/lib/plan";
+import { usePathname, useRouter } from "next/navigation";
 import React, {
   createContext,
   useContext,
@@ -7,8 +9,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { Plan, ProChoice, planAllows, canDownload } from "@/lib/plan";
 
 /** Calculator ids used by the GATE (not your UI keys). */
 export type CalcId =
@@ -70,6 +70,22 @@ function usePersistentState<T>(key: string, initial: T) {
   return [value, setValue, hydrated] as const;
 }
 
+/* ------------------------------------------------------------------------------------------------
+    Dev plan override helpers
+ ------------------------------------------------------------------------------------------------ */
+function getDevPlanOverride(): Plan | null {
+  if (typeof window === "undefined") return null;
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const planParam = searchParams.get("plan");
+
+  if (planParam && ["free", "plus", "pro", "premium"].includes(planParam)) {
+    return planParam as Plan;
+  }
+
+  return null;
+}
+
 const EntitlementsCtx = createContext<EntitlementsState | null>(null);
 
 export function EntitlementsProvider({
@@ -96,18 +112,36 @@ export function EntitlementsProvider({
 
   const hydrated = h1 && h2 && h3;
 
+  // Dev plan override with memoization
+  const devPlanOverride = useMemo(() => {
+    const override = getDevPlanOverride();
+    if (override) {
+      // Set up global for debugging
+      if (typeof window !== "undefined") {
+        (window as any).__FWV_PLAN = override;
+      }
+      return override;
+    }
+    return null;
+  }, []);
+
+  // Use override if available, otherwise use persisted planId
+  const effectivePlanId = useMemo(() => {
+    return devPlanOverride || planId;
+  }, [devPlanOverride, planId]);
+
   // Helper functions using your new plan.ts logic
   const canAccessCalculator = (calcId: CalcId): boolean => {
-    return planAllows(calcId, planId, proChoice);
+    return planAllows(calcId, effectivePlanId, proChoice);
   };
 
   const canDownloadReport = (calcId: CalcId): boolean => {
-    return canDownload(planId, calcId);
+    return canDownload(effectivePlanId, calcId);
   };
 
   const value = useMemo(
     () => ({
-      planId,
+      planId: effectivePlanId,
       proChoice,
       activeCalc,
       setPlanId,
@@ -118,7 +152,7 @@ export function EntitlementsProvider({
       canDownloadReport,
     }),
     [
-      planId,
+      effectivePlanId,
       proChoice,
       activeCalc,
       setPlanId,

@@ -34,7 +34,7 @@ function Header() {
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-6">
         <a href="/" className="logo-ring-regal flex items-center gap-3 shrink-0 transition-transform hover:scale-105">
           <img src="/fwv-logo-gold.svg" alt="Foster Wealth Ventures" width={184} height={100} className="rounded-sm" />
-          <span className="text-lg md:text-xl font-semibold text-white">Foster Wealth Calculators</span>
+          <span className="text-lg md:text-xl font-bold text-gradient-gold">Calculators</span>
         </a>
         <nav className="hidden md:flex items-center gap-5">
           <a className="nav-link-regal" href="/">Home</a>
@@ -139,7 +139,7 @@ function RootLayoutInner({ children, plan }: { children: React.ReactNode; plan: 
           <PlanProvider initialPlan={plan}>
             <Header />
             <main className="min-h-screen">
-              <div className="mx-auto max-w-6xl px-4 py-8">
+              <div className="mx-auto max-w-6xl px-4 py-8 pb-24">
                 <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
                   <div className="animate-fade-in">
                     {children}

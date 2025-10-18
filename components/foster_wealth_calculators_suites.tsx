@@ -115,6 +115,38 @@ const fmtPct = (n: number) =>
     maximumFractionDigits: 2,
   });
 
+// --- Robust numeric helpers ---
+const toNum = (v: string | number) =>
+  Number(String(v ?? "").replace(/[^0-9.+-eE]/g, "")) || 0;
+
+const toPct = (v: string | number) => fmtPct(toNum(v) / 100);
+
+// --- CSV export helper ---
+const downloadCSV = (rows: Record<string, string | number>[], filename: string) => {
+  if (!rows.length) return;
+  const headers = Object.keys(rows[0]);
+  const body = rows.map(r => headers.map(h => String(r[h] ?? "")).join(",")).join("\n");
+  const csv = [headers.join(","), body].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+};
+
+const solveMonthlyForGoal = (FV: number, P: number, rMonthly: number, n: number) => {
+  if (n <= 0) return 0;
+  if (rMonthly <= 0) return (FV - P) / n;
+  const a = Math.pow(1 + rMonthly, n);
+  return (rMonthly * (FV - P * a)) / (a - 1);
+};
+
+const solvePaymentForMonths = (B: number, iMonthly: number, n: number) => {
+  if (n <= 0) return B;
+  if (iMonthly <= 0) return B / n;
+  return (iMonthly * B) / (1 - Math.pow(1 + iMonthly, -n));
+};
+
 const ChipButton: React.FC<{
   active?: boolean;
   onClick?: () => void;
@@ -182,8 +214,8 @@ const ExplanationPanel: React.FC<{
   children: React.ReactNode;
 }> = ({ title, children }) => (
   <div className="card-regal p-4">
-    <h3 className="mb-2 text-sm font-semibold text-plum-700">{title}</h3>
-    <div className="prose prose-sm max-w-none text-plum-700">{children}</div>
+    <h3 className="mb-2 text-sm font-semibold text-plum-900 dark:text-plum-100">{title}</h3>
+    <div className="prose prose-sm max-w-none text-plum-900 dark:text-plum-100">{children}</div>
   </div>
 );
 
@@ -192,7 +224,7 @@ const InputsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   children,
 }) => (
   <div className="card-regal p-5">
-    <h3 className="mb-4 text-sm font-semibold text-plum-700">{title}</h3>
+    <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">{title}</h3>
     <div className="space-y-4">{children}</div>
   </div>
 );
@@ -202,7 +234,7 @@ const ResultsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   children,
 }) => (
   <div className="card-regal p-5">
-    <h3 className="mb-4 text-sm font-semibold text-plum-700">{title}</h3>
+    <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">{title}</h3>
     <div className="space-y-3">{children}</div>
   </div>
 );
@@ -220,7 +252,7 @@ const KV: React.FC<{ label: string; value: React.ReactNode }> = ({
 
 const Header: React.FC<{ title: string }> = ({ title }) => (
   <div className="border-b border-plum-200 bg-plum-50/50 px-4 py-3">
-    <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-plum-800">{title}</h2>
+    <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-purple-title">{title}</h2>
   </div>
 );
 
@@ -232,6 +264,7 @@ const COMPOUND_OPTIONS = [
   { value: "semiannually", label: "Semi-Annually", n: 2 },
   { value: "quarterly", label: "Quarterly", n: 4 },
   { value: "monthly", label: "Monthly", n: 12 },
+  { value: "weekly", label: "Weekly", n: 52 },
   { value: "daily", label: "Daily", n: 365 },
 ] as const;
 
@@ -253,16 +286,16 @@ const YearBreakdownTable: React.FC<{ rows: YearRow[] }> = ({ rows }) => {
       <table className="min-w-[720px] w-full text-sm">
         <thead className="bg-plum-50/80">
           <tr className="text-left">
-            <th className="px-4 py-3 font-semibold">Year</th>
-            <th className="px-4 py-3 font-semibold">Starting Balance</th>
-            <th className="px-4 py-3 font-semibold">Contributions</th>
-            <th className="px-4 py-3 font-semibold">Interest</th>
-            <th className="px-4 py-3 font-semibold">Ending Balance</th>
+            <th className="px-4 py-3 font-semibold text-plum-900 dark:text-plum-100">Year</th>
+            <th className="px-4 py-3 font-semibold text-plum-900 dark:text-plum-100">Starting Balance</th>
+            <th className="px-4 py-3 font-semibold text-plum-900 dark:text-plum-100">Contributions</th>
+            <th className="px-4 py-3 font-semibold text-plum-900 dark:text-plum-100">Interest</th>
+            <th className="px-4 py-3 font-semibold text-plum-900 dark:text-plum-100">Ending Balance</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-plum-900 dark:text-plum-100">
           {rows.map((r) => (
-            <tr key={r.year} className="odd:bg-white even:bg-neutral-50">
+            <tr key={r.year} className="odd:bg-white dark:odd:bg-plum-900/20 even:bg-neutral-50 dark:even:bg-plum-900/10">
               <td className="px-4 py-3">{r.year}</td>
               <td className="px-4 py-3">{fmtUSD(r.start)}</td>
               <td className="px-4 py-3">{fmtUSD(r.contributions)}</td>
@@ -284,13 +317,13 @@ export default function FosterWealthCalculators({
 }: {
   freeOnly?: boolean;
 }) {
-  const { planId } = useEntitlements(); // single source of truth for plan (Free shows ads)
+  const { planId } = useEntitlements(); // single source of truth for plan (Free shows ads) - now includes dev override
   const [activeCalc, setActiveCalc] = useState<CalcKey>("roi");
 
   // Deep-link support (?calc=), with safety if freeOnly hides paid calcs
-  const search = useSearchParams();
+  const searchParams = useSearchParams();
   useEffect(() => {
-    const q = (search.get("calc") || "").toLowerCase() as CalcKey;
+    const q = (searchParams.get("calc") || "").toLowerCase() as CalcKey;
     if (q && q in calcMeta.calculators) {
       const tier = (calcMeta.calculators as any)[q]?.tier as
         | "free"
@@ -302,7 +335,7 @@ export default function FosterWealthCalculators({
         setActiveCalc(q);
       }
     }
-  }, [search, freeOnly]);
+  }, [searchParams, freeOnly]);
 
   const visibleCalcs = Object.entries(calcMeta.calculators).filter(
     ([, meta]) => !(freeOnly && meta.tier !== "free"),
@@ -324,12 +357,14 @@ export default function FosterWealthCalculators({
     timeHorizon: "2",
   });
   const roi = useMemo(() => {
-    const P = parseFloat(roiInputs.initialInvestment) || 0;
-    const F = parseFloat(roiInputs.finalValue) || 0;
-    const Y = parseFloat(roiInputs.timeHorizon) || 1;
+    const P = toNum(roiInputs.initialInvestment);
+    const F = toNum(roiInputs.finalValue);
+    const Y = toNum(roiInputs.timeHorizon) || 1;
     const total = P === 0 ? 0 : (F - P) / P;
     const annual = P === 0 || Y <= 0 ? 0 : Math.pow(F / P, 1 / Y) - 1;
-    return { total, annual };
+    const netProfit = F - P;
+    const finalAmount = F;
+    return { total, annual, netProfit, finalAmount };
   }, [roiInputs]);
 
   /* ------------- Break-Even ------------- */
@@ -482,6 +517,29 @@ export default function FosterWealthCalculators({
     tipPct: "18",
     tipOn: "afterDiscount" as "afterDiscount" | "beforeDiscount",
   });
+
+  // --- Split by Order (incl. shared appetizers) ---
+  const [orderYour, setOrderYour] = useState("0");
+  const [orderOthers, setOrderOthers] = useState<string[]>([""]);
+  const [orderShared, setOrderShared] = useState("0");
+  const [orderSharers, setOrderSharers] = useState<string>("");
+
+  const parsedYour = toNum(orderYour);
+  const parsedOthers = orderOthers.map((v) => toNum(v));
+  const shared = toNum(orderShared);
+
+  // if blank, default sharers to "everyone who entered something"
+  const positiveOthers = parsedOthers.filter((v) => v > 0).length;
+  const baseSharers = 1 + positiveOthers;
+  const sharers = Math.max(1, toNum(orderSharers) || baseSharers);
+
+  // Pre-tax allocation including shared
+  const yourPre = parsedYour + (shared / sharers);
+  const totalPre =
+    parsedYour + parsedOthers.reduce((a, b) => a + b, 0) + shared;
+
+  const yourRatio = totalPre > 0 ? yourPre / totalPre : 0;
+
   const tipSplit = useMemo(() => {
     const bill = parseFloat(tipInputs.bill) || 0;
     const people = Math.max(parseInt(tipInputs.people || "1", 10) || 1, 1);
@@ -515,6 +573,9 @@ export default function FosterWealthCalculators({
     };
   }, [tipInputs]);
 
+  // Final bill comes from your existing calculator (after discount/tax/tip)
+  const yourOwe = yourRatio * tipSplit.total;
+
   /* ---------------- Savings Growth ---------------- */
   const [sav, setSav] = useState({
     start: "10000",
@@ -522,16 +583,57 @@ export default function FosterWealthCalculators({
     ratePct: "6",
     years: "10",
   });
+  const [savingsTarget, setSavingsTarget] = useState<string>("");
+
   const savings = useMemo(() => {
-    const P = parseFloat(sav.start) || 0;
-    const PMT = parseFloat(sav.monthly) || 0;
-    const r = (parseFloat(sav.ratePct) || 0) / 100 / 12;
-    const n = (parseFloat(sav.years) || 0) * 12;
-    const growth = r > 0 ? PMT * ((Math.pow(1 + r, n) - 1) / r) : PMT * n;
-    const total = P * Math.pow(1 + r, n) + growth;
+    const P = toNum(sav.start);
+    const PMT = toNum(sav.monthly);
+    const rMonthly = toNum(sav.ratePct) / 100 / 12;
+    const n = toNum(sav.years) * 12;
+
+    // core FV
+    const growth = rMonthly > 0 ? PMT * ((Math.pow(1 + rMonthly, n) - 1) / rMonthly) : PMT * n;
+    const total = P * Math.pow(1 + rMonthly, n) + growth;
     const contributed = P + PMT * n;
-    return { total, contributed, growth: total - contributed };
-  }, [sav]);
+
+    // goal solver (optional)
+    const targetFV = toNum(savingsTarget);
+    const requiredMonthly = targetFV > 0 ? solveMonthlyForGoal(targetFV, P, rMonthly, n) : 0;
+
+    // Yearly schedule (aggregate every 12 months)
+    let balance = P;
+    let yearStart = P;
+    let yearContrib = 0;
+    let yearInterest = 0;
+    const rows: { year: number; start: number; contributions: number; interest: number; end: number }[] = [];
+    for (let m = 1; m <= n; m++) {
+      // interest on current balance
+      const iM = balance * rMonthly;
+      balance += iM;
+      yearInterest += iM;
+
+      // contribution at end of month
+      balance += PMT;
+      yearContrib += PMT;
+
+      if (m % 12 === 0 || m === n) {
+        const y = Math.ceil(m / 12);
+        rows.push({ year: y, start: yearStart, contributions: yearContrib, interest: yearInterest, end: balance });
+        yearStart = balance;
+        yearContrib = 0;
+        yearInterest = 0;
+      }
+    }
+
+    return {
+      total,
+      contributed,
+      growth: total - contributed,
+      requiredMonthly,
+      targetFV,
+      breakdown: rows,
+    };
+  }, [sav, savingsTarget]);
 
   /* ---------------- Debt Payoff ---------------- */
   const [debt, setDebt] = useState({
@@ -539,10 +641,14 @@ export default function FosterWealthCalculators({
     aprPct: "19.99",
     monthlyPay: "350",
   });
+
+  const [debtTargetMonths, setDebtTargetMonths] = useState<string>("");
+  const [debtExtra, setDebtExtra] = useState<string>("0");
   const payoff = useMemo(() => {
-    const B = parseFloat(debt.balance) || 0;
-    const i = (parseFloat(debt.aprPct) || 0) / 100 / 12;
-    const P = parseFloat(debt.monthlyPay) || 0;
+    const B = toNum(debt.balance);
+    const i = toNum(debt.aprPct) / 100 / 12;
+    const P = toNum(debt.monthlyPay);
+
     if (i <= 0) {
       const months = Math.ceil(B / Math.max(P, 1));
       return {
@@ -553,11 +659,48 @@ export default function FosterWealthCalculators({
     }
     if (P <= B * i)
       return { months: Infinity, totalPaid: Infinity, interest: Infinity };
+
     const months = Math.ceil(-Math.log(1 - (i * B) / P) / Math.log(1 + i));
     const totalPaid = P * months;
     const interest = totalPaid - B;
     return { months, totalPaid, interest };
   }, [debt]);
+
+  // Debt quick-win derived values
+  const B = toNum(debt.balance);
+  const iMonthly = toNum(debt.aprPct) / 100 / 12;
+  const basePmt = toNum(debt.monthlyPay);
+
+  // Target months solver
+  const nTarget = Math.max(0, Math.floor(toNum(debtTargetMonths)));
+  const requiredForTarget = nTarget > 0 ? solvePaymentForMonths(B, iMonthly, nTarget) : 0;
+
+  // Payoff date from existing payoff.months
+  const payoffDate = isFinite(payoff.months)
+    ? new Date(new Date().setMonth(new Date().getMonth() + payoff.months))
+    : null;
+
+  // Extra payment scenario (flat monthly)
+  const pmtExtra = basePmt + toNum(debtExtra);
+  const payoffWithExtra = useMemo(() => {
+    if (iMonthly <= 0) {
+      const m = Math.ceil(B / Math.max(pmtExtra, 1));
+      const total = pmtExtra * m;
+      return { months: m, totalPaid: total, interest: total - B };
+    }
+    if (pmtExtra <= B * iMonthly) return { months: Infinity, totalPaid: Infinity, interest: Infinity };
+    const m = Math.ceil(-Math.log(1 - (iMonthly * B) / pmtExtra) / Math.log(1 + iMonthly));
+    const total = pmtExtra * m;
+    return { months: m, totalPaid: total, interest: total - B };
+  }, [B, iMonthly, pmtExtra]);
+
+  const monthsSaved = (isFinite(payoff.months) && isFinite(payoffWithExtra.months))
+    ? Math.max(payoff.months - payoffWithExtra.months, 0)
+    : 0;
+
+  const interestSaved = (isFinite(payoff.interest) && isFinite(payoffWithExtra.interest))
+    ? Math.max(payoff.interest - payoffWithExtra.interest, 0)
+    : 0;
 
   /** --------------------------------------------------------------------------------------------
    *  Render
@@ -589,14 +732,14 @@ export default function FosterWealthCalculators({
         </div>
 
         {/* Top in-suite ad – show only for Free plan */}
-        <div className="mt-3">{planId === "free" ? <AdBannerTop /> : null}</div>
+        <div className="mt-2">{planId === "free" ? <AdBannerTop /> : null}</div>
       </div>
 
       {/* Main calculator body */}
-      <main className="fwv-container mt-6 flex-grow space-y-10 pb-12">
+      <main className="fwv-container mt-4 flex-grow space-y-6 pb-10">
         {/* ROI */}
         {activeCalc === "roi" && (
-          <section>
+          <section className="mt-4">
             <ProfessionalCard>
               <Header title="ROI Calculator" />
               <div className="grid gap-4 p-4 md:grid-cols-2">
@@ -627,6 +770,8 @@ export default function FosterWealthCalculators({
                   />
                 </InputsPanel>
                 <ResultsPanel title="Results">
+                  <KV label="Final Amount" value={fmtUSD(roi.finalAmount)} />
+                  <KV label="Net Profit" value={fmtUSD(roi.netProfit)} />
                   <KV label="Total ROI" value={fmtPct(roi.total)} />
                   <KV label="Annualized ROI" value={fmtPct(roi.annual)} />
                 </ResultsPanel>
@@ -663,7 +808,7 @@ export default function FosterWealthCalculators({
 
         {/* Break-Even */}
         {activeCalc === "break-even" && (
-          <section>
+          <section className="mt-4">
             <ProfessionalCard>
               <Header title="Break-Even Calculator" />
               <div className="grid gap-6 p-6 md:grid-cols-2">
@@ -696,7 +841,7 @@ export default function FosterWealthCalculators({
                 <ResultsPanel title="Results">
                   <KV
                     label="Break-Even (units)"
-                    value={isFinite(breakEvenUnits) ? breakEvenUnits : "N/A"}
+                    value={isFinite(breakEvenUnits) ? `${Math.round(breakEvenUnits).toLocaleString()} units` : "N/A"}
                   />
                 </ResultsPanel>
               </div>
@@ -726,7 +871,7 @@ export default function FosterWealthCalculators({
 
         {/* Mortgage */}
         {activeCalc === "mortgage" && (
-          <section>
+          <section className="mt-4">
             <ProfessionalCard>
               <Header title="Mortgage Calculator" />
               <div className="grid gap-6 p-6 md:grid-cols-2">
@@ -797,7 +942,7 @@ export default function FosterWealthCalculators({
 
         {/* Tip & Tab Split */}
         {activeCalc === "tip-split" && (
-          <section className="card-regal">
+          <section className="card-regal mt-4">
             <Header title="Restaurant Tip & Tab Split Calculator" />
             <div className="grid gap-6 p-6 md:grid-cols-2">
               <InputsPanel title="Inputs">
@@ -865,7 +1010,7 @@ export default function FosterWealthCalculators({
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-plum-900 dark:text-plum-100">
                       Tip On
                     </span>
                     <ToggleGroup
@@ -904,6 +1049,109 @@ export default function FosterWealthCalculators({
             </div>
 
             <div className="px-6 pb-6">
+              <div className="card-regal p-5">
+                <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">
+                  Split by Order (optional) — includes shared appetizers
+                </h3>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  {/* Left: inputs */}
+                  <div className="space-y-4">
+                    <Input
+                      id="order_yours"
+                      label="Your order (pre-tax)"
+                      value={orderYour}
+                      onChange={setOrderYour}
+                      placeholder="e.g., 24.50"
+                    />
+
+                    <div>
+                      <div className="mb-2 flex items-center justify-between">
+                        <label className="text-sm font-medium text-plum-900 dark:text-plum-100">
+                          Others' orders (pre-tax)
+                        </label>
+                        <button
+                          type="button"
+                          className="text-sm underline"
+                          onClick={() => setOrderOthers((arr) => [...arr, ""])}
+                        >
+                          + Add another
+                        </button>
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {orderOthers.map((val, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              inputMode="decimal"
+                              min="0"
+                              className="w-full rounded-xl border px-3 py-2"
+                              placeholder={`Order ${idx + 1}`}
+                              value={val}
+                              onChange={(e) => {
+                                const next = [...orderOthers];
+                                next[idx] = e.target.value;
+                                setOrderOthers(next);
+                              }}
+                            />
+                            <button
+                              type="button"
+                              className="px-2 py-1 text-xs rounded-lg border"
+                              onClick={() =>
+                                setOrderOthers((arr) => arr.filter((_, i) => i !== idx))
+                              }
+                              aria-label="Remove"
+                              title="Remove"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Input
+                        id="order_shared"
+                        label="Shared items (appetizers, etc. — pre-tax)"
+                        value={orderShared}
+                        onChange={setOrderShared}
+                        placeholder="e.g., 18.00"
+                      />
+                      <Input
+                        id="order_sharers"
+                        label={`People sharing these items (default: ${baseSharers})`}
+                        value={orderSharers}
+                        onChange={setOrderSharers}
+                        placeholder={`${baseSharers}`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right: results */}
+                  <div className="space-y-3">
+                    <KV label="Sum of personal orders + shared" value={fmtUSD(totalPre)} />
+                    <KV
+                      label="Your allocation ratio"
+                      value={yourRatio ? `${(yourRatio * 100).toFixed(2)}%` : "0%"}
+                    />
+                    <div className="rounded-xl border p-4 bg-black/5 dark:bg-white/5">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-sm font-medium">You owe (of final bill)</span>
+                        <span className="text-2xl font-bold tracking-tight">
+                          {fmtUSD(yourOwe)}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs opacity-70">
+                        Uses your final bill above (after discount, tax & tip). Formula:
+                        (Your order + shared share) ÷ (All orders + shared) × Final bill.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 pb-6">
               <ExplanationPanel title="How this works">
                 <ul className="ml-5 list-disc">
                   <li>
@@ -936,7 +1184,7 @@ export default function FosterWealthCalculators({
 
         {/* Interest (Simple/Compound) - ENHANCED VERSION */}
         {activeCalc === "interest" && (
-          <section className="card-regal">
+          <section className="card-regal mt-4">
             <Header title="Interest Calculator (Simple / Compound)" />
             <div className="p-6">
               {/* Mode toggle */}
@@ -945,8 +1193,8 @@ export default function FosterWealthCalculators({
                   type="button"
                   onClick={() => setInterestMode("compound")}
                   className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${interestMode === "compound"
-                      ? "bg-plum-600 text-white shadow-md"
-                      : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
+                    ? "bg-plum-600 text-white shadow-md"
+                    : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
                     }`}
                 >
                   Compound Interest
@@ -955,8 +1203,8 @@ export default function FosterWealthCalculators({
                   type="button"
                   onClick={() => setInterestMode("simple")}
                   className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${interestMode === "simple"
-                      ? "bg-plum-600 text-white shadow-md"
-                      : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
+                    ? "bg-plum-600 text-white shadow-md"
+                    : "border border-plum-300 bg-white hover:bg-plum-50 text-plum-700"
                     }`}
                 >
                   Simple Interest
@@ -999,7 +1247,7 @@ export default function FosterWealthCalculators({
 
                   {interestMode === "compound" && (
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                      <label className="mb-2 block text-sm font-medium text-plum-900 dark:text-plum-100">
                         Compounding Frequency
                       </label>
                       <select
@@ -1023,10 +1271,10 @@ export default function FosterWealthCalculators({
                 <ResultsPanel title="Results">
                   <div className="space-y-4">
                     <div className="rounded-xl bg-gradient-to-br from-aure-100/50 to-plum-100/30 p-4 ring-1 ring-aure-300/30">
-                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-plum-700">
+                      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-plum-900 dark:text-plum-100">
                         Final Amount
                       </p>
-                      <p className="text-3xl font-bold text-plum-800">
+                      <p className="text-3xl font-bold text-plum-900 dark:text-plum-100">
                         {fmtUSD(interest.amount)}
                       </p>
                     </div>
@@ -1036,20 +1284,20 @@ export default function FosterWealthCalculators({
 
                     <div className="rounded-lg bg-plum-50/50 p-3 text-sm">
                       <div className="flex justify-between mb-1">
-                        <span className="text-plum-600">Principal:</span>
+                        <span className="text-plum-900 dark:text-plum-100">Principal:</span>
                         <span className="font-medium">{fmtUSD(parseFloat(intInputs.principal) || 0)}</span>
                       </div>
                       {parseFloat(intInputs.monthlyContribution) > 0 && (
                         <div className="flex justify-between mb-1">
-                          <span className="text-plum-600">Monthly Deposits:</span>
+                          <span className="text-plum-900 dark:text-plum-100">Monthly Deposits:</span>
                           <span className="font-medium">
                             {fmtUSD(parseFloat(intInputs.monthlyContribution) * parseFloat(intInputs.years) * 12)}
                           </span>
                         </div>
                       )}
-                      <div className="flex justify-between pt-2 border-t border-gray-200">
-                        <span className="font-semibold text-plum-700">Interest:</span>
-                        <span className="font-semibold text-aure-600">{fmtUSD(interest.interest)}</span>
+                      <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-600">
+                        <span className="font-semibold text-plum-900 dark:text-plum-100">Interest:</span>
+                        <span className="font-semibold text-aure-600 dark:text-aure-400">{fmtUSD(interest.interest)}</span>
                       </div>
                     </div>
                   </div>
@@ -1127,7 +1375,7 @@ export default function FosterWealthCalculators({
 
         {/* Freelancer Rate */}
         {activeCalc === "freelancer-rate" && (
-          <section>
+          <section className="mt-4">
             <ProfessionalCard>
               <Header title="Freelancer Rate Calculator" />
               <div className="grid gap-6 p-6 md:grid-cols-2">
@@ -1212,7 +1460,7 @@ export default function FosterWealthCalculators({
 
         {/* Savings (Plus) */}
         {!freeOnly && activeCalc === "savings" && (
-          <section className="card-regal relative">
+          <section className="card-regal relative mt-4">
             <Header title="Savings Growth Calculator" />
             {/* Gate will allow for plus/pro/premium; show upgrade card otherwise */}
             <Gate calc="savings">
@@ -1242,6 +1490,13 @@ export default function FosterWealthCalculators({
                     value={sav.years}
                     onChange={(v) => setSav((s) => ({ ...s, years: v }))}
                   />
+                  <Input
+                    id="sav_target"
+                    label="Target Amount ($)"
+                    value={savingsTarget}
+                    onChange={setSavingsTarget}
+                    placeholder="Optional"
+                  />
                 </InputsPanel>
                 <ResultsPanel title="Results (monthly compounding)">
                   <KV
@@ -1253,8 +1508,36 @@ export default function FosterWealthCalculators({
                     value={fmtUSD(savings.contributed)}
                   />
                   <KV label="Total Growth" value={fmtUSD(savings.growth)} />
+                  {toNum(savingsTarget) > 0 && (
+                    <KV label="Required Monthly (to reach target)" value={fmtUSD(Math.max(savings.requiredMonthly, 0))} />
+                  )}
                 </ResultsPanel>
               </div>
+
+              <div className="px-6 pb-6">
+                <ExplanationPanel title="Year-by-Year Breakdown (Savings)">
+                  <YearBreakdownTable rows={savings.breakdown as any} />
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded-lg border border-plum-300 px-3 py-2 text-sm hover:bg-plum-50"
+                      onClick={() => {
+                        const rows = (savings.breakdown || []).map((r: any) => ({
+                          Year: r.year,
+                          Starting_Balance: r.start.toFixed(2),
+                          Contributions: r.contributions.toFixed(2),
+                          Interest: r.interest.toFixed(2),
+                          Ending_Balance: r.end.toFixed(2),
+                        }));
+                        downloadCSV(rows, "savings_schedule.csv");
+                      }}
+                    >
+                      Download CSV
+                    </button>
+                  </div>
+                </ExplanationPanel>
+              </div>
+
               <div className="px-6 pb-6">
                 <ExplanationPanel title="How this works">
                   <ul className="ml-5 list-disc">
@@ -1274,7 +1557,7 @@ export default function FosterWealthCalculators({
 
         {/* Debt Payoff (Plus) */}
         {!freeOnly && activeCalc === "debt-payoff" && (
-          <section className="card-regal relative">
+          <section className="card-regal relative mt-4">
             <Header title="Debt Payoff Calculator" />
             <Gate calc="debt-payoff">
               <div className="grid gap-6 p-6 md:grid-cols-2">
@@ -1297,6 +1580,22 @@ export default function FosterWealthCalculators({
                     value={debt.monthlyPay}
                     onChange={(v) => setDebt((s) => ({ ...s, monthlyPay: v }))}
                   />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Input
+                      id="debt_targetMonths"
+                      label="Target Months (optional)"
+                      value={debtTargetMonths}
+                      onChange={setDebtTargetMonths}
+                      placeholder="e.g., 36"
+                    />
+                    <Input
+                      id="debt_extra"
+                      label="Extra Monthly ($)"
+                      value={debtExtra}
+                      onChange={setDebtExtra}
+                      placeholder="0"
+                    />
+                  </div>
                 </InputsPanel>
                 <ResultsPanel title="Results (fixed payment)">
                   <KV
@@ -1309,8 +1608,53 @@ export default function FosterWealthCalculators({
                   />
                   <KV label="Total Paid" value={fmtUSD(payoff.totalPaid)} />
                   <KV label="Total Interest" value={fmtUSD(payoff.interest)} />
+                  {nTarget > 0 && (
+                    <KV label="Required Monthly (for target)" value={fmtUSD(requiredForTarget)} />
+                  )}
+                  {payoffDate && (
+                    <KV label="Estimated Payoff Date" value={payoffDate.toLocaleDateString()} />
+                  )}
+                  {isFinite(payoffWithExtra.months) && (
+                    <>
+                      <KV label="With Extra: Months to Payoff" value={payoffWithExtra.months} />
+                      <KV label="With Extra: Total Paid" value={fmtUSD(payoffWithExtra.totalPaid)} />
+                      <KV label="With Extra: Total Interest" value={fmtUSD(payoffWithExtra.interest)} />
+                      <KV label="Months Saved" value={monthsSaved} />
+                      <KV label="Interest Saved" value={fmtUSD(interestSaved)} />
+                    </>
+                  )}
                 </ResultsPanel>
               </div>
+
+              <div className="px-6 pb-6">
+                <ExplanationPanel title="Export Summary (Debt)">
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-lg border border-plum-300 px-3 py-2 text-sm hover:bg-plum-50"
+                    onClick={() => {
+                      const rows = [{
+                        Mode: "Baseline",
+                        Months: isFinite(payoff.months) ? payoff.months : "∞",
+                        Total_Paid: isFinite(payoff.totalPaid) ? payoff.totalPaid.toFixed(2) : "∞",
+                        Total_Interest: isFinite(payoff.interest) ? payoff.interest.toFixed(2) : "∞",
+                      }, {
+                        Mode: "With Extra",
+                        Months: isFinite(payoffWithExtra.months) ? payoffWithExtra.months : "∞",
+                        Total_Paid: isFinite(payoffWithExtra.totalPaid) ? payoffWithExtra.totalPaid.toFixed(2) : "∞",
+                        Total_Interest: isFinite(payoffWithExtra.interest) ? payoffWithExtra.interest.toFixed(2) : "∞",
+                      }, {
+                        Mode: "Savings",
+                        Months_Saved: monthsSaved,
+                        Interest_Saved: interestSaved.toFixed(2),
+                      }];
+                      downloadCSV(rows as any, "debt_summary.csv");
+                    }}
+                  >
+                    Download CSV
+                  </button>
+                </ExplanationPanel>
+              </div>
+
               <div className="px-6 pb-6">
                 <ExplanationPanel title="How this works">
                   <ul className="ml-5 list-disc">
@@ -1328,7 +1672,7 @@ export default function FosterWealthCalculators({
 
         {/* Employee Cost (Pro choice via Gate) */}
         {!freeOnly && activeCalc === "employee-cost" && (
-          <section className="card-regal relative">
+          <section className="card-regal relative mt-4">
             <Header title="Employee Cost Calculator" />
             {/* Gate calc id maps to entitlements-client ("employee_cost") */}
             <Gate calc="employee-cost">

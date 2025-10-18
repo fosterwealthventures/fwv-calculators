@@ -1,6 +1,6 @@
 // app/guide/page.tsx
-import Link from "next/link";
 import { getAllGuides } from "@/lib/guides"; // <-- exact path/casing to match lib/guides.ts
+import Link from "next/link";
 
 export const metadata = {
   title: "Guides | Foster Wealth Ventures",
@@ -15,7 +15,7 @@ export default function GuideIndex() {
 
   return (
     <main className="mx-auto max-w-7xl px-6 md:px-10 py-10">
-      <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Guides</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Guides</h1>
 
       {!guides?.length ? (
         <p className="mt-6 text-sm text-neutral-600">No guides found yet. Check back soon.</p>

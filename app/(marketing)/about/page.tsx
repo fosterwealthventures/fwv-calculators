@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 space-y-6">
       <Breadcrumb trail={[{ href: "/about", label: "About" }]} />
-      <h1 className="text-3xl font-bold text-brand-green">
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">
         About Foster Wealth Ventures
       </h1>
       <p className="text-gray-700">

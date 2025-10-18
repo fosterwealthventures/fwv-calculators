@@ -1,6 +1,6 @@
 // app/(marketing)/terms/page.tsx
-import type { Metadata } from "next";
 import Breadcrumb from "@/components/Breadcrumb";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms — Foster Wealth Calculators",
@@ -20,7 +20,7 @@ export default function TermsPage() {
       {/* Keep this identical to Disclaimer for uniform nav */}
       <Breadcrumb trail={[{ href: "/terms", label: "Terms" }]} />
 
-      <h1 className="text-3xl font-bold text-brand-green">Terms of Service</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Terms of Service</h1>
 
       <p className="mt-6 leading-7">
         Welcome to Foster Wealth Calculators. By accessing or using our website,

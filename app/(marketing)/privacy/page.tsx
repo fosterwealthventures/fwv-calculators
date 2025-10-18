@@ -8,7 +8,7 @@ export default function PrivacyPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 space-y-6">
       <Breadcrumb trail={[{ href: "/privacy", label: "Privacy" }]} />
-      <h1 className="text-3xl font-bold text-brand-green">Privacy Policy</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Privacy Policy</h1>
       <p className="text-sm text-gray-500">Effective date: {EFFECTIVE_DATE}</p>
 
       <section className="space-y-3 text-gray-700">

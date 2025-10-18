@@ -15,7 +15,7 @@ export default function BlogIndex() {
 
   return (
     <main className="mx-auto w-full max-w-6xl lg:max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Blog</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Blog</h1>
       {!posts.length ? (
         <p className="mt-6 text-sm text-neutral-600">
           No posts yet. Add <code>.md</code>/<code>.mdx</code> files to <code>content/blog</code>.
