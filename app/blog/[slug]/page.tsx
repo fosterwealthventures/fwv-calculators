@@ -33,50 +33,69 @@ export default async function BlogPostPage({
 
   const body = md.replace(/^---[\s\S]*?---\s*/m, "");
 
+  // Remove leading H1 from markdown content to prevent duplicate titles
+  const cleanBody = body.replace(/^#\s+.+$/m, "");
+
   // Configure marked to preserve img tags and allow necessary attributes
-  const html = marked.parse(body, {
+  const html = marked.parse(cleanBody, {
     breaks: true,
     gfm: true,
   }) as string;
 
+  // Post-process math expressions for KaTeX rendering
+  let processedHtml = html
+    // Convert display math $$...$$ to div with data-katex attribute
+    .replace(/\$\$([^$]+)\$\$/g, '<div data-katex-display>$1</div>')
+    // Convert inline math $...$ to span with data-katex attribute (but not inside display math)
+    .replace(/(?<!\\)\$([^$]+)\$/g, '<span data-katex-inline>$1</span>');
+
   return (
     <>
-      {/* MathJax Configuration */}
-      <Script
-        src="https://polyfill.io/v3/polyfill.min.js?features=es6"
-        strategy="beforeInteractive"
-      />
-      <Script
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-        strategy="beforeInteractive"
-      />
-      <Script id="mathjax-config" strategy="beforeInteractive">
+      <Script id="katex-config" strategy="afterInteractive">
         {`
-          window.MathJax = {
-            tex: {
-              inlineMath: [['\\\\(', '\\\\)']],
-              displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
-              processEscapes: true,
-              processEnvironments: true
-            },
-            options: {
-              skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          // Simple KaTeX math rendering for blog posts
+          document.addEventListener('DOMContentLoaded', function() {
+            // Check if KaTeX is available
+            if (typeof katex !== 'undefined') {
+              // Render display math
+              document.querySelectorAll('[data-katex-display]').forEach(function(el) {
+                try {
+                  el.innerHTML = katex.renderToString(el.textContent, {
+                    displayMode: true,
+                    throwOnError: false
+                  });
+                } catch (e) {
+                  console.warn('KaTeX rendering error:', e);
+                }
+              });
+
+              // Render inline math
+              document.querySelectorAll('[data-katex-inline]').forEach(function(el) {
+                try {
+                  el.innerHTML = katex.renderToString(el.textContent, {
+                    displayMode: false,
+                    throwOnError: false
+                  });
+                } catch (e) {
+                  console.warn('KaTeX rendering error:', e);
+                }
+              });
             }
-          };
+          });
         `}
       </Script>
 
-      <div className="fwv-container min-h-screen">
-        <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-12">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+        <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
           {/* TOC sidebar (desktop) */}
-          <aside className="hidden lg:block sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto">
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-plum-200/40 p-4 shadow-sm">
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 rounded-2xl bg-white/10 dark:bg-white/10 backdrop-blur p-4 max-h-[70vh] overflow-auto">
               <TOC />
             </div>
           </aside>
 
           {/* Article */}
-          <article className="max-w-[75ch] mx-auto px-4 lg:px-6">
+          <article className="mx-auto w-full max-w-[72ch] prose lg:prose-lg prose-invert dark:prose-invert">
             <div className="prose lg:prose-lg leading-[1.7]">
               <nav className="mb-4 text-sm text-gray-600" aria-label="Breadcrumb">
                 <Link href="/" className="hover:underline">
@@ -96,7 +115,7 @@ export default async function BlogPostPage({
               </header>
 
               <PostContainer>
-                <div className="article" dangerouslySetInnerHTML={{ __html: html }} />
+                <div className="article" dangerouslySetInnerHTML={{ __html: processedHtml }} />
                 <div className="my-10">
                   <AdGateFreeOnly>
                     <AdInContent

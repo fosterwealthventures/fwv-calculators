@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 // app/layout.tsx
+import 'katex/dist/katex.min.css';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import React from 'react';
