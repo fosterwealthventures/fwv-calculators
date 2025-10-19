@@ -34,26 +34,11 @@ When performing multiple calculations, it’s easy to forget the order of operat
 
 #### Example:
 Suppose your monthly income is $3000, and you have fixed expenses of $1200 and variable expenses of $800. If you want to find out your remaining budget after all expenses, the correct calculation should be:
-
-$$
-Remaining\ Budget = Income - (Fixed\ Expenses + Variable\ Expenses)
-$$
-
 If you input it incorrectly, say by adding first, you might accidentally calculate:
-
-$$
-Remaining\ Budget = 3000 - 1200 + 800 = 2600
-$$
-
 This gives you a misleadingly high remaining budget.
 
 #### How to Avoid It:
 Break down your calculations into smaller steps. Use parentheses to clarify your calculations. For the example above, make sure to calculate the expenses first:
-
-$$
-Remaining\ Budget = 3000 - (1200 + 800) = 3000 - 2000 = 1000
-$$
-
 ### 3. Failing to Include All Expenses
 
 #### The Mistake:
@@ -69,26 +54,11 @@ When calculating percentages, it’s easy to get confused. For instance, if you 
 
 #### Example:
 If your income is $5000, the correct calculation for 20% savings is:
-
-$$
-Savings = 0.20 \times Income = 0.20 \times 5000 = 1000
-$$
-
 But if you mistakenly calculate it as:
-
-$$
-Savings = 5000 \div 20 = 250
-$$
-
 You would be saving much less than intended.
 
 #### How to Avoid It:
 Always convert percentages to decimals before performing calculations. It’s often easier to think in terms of decimals. So, remember:
-
-$$
-\text{Percentage} = \frac{Percentage\ Value}{100}
-$$
-
 ### 5. Misunderstanding Compound Interest
 
 #### The Mistake:
@@ -96,11 +66,6 @@ Compound interest can be tricky. Many people don’t fully grasp how it works, l
 
 #### Example:
 If you invest $1000 at an annual interest rate of 5% compounded annually for 3 years, the total amount can be calculated using:
-
-$$
-A = P \left(1 + \frac{r}{n}\right)^{nt}
-$$
-
 Where:
 - \(A\) = the amount of money accumulated after n years, including interest.
 - \(P\) = the principal amount ($1000).
@@ -109,11 +74,6 @@ Where:
 - \(t\) = the number of years the money is invested (3).
 
 Plugging in the numbers:
-
-$$
-A = 1000 \left(1 + \frac{0.05}{1}\right)^{1 \cdot 3} = 1000 \left(1.05\right)^{3} \approx 1157.63
-$$
-
 #### How to Avoid It:
 Use our [Simple vs Compound Interest Calculator](/calculators) to visualize how your money grows over time, helping you understand the implications of different interest types.
 
@@ -154,31 +114,11 @@ Your total monthly income amounts to $4,500.
 
 **Step 3: Total Expense Calculation**
 First, calculate your total expenses:
-
-$$
-Total\ Expenses = Rent + Utilities + Insurance + Groceries + Entertainment + Dining\ Out
-$$
-
 Plugging in the numbers:
-
-$$
-Total\ Expenses = 1500 + 300 + 200 + 400 + 300 + 250 = 2950
-$$
-
 **Step 4: Remaining Budget**
 Now, subtract your total expenses from your income:
-
-$$
-Remaining\ Budget = Income - Total\ Expenses = 4500 - 2950 = 1550
-$$
-
 **Step 5: Savings Calculation**
 If you want to save 20% of your income, calculate it like this:
-
-$$
-Savings = 0.20 \times 4500 = 900
-$$
-
 **Step 6: Final Review**
 With a remaining budget of $1550, after saving $900, you should reassess your discretionary spending. You could allocate this remaining budget towards investments or unexpected expenses.
 

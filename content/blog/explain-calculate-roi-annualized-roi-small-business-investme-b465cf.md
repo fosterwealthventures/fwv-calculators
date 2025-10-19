@@ -16,53 +16,24 @@ Investing in a small business can be both exciting and daunting. One of the most
 1. **What is ROI?**
    ROI represents the return on an investment relative to its cost. It helps you assess the efficiency of an investment and make informed decisions.
 
-   The formula for ROI is:
-   $$
-   ROI = \frac{Net\ Profit}{Cost\ of\ Investment} \times 100
-   $$
-   Where:
-   - $Net\ Profit = Total\ Revenue - Total\ Costs$
+   ROI is calculated by dividing your net profit (total revenue minus total costs) by the cost of your investment, then multiplying by 100 to get a percentage.
 
 2. **Calculating Basic ROI**
    Let's say you invested $10,000 in a marketing campaign, and it generated $15,000 in revenue. Your costs (including the investment) are $10,000.
 
-   Step 1: Calculate Net Profit
-   $$
-   Net\ Profit = Total\ Revenue - Total\ Costs = 15000 - 10000 = 5000
-   $$
-
-   Step 2: Calculate ROI
-   $$
-   ROI = \frac{5000}{10000} \times 100 = 50\%
-   $$
+   Step 1: Calculate Net Profit: $15,000 - $10,000 = $5,000
+   
+   Step 2: Calculate ROI: ($5,000 ÷ $10,000) × 100 = 50%
 
 3. **What is Annualized ROI?**
    Annualized ROI allows you to understand the average annual return on your investment over a specified period, making it easier to compare investments of different lengths.
 
-   The formula for Annualized ROI is:
-   $$
-   Annualized\ ROI = \left(1 + \frac{Net\ Profit}{Cost\ of\ Investment}\right)^{\frac{1}{n}} - 1
-   $$
-   Where:
-   - $n$ is the number of years the investment has been held.
+   Annualized ROI helps you understand the average annual return on your investment over time. For example, if you held an investment for 2 years and earned a total return of 50%, your annualized ROI would be about 22.5%.
 
 4. **Calculating Annualized ROI**
    Using our previous example, if you held your investment for 2 years, you would calculate as follows:
 
-   Step 1: Plug values into the formula:
-   $$
-   Annualized\ ROI = \left(1 + \frac{5000}{10000}\right)^{\frac{1}{2}} - 1
-   $$
-
-   Step 2: Solve the equation:
-   $$
-   Annualized\ ROI = \left(1 + 0.5\right)^{0.5} - 1 \approx (1.5)^{0.5} - 1
-   $$
-
-   Using a calculator, $(1.5)^{0.5} \approx 1.2247$, hence:
-   $$
-   Annualized\ ROI \approx 1.2247 - 1 \approx 0.2247 \Rightarrow 22.47\%
-   $$
+   For our example with a 50% return over 2 years, the annualized ROI would be approximately 22.5%. This means you earned an average of 22.5% per year over the 2-year period.
 
 5. **Common Mistakes to Avoid**
    - **Ignoring Costs**: Always include all costs associated with the investment, including hidden or indirect costs.

@@ -21,16 +21,10 @@ The break-even point (BEP) is a crucial concept in financial management and busi
    - **Variable Costs**: These expenses vary directly with the level of production. Examples include raw materials and direct labor costs.
 
 3. **Break-Even Formula**
-   The break-even point can be calculated using the following formula:
-   $$ 
-   BEP = \frac{Fixed\ Costs}{Price_{unit} - Variable\ Cost_{unit}} 
-   $$
+    The break-even point is calculated by dividing your fixed costs by the difference between your selling price per unit and variable cost per unit.
 
 4. **Contribution Margin**
-   The contribution margin (CM) is the difference between the sales price per unit and the variable cost per unit. It can be expressed as:
-   $$ 
-   CM = Price_{unit} - Variable\ Cost_{unit} 
-   $$
+    The contribution margin is the difference between your selling price per unit and the variable cost per unit. This represents the amount each unit contributes toward covering your fixed costs.
 
 5. **Importance in Decision Making**
    Knowing your break-even point helps in setting sales targets, pricing strategies, and understanding the financial viability of a product or service.
@@ -65,15 +59,9 @@ Imagine you own a coffee shop. Here are your costs:
 
 Now, let’s calculate the break-even point:
 
-1. **Calculate Contribution Margin**:
-   $$
-   CM = Price_{unit} - Variable\ Cost_{unit} = 4.00 - 2.00 = 2.00
-   $$
+1. **Calculate Contribution Margin**: $4.00 - $2.00 = $2.00 per cup
 
-2. **Calculate Break-Even Point**:
-   $$
-   BEP = \frac{Fixed\ Costs}{CM} = \frac{5,500}{2.00} = 2,750 \text{ cups}
-   $$
+2. **Calculate Break-Even Point**: $5,500 ÷ $2.00 = 2,750 cups
 
 This means you need to sell 2,750 cups of coffee to break even.
 
@@ -94,15 +82,9 @@ Let’s say you’re launching an online course:
 
 Now we calculate the break-even point:
 
-1. **Calculate Contribution Margin**:
-   $$
-   CM = Price_{unit} - Variable\ Cost_{unit} = 100 - 20 = 80
-   $$
+1. **Calculate Contribution Margin**: $100 - $20 = $80 per student
 
-2. **Calculate Break-Even Point**:
-   $$
-   BEP = \frac{Fixed\ Costs}{CM} = \frac{2,000}{80} = 25 \text{ students}
-   $$
+2. **Calculate Break-Even Point**: $2,000 ÷ $80 = 25 students
 
 You need to enroll 25 students to cover your costs.
 

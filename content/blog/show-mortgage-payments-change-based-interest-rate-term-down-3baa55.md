@@ -21,72 +21,12 @@ A mortgage is a loan taken out to buy property, where the property itself serves
 - **Loan Term**: The length of time over which you'll repay the loan, typically in years (e.g., 15 or 30 years).
 
 ## Method
-
-To calculate monthly mortgage payments, we can use the mortgage payment formula:
-
-$$
-M = P \frac{r(1 + r)^n}{(1 + r)^n - 1}
-$$
-
-Where:
-- \(M\) = monthly payment
-- \(P\) = principal (loan amount)
-- \(r\) = monthly interest rate (annual rate divided by 12)
-- \(n\) = number of payments (loan term in months)
-
+To calculate monthly mortgage payments, you can use online calculators or speak with your lender. The payment depends on your loan amount, interest rate, and loan term.
 ### Step-by-Step Calculation
 
 Let's say you're considering a home costing $300,000 with a 20% down payment and a 30-year mortgage at an interest rate of 4%.
 
-1. **Calculate the Down Payment:**
-   $$ 
-   Down\ Payment = Home\ Price \times Down\ Payment\ Percentage 
-   $$ 
-   $$ 
-   Down\ Payment = 300,000 \times 0.20 = 60,000
-   $$
-
-2. **Calculate the Loan Amount (Principal):**
-   $$ 
-   P = Home\ Price - Down\ Payment 
-   $$ 
-   $$ 
-   P = 300,000 - 60,000 = 240,000 
-   $$
-
-3. **Convert the Annual Interest Rate to Monthly:**
-   $$ 
-   r = \frac{Annual\ Interest\ Rate}{12} 
-   $$ 
-   $$ 
-   r = \frac{0.04}{12} = 0.003333 
-   $$
-
-4. **Calculate the Total Number of Payments:**
-   $$ 
-   n = Loan\ Term \times 12 
-   $$ 
-   $$ 
-   n = 30 \times 12 = 360 
-   $$
-
-5. **Plug Values into the Mortgage Formula:**
-   $$ 
-   M = 240,000 \frac{0.003333(1 + 0.003333)^{360}}{(1 + 0.003333)^{360} - 1} 
-   $$
-
-6. **Calculate the Result:**
-   - First, calculate \( (1 + r)^{n} \):
-   $$ 
-   (1 + 0.003333)^{360} \approx 3.243 
-   $$
-   - Now substitute this back into the formula:
-   $$ 
-   M = 240,000 \frac{0.003333 \times 3.243}{3.243 - 1} 
-   $$ 
-   $$ 
-   M \approx 240,000 \frac{0.01081}{2.243} \approx 240,000 \times 0.00482 \approx 1,155.12 
-   $$ 
+For a $300,000 home with a 20% down payment ($60,000), your loan amount would be $240,000. With a 30-year mortgage at 4% interest, your monthly payment would be approximately $1,155.
 
 So, your monthly mortgage payment will be approximately **$1,155.12**.
 
@@ -95,9 +35,7 @@ So, your monthly mortgage payment will be approximately **$1,155.12**.
 ### Example 1: Changing the Interest Rate
 If the interest rate increases to 5%, let's see how it affects your monthly payment:
 
-1. New \( r \) value:
-   $$ 
-   r = \frac{0.05}{
+**Interest rate conversion:** For a 5% interest rate, convert to monthly decimal: 0.05 (annual rate) ÷ 12 (months) = 0.00417 monthly rate.
 
 
 

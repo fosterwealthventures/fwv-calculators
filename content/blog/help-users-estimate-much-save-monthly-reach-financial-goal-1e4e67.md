@@ -24,17 +24,7 @@ Next, decide how long you have to save for this goal. For our example, let’s s
 ### Step 3: Calculate Your Monthly Savings Requirement
 
 To find out how much you need to save each month, you can use the formula:
-
-$$
-Monthly\ Savings = \frac{Total\ Goal}{Time\ Frame}
-$$
-
 Plugging our numbers into the formula gives:
-
-$$
-Monthly\ Savings = \frac{4500}{18} = 250
-$$
-
 So, you need to save $250 each month to reach your goal of $4,500 in 18 months.
 
 ### Step 4: Factor in Interest or Investment Returns (Optional)
@@ -42,11 +32,6 @@ So, you need to save $250 each month to reach your goal of $4,500 in 18 months.
 If you plan to invest your savings or earn interest on it, you can adjust your calculations. For instance, let’s say you expect to earn an annual interest rate of 5%. 
 
 The formula to calculate the future value of your savings is:
-
-$$
-FV = P \cdot \left(1 + \frac{r}{n}\right)^{nt}
-$$
-
 Where:
 - $FV$ = future value of the investment/loan, including interest
 - $P$ = principal investment amount (initial deposit or loan amount)
@@ -75,11 +60,6 @@ Let’s put this all together with an example:
 **Expected Interest Rate**: 4% per annum
 
 1. **Calculate Monthly Savings Without Interest**:
-
-   $$
-   Monthly\ Savings = \frac{20000}{24} = 833.33
-   $$
-
    You would need to save approximately $833.33 each month.
 
 2. **Calculate Using Interest**: 

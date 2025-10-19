@@ -189,3 +189,37 @@
     color: #f3e8ff; /* Light purple for dark mode */
   }
 }
+
+/* Blog spacing normalization */
+.prose h1, .prose h2, .prose h3 { margin-top: 0.75rem; margin-bottom: 0.5rem; }
+.prose p { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.prose ul, .prose ol { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.prose blockquote { margin-top: 0.75rem; margin-bottom: 0.75rem; padding-left: 0.85rem; }
+
+/* Optional blog hero tighten (if present) */
+.blog-hero { padding-top: 1rem; padding-bottom: 0.75rem; }
+
+/* Enhanced TOC styling for better visibility */
+.toc-enhanced {
+  @apply bg-white/95 backdrop-blur-sm border border-plum-200/50 rounded-xl shadow-sm;
+}
+
+.toc-enhanced h3 {
+  @apply text-plum-900 font-bold text-sm mb-3 pb-2 border-b border-plum-200/50;
+}
+
+.toc-enhanced ul {
+  @apply space-y-1 max-h-[65vh] overflow-y-auto;
+}
+
+.toc-enhanced li {
+  @apply list-none;
+}
+
+.toc-enhanced a {
+  @apply block py-2 px-3 rounded-lg text-plum-700 hover:text-plum-900 hover:bg-plum-50/90 transition-all duration-200 text-sm leading-relaxed no-underline;
+}
+
+.toc-enhanced a:hover {
+  @apply bg-plum-100/60;
+}

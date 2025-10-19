@@ -22,13 +22,9 @@ In this method, the total bill is divided equally among all diners. This is ofte
 **Example Calculation:**
 Suppose your total bill is $150, and there are 5 people in your group. 
 
-The calculation would be:
+**How to calculate:** Simply divide the total bill by the number of people dining together.
 
-$$
-Individual\ Share = \frac{Total\ Bill}{Number\ of\ Diners} = \frac{150}{5} = 30
-$$
-
-Each person would pay $30. 
+**The math:** $150 (total bill) ÷ 5 (number of diners) = $30 per person.
 
 **Option B: Itemized Bill**
 
@@ -43,11 +39,7 @@ Let’s say the breakdown of orders is as follows:
 - Person D: $20
 - Person E: $35
 
-The total is:
-
-$$
-Total\ Bill = 40 + 30 + 25 + 20 + 35 = 150
-$$
+**Total verification:** Add up what everyone ordered to make sure it matches the bill: $40 + $30 + $25 + $20 + $35 = $150 (matches the restaurant total).
 
 When it comes to splitting the tip, you can calculate the total tip based on the total bill or based on individual amounts.
 
@@ -80,17 +72,9 @@ A common guideline is to tip 15% to 20% of the total bill before tax. If your se
 
 ### Q2: How do I calculate the tip?
 
-Using the total bill, you can calculate the tip as follows:
+**How to calculate tip:** Multiply your total bill by the tip percentage (as a decimal) to find out how much to leave for great service.
 
-$$
-Tip = Total\ Bill \times Tip\ Percentage
-$$
-
-For example, if your total bill is $150 and you want to leave a 20% tip:
-
-$$
-Tip = 150 \times 0.20 = 30
-$$
+**Example:** For a $150 bill with 20% tip: $150 × 0.20 = $30 tip.
 
 ### Q3: What if someone forgot to pay?
 
@@ -114,25 +98,11 @@ Absolutely! Use our [Expense Split Calculator](/calculators) to simplify the pro
 
 Let’s say you and three friends dine out and the total bill is $220, and you want to leave a 20% tip. Here’s how you can break it down.
 
-1. **Calculate the Tip**:
+1. **Calculate the Tip:** For a $220 bill with 20% tip: $220 × 0.20 = $44 tip.
 
-$$
-Tip = Total\ Bill \times Tip\ Percentage = 220 \times 0.20 = 44
-$$
+**Total amount including tip:** Add the tip to your original bill: $220 (food and drinks) + $44 (tip) = $264 total to be split.
 
-So, the total amount to be paid is:
-
-$$
-Total\ Amount = Total\ Bill + Tip = 220 + 44 = 264
-$$
-
-2. **Split the Total Evenly**:
-
-$$
-Individual\ Share = \frac{Total\ Amount}{Number\ of\ Diners} = \frac{264}{4} = 66
-$$
-
-Each person pays $66.
+2. **Split the Total Evenly:** Divide the total amount (including tip) by the number of people dining together: $264 (total bill + tip) ÷ 4 (number of diners) = $66 per person.
 
 3. **Use Our Calculators**:
 

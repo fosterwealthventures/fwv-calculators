@@ -20,8 +20,7 @@ Planning a vacation with friends or family can be an exciting experience, but ma
    - Food: $300
    - Entertainment: $200  
    
-   The total expense can be calculated as follows:
-   $$Total = 800 + 400 + 300 + 200 = 1700$$
+   **Total cost:** Simply add up all the expenses: $800 (accommodation) + $400 (transportation) + $300 (food) + $200 (entertainment) = $1,700 total.
 
 2. **Decide on a Payment Method**  
    Agree on how the expenses will be paid. Some prefer to pay upfront and get reimbursed later, while others might handle expenses as they go. This impacts how you calculate individual contributions.
@@ -30,11 +29,9 @@ Planning a vacation with friends or family can be an exciting experience, but ma
    Know how many people will be sharing the costs. Let’s say you have 4 friends going on the trip. 
 
 4. **Calculate Individual Shares**  
-   To find out how much each person owes, divide the total expenses by the number of participants:
-   $$Share = \frac{Total}{Number\ of\ Participants}$$
-   Using our example:
-   $$Share = \frac{1700}{4} = 425$$  
-   Each person owes $425.
+   **How much each person owes:** Simply divide the total expenses by the number of people sharing the costs.
+
+   **The calculation:** $1,700 (total cost) ÷ 4 (number of people) = $425 per person.
 
 5. **Track Individual Contributions**  
    As expenses occur, track who pays what. For example, if one person pays for accommodation ($800) and another pays for food ($300), their contributions are recorded as:
@@ -43,11 +40,9 @@ Planning a vacation with friends or family can be an exciting experience, but ma
 
 6. **Adjust for Unequal Contributions**  
    If some friends agree to cover certain expenses (like splurging on a fancy dinner), adjust the calculations accordingly. If Person A pays for the fancy dinner ($200), their total contribution becomes:
-   $$Total_{A} = 800 + 200 = 1000$$  
-   To find out how much they still owe:
-   $$Amount\ Owed_{A} = Share - Total_{A}$$
-   $$Amount\ Owed_{A} = 425 - 1000 = -575$$  
-   Person A is owed $575 by the group.
+   **Updated contribution:** $800 (original) + $200 (dinner) = $1,000 total paid.
+
+   **Settlement calculation:** $1,000 (paid) - $425 (fair share) = $575. Since it's positive, the group owes Person A $575.
 
 7. **Final Settlements**  
    Once the trip is over, compare each person's contributions to their share. Settle any debts to ensure fairness. 
@@ -61,14 +56,10 @@ Imagine a weekend trip with 4 friends, with expenses as follows:
 - Food: $150
 - Activities: $100
 
-Total expenses:
-$$Total = 400 + 100 + 150 + 100 = 750$$  
-Each person’s share:
-$$Share = \frac{750}{4} = 187.50$$  
+**Total cost:** $400 (accommodation) + $100 (gas) + $150 (food) + $100 (activities) = $750 total.
+**Each person's fair share:** $750 (total cost) ÷ 4 (number of people) = $187.50 per person.
 
-If Person A pays for accommodation and gas ($500 total), their contribution comparison will be:
-$$Amount\ Owed_{A} = 187.50 - 500 = -312.50$$  
-Person A is owed $312.50.
+**Settlement calculation:** If Person A pays for accommodation and gas ($500 total), compare what they paid to their fair share: $500 (paid) - $187.50 (fair share) = $312.50. Since it's positive, the group owes Person A $312.50.
 
 ### Example 2: A Family Vacation
 Consider a family trip where the total costs are:
@@ -77,10 +68,8 @@ Consider a family trip where the total costs are:
 - Food: $500
 - Activities: $300
 
-Total expenses:
-$$Total = 1200 + 800 + 500 + 300 = 2800$$  
-With 5 family members:
-$$Share = \frac{2800}{5} = 560$$  
+**Total cost:** $1,200 (flights) + $800 (accommodation) + $500 (food) + $300 (activities) = $2,800 total.
+**Each person's fair share:** $2,800 (total cost) ÷ 5 (number of family members) = $560 per person.
 
 If one family member covers flights and accommodation ($2000), their balance
 

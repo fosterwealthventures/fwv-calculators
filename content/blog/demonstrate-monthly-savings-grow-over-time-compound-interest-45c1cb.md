@@ -14,20 +14,7 @@ Saving money is essential for building wealth and achieving financial goals. One
 ## Understanding Compound Interest
 
 Before diving into calculations, let’s clarify what compound interest is. Compound interest refers to the interest calculated on the initial principal and also on the accumulated interest from previous periods. This means that, over time, you earn interest on both your original investment and any interest that has already been added to it.
-
-The formula for compound interest is:
-
-$$
-A = P \left(1 + \frac{r}{n}\right)^{nt}
-$$
-
-Where:
-- $A$ = the amount of money accumulated after n years, including interest.
-- $P$ = the principal amount (the initial amount of money).
-- $r$ = the annual interest rate (decimal).
-- $n$ = the number of times that interest is compounded per year.
-- $t$ = the time the money is invested for in years.
-
+Compound interest grows your money by earning interest on both your original investment and any interest that has already been added. For example, if you invest $1,000 at 5% annual interest compounded monthly for 10 years, you'll end up with approximately $1,648.
 ## Option A vs B: Monthly Savings vs Lump Sum Investment
 
 When it comes to investing your money, you typically have two options: making regular monthly contributions or making a one-time lump sum investment. Let’s compare these two strategies.
@@ -42,40 +29,10 @@ Let’s say you decide to save $200 each month in an account that earns an annua
 4. **Time in Years**: Let’s calculate for $t = 10$ years.
 
 Using the future value of a series formula for compound interest:
-
-$$
-FV = P \times \frac{(1 + r/n)^{nt} - 1}{(r/n)}
-$$
-
 Plugging in the numbers:
-
-$$
-FV = 200 \times \frac{(1 + 0.05/12)^{12 \times 10} - 1}{(0.05/12)}
-$$
-
 Calculating step-by-step:
 
-1. Calculate monthly interest rate: 
-   $$ 
-   \frac{0.05}{12} = 0.0041667 
-   $$
-
-2. Calculate the total number of deposits:
-   $$
-   12 \times 10 = 120
-   $$
-
-3. Calculate the future value:
-   $$
-   FV = 200 \times \frac{(1 + 0.0041667)^{120} - 1}{0.0041667}
-   $$
-
-4. Using a calculator, we find that $(1 + 0.0041667)^{120} \approx 1.6470095$.
-
-5. Therefore:
-   $$
-   FV = 200 \times \frac{1.6470095 - 1}{0.0041667} \approx 200 \times 155.167 = 31033.40
-   $$
+If you save $200 each month at 5% annual interest compounded monthly, after 10 years you'll have approximately $31,033. This works out to be about $7,033 more than if you had just saved the money without earning interest.
 
 After 10 years, your total savings will be approximately **$31,033.40**.
 
@@ -84,43 +41,15 @@ After 10 years, your total savings will be approximately **$31,033.40**.
 Now, let’s see what happens if instead you invest a lump sum of $24,000 at the same interest rate of 5% for 10 years.
 
 Using the compound interest formula:
-
-$$
-A = P \left(1 + \frac{r}{n}\right)^{nt}
-$$
-
 1. **Principal Amount**: $P = 24000$
 2. **Annual Interest Rate**: $r = 0.05$
 3. **Number of Compounding Periods per Year**: $n = 12$
 4. **Time in Years**: $t = 10$
 
 Plugging in the numbers:
-
-$$
-A = 24000 \left(1 + \frac{0.05}{12}\right)^{12 \times 10}
-$$
-
 Calculating step-by-step:
 
-1. Calculate monthly interest rate: 
-   $$ 
-   \frac{0.05}{12} = 0.0041667 
-   $$
-
-2. Calculate the total number of periods:
-   $$
-   12 \times 10 = 120
-   $$
-
-3. Calculate the future value:
-   $$
-   A = 24000 \times (1 + 0.0041667)^{120}
-   $$
-
-4. Continuing from earlier:
-   $$
-   A = 24000 \times 1.6470095 \approx 39528.23
-   $$
+If you invest a lump sum of $24,000 at 5% annual interest compounded monthly, after 10 years you'll have approximately $39,528. This is about $15,528 more than your original investment.
 
 After 10 years, your total amount from the lump sum investment will be approximately **$39,528.23**.
 

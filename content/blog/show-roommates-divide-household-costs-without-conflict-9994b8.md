@@ -23,35 +23,17 @@ Start by compiling a comprehensive list of shared expenses. These can include:
 - Any additional shared costs (like cleaning services)
 
 ### 2. Calculate the Total Cost
-Once you have the list, calculate the total amount of each expense. For example, if the rent is $1200, utilities total $300, and groceries are $200, your total costs would be:
-
-$$
-Total = Rent + Utilities + Groceries = 1200 + 300 + 200 = 1700
-$$
+**Total monthly costs:** Add up all shared expenses: $1,200 (rent) + $300 (utilities) + $200 (groceries) = $1,700 total.
 
 ### 3. Determine Each Person’s Share
-Divide the total expenses by the number of roommates. If there are four roommates, the calculation would be:
-
-$$
-Share_{each} = \frac{Total}{Number \, of \, Roommates} = \frac{1700}{4} = 425
-$$
-
-This means each roommate is responsible for $425 of the total monthly costs.
+**Cost per roommate:** Divide the total expenses by the number of roommates: $1,700 (total costs) ÷ 4 (roommates) = $425 per person.
 
 ### 4. Consider Individual Contributions
 If some roommates contribute more to certain expenses (like buying groceries or paying for shared subscriptions), make adjustments. For example, if one roommate pays for internet ($100) and another pays for utilities ($300), recognize that not everyone might pay the same amount.
 
-Adjust the total based on these contributions:
+**Adjusted total:** Subtract what individuals have already paid: $1,700 (total) - $100 (internet) - $300 (utilities) = $1,300 remaining to split.
 
-$$
-Adjusted \, Total = Total - Contribution_{internet} - Contribution_{utilities} = 1700 - 100 - 300 = 1300
-$$
-
-Now recalculate:
-
-$$
-Share_{each} = \frac{1300}{4} = 325
-$$
+**New cost per roommate:** $1,300 ÷ 4 (roommates) = $325 per person.
 
 ### 5. Use an Expense Split Calculator
 To simplify the process, consider using our [Expense Split Calculator](/calculators). This tool can help you automatically calculate each person's share and adjust for any individual contributions, reducing the risk of human error.
@@ -72,29 +54,13 @@ Let’s put this into action with a practical example:
 - Utilities: $300
 - Groceries: $200
 
-**Total Calculation:**
+**Total monthly costs:** $1,200 (rent) + $300 (utilities) + $200 (groceries) = $1,700 total.
 
-$$
-Total = 1200 + 300 + 200 = 1700
-$$
+**Cost per roommate:** $1,700 (total costs) ÷ 4 (roommates) = $425 per person.
 
-**Cost Per Roommate:**
+**Adjusted for extra contribution:** Since one roommate spent an extra $100 on groceries, subtract that from the total: $1,700 (total) - $100 (extra groceries) = $1,600 remaining to split.
 
-$$
-Share_{each} = \frac{1700}{4} = 425
-$$
-
-Now, say one roommate frequently buys groceries, spending an additional $100. Adjust for that:
-
-$$
-Adjusted \, Total = 1700 - 100 = 1600
-$$
-
-**Recalculate:**
-
-$$
-Share_{each} = \frac{1600}{4} = 400
-$$
+**New cost per roommate:** $1,600 (adjusted total) ÷ 4 (roommates) = $400 per person.
 
 Each roommate now pays $400, acknowledging that the grocery buyer has contributed more upfront.
 

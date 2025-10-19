@@ -223,9 +223,9 @@ const InputsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
 }) => (
-  <div className="card-regal p-5">
+  <div className="card-regal p-4">
     <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">{title}</h3>
-    <div className="space-y-4">{children}</div>
+    <div className="space-y-3">{children}</div>
   </div>
 );
 
@@ -233,7 +233,7 @@ const ResultsPanel: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
 }) => (
-  <div className="card-regal p-5">
+  <div className="card-regal p-4">
     <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">{title}</h3>
     <div className="space-y-3">{children}</div>
   </div>
@@ -251,7 +251,7 @@ const KV: React.FC<{ label: string; value: React.ReactNode }> = ({
 );
 
 const Header: React.FC<{ title: string }> = ({ title }) => (
-  <div className="border-b border-plum-200 bg-plum-50/50 px-4 py-3">
+  <div className="border-b border-plum-200 bg-plum-50/50 px-3 py-2">
     <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-purple-title">{title}</h2>
   </div>
 );
@@ -811,7 +811,7 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Break-Even Calculator" />
-              <div className="grid gap-6 p-6 md:grid-cols-2">
+              <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="be_fixed"
@@ -874,7 +874,7 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Mortgage Calculator" />
-              <div className="grid gap-6 p-6 md:grid-cols-2">
+              <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="mtg_loan"
@@ -944,7 +944,7 @@ export default function FosterWealthCalculators({
         {activeCalc === "tip-split" && (
           <section className="card-regal mt-4">
             <Header title="Restaurant Tip & Tab Split Calculator" />
-            <div className="grid gap-6 p-6 md:grid-cols-2">
+            <div className="grid gap-4 p-4 md:grid-cols-2">
               <InputsPanel title="Inputs">
                 <div className="grid gap-4">
                   <Input
@@ -1378,7 +1378,7 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Freelancer Rate Calculator" />
-              <div className="grid gap-6 p-6 md:grid-cols-2">
+              <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="fr_income"
@@ -1464,7 +1464,7 @@ export default function FosterWealthCalculators({
             <Header title="Savings Growth Calculator" />
             {/* Gate will allow for plus/pro/premium; show upgrade card otherwise */}
             <Gate calc="savings">
-              <div className="grid gap-6 p-6 md:grid-cols-2">
+              <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="sav_start"
@@ -1560,7 +1560,7 @@ export default function FosterWealthCalculators({
           <section className="card-regal relative mt-4">
             <Header title="Debt Payoff Calculator" />
             <Gate calc="debt-payoff">
-              <div className="grid gap-6 p-6 md:grid-cols-2">
+              <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
                     id="debt_bal"
@@ -1685,7 +1685,7 @@ export default function FosterWealthCalculators({
 
         {/* Expense Split Deluxe (Pro / Premium via Gate) */}
         {!freeOnly && activeCalc === "expense-split-deluxe" && (
-          <section className="card-regal relative">
+          <section className="card-regal relative mt-4">
             <Header title="Expense Split Deluxe" />
             <Gate calc="expense-split-deluxe">
               <div className="p-4 md:p-6">

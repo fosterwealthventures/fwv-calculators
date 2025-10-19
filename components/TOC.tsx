@@ -15,12 +15,13 @@ export default function TOC() {
     if (!items.length) return null;
 
     return (
-        <nav aria-label="Table of contents" className="card-regal p-4 text-sm sticky top-24">
-            <h3 className="text-sm font-semibold mb-2">On this page</h3>
-            <ul className="space-y-2">
+        <nav aria-label="Table of contents" className="toc-enhanced">
+            <ul>
                 {items.map(i => (
-                    <li key={i.id} className={i.level === 3 ? "pl-3" : ""}>
-                        <a className="link-regal" href={`#${i.id}`}>{i.text}</a>
+                    <li key={i.id}>
+                        <a href={`#${i.id}`}>
+                            {i.text}
+                        </a>
                     </li>
                 ))}
             </ul>

@@ -17,8 +17,7 @@ published: true
 
 **TL;DR:** The break-even point tells you **how many units** you must sell (or how much revenue to generate) to cover **all** costs—no profit, no loss.
 
-- **Formula (units):** `Break-even units = Fixed costs ÷ (Price − Variable cost per unit)`
-- **Formula (revenue):** `Break-even revenue = Break-even units × Price`
+The break-even point tells you how many units you need to sell to cover all your costs. It's calculated by dividing your fixed costs by the difference between your selling price and variable cost per unit.
 - Try it instantly with the **Free Break-Even Calculator** below.
 
 > “Beloved, I pray that you may prosper in all things and be in health, just as your soul prospers.” — 3 John 1:2

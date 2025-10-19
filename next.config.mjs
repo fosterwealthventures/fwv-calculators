@@ -72,6 +72,39 @@ const nextConfig = {
     ].join('; ');
 
     return [
+      // HTML & data routes (always fresh)
+      {
+        source: "/((?!_next/static|.*\\.(?:js|css|png|jpg|jpeg|gif|webp|svg|ico)).*)",
+        headers: [
+          { key: "Cache-Control", value: "no-store" }
+        ]
+      },
+
+      // Next hashed assets (immutable)
+      {
+        source: "/_next/static/(.*)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" }
+        ]
+      },
+
+      // Fonts (immutable if hashed)
+      {
+        source: "/(.*)\\.(woff2?|ttf|otf)$",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" }
+        ]
+      },
+
+      // Public assets (images, etc.) — long cache but not immutable (filenames aren't hashed)
+      {
+        source: "/(.*)\\.(png|jpg|jpeg|gif|webp|svg|ico)$",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, must-revalidate" }
+        ]
+      },
+
+      // Apply security headers to all routes
       {
         source: '/:path*',
         headers: [

@@ -66,45 +66,59 @@ export default async function BlogPostPage({
         `}
       </Script>
 
-      <div className="mx-auto w-full max-w-6xl lg:max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 md:pt-8">
-        <div className="relative">
-          {/* TOC - positioned on the left side */}
-          <div className="hidden xl:block absolute left-0 top-0 w-64 -ml-72">
-            <div className="sticky top-24">
+      <div className="fwv-container min-h-screen">
+        <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-12">
+          {/* TOC sidebar (desktop) */}
+          <aside className="hidden lg:block sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-plum-200/40 p-4 shadow-sm">
               <TOC />
             </div>
-          </div>
+          </aside>
 
-          {/* Main article - full width */}
-          <div className="xl:ml-8">
-            <nav className="mb-6 text-sm text-gray-600" aria-label="Breadcrumb">
-              <Link href="/" className="hover:underline">
-                Home
-              </Link>
-              <span className="mx-2">›</span>
-              <Link href="/blog" className="hover:underline">
-                Blog
-              </Link>
-              <span className="mx-2">›</span>
-              <span className="text-gray-500">{title}</span>
-            </nav>
+          {/* Article */}
+          <article className="max-w-[75ch] mx-auto px-4 lg:px-6">
+            <div className="prose lg:prose-lg leading-[1.7]">
+              <nav className="mb-4 text-sm text-gray-600" aria-label="Breadcrumb">
+                <Link href="/" className="hover:underline">
+                  Home
+                </Link>
+                <span className="mx-2">›</span>
+                <Link href="/blog" className="hover:underline">
+                  Blog
+                </Link>
+                <span className="mx-2">›</span>
+                <span className="text-gray-500">{title}</span>
+              </nav>
 
-            <header className="mb-8 lg:mb-12">
-              <p className="text-sm text-plum-200/80">{new Date(date).toLocaleDateString()}</p>
-              <h1 className="mt-2 text-4xl lg:text-5xl font-extrabold tracking-tight text-plum-50">{title}</h1>
-            </header>
+              <header className="mb-6">
+                <p className="text-sm text-plum-200/80 mb-3">{new Date(date).toLocaleDateString()}</p>
+                <h1 className="font-extrabold leading-tight text-plum-50 drop-shadow-sm" style={{ fontSize: 'clamp(34px, 6vw, 48px)' }}>{title}</h1>
+              </header>
 
-            <PostContainer>
-              <div className="article" dangerouslySetInnerHTML={{ __html: html }} />
-              <div className="my-10">
-                <AdGateFreeOnly>
-                  <AdInContent
-                    slot={process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT}
-                  />
-                </AdGateFreeOnly>
-              </div>
-            </PostContainer>
-          </div>
+              <PostContainer>
+                <div className="article" dangerouslySetInnerHTML={{ __html: html }} />
+                <div className="my-10">
+                  <AdGateFreeOnly>
+                    <AdInContent
+                      slot={process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT}
+                    />
+                  </AdGateFreeOnly>
+                </div>
+              </PostContainer>
+            </div>
+          </article>
+        </div>
+
+        {/* TOC mobile (collapsible) */}
+        <div className="lg:hidden mt-6 -mb-2">
+          <details className="bg-white/90 backdrop-blur-sm rounded-xl border border-plum-200/40 p-4 shadow-sm">
+            <summary className="cursor-pointer font-semibold text-plum-900 hover:text-plum-700 transition-colors">
+              📋 Table of Contents
+            </summary>
+            <div className="mt-4">
+              <TOC />
+            </div>
+          </details>
         </div>
       </div>
     </>

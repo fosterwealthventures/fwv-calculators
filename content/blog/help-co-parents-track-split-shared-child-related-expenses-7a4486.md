@@ -33,13 +33,7 @@ Categorizing expenses helps clarify what needs to be paid. Here are some suggest
 
 ### 3. Use a Clear Calculation Method
 When splitting expenses, decide on a method that works for both parties. A common approach is to split expenses evenly. 
-
-For example, if the total expenses for the month are $600, each parent would owe:
-
-$$
-Owing = \frac{Total}{2} = \frac{600}{2} = 300
-$$
-
+For example, if the total expenses for the month are $600, each parent would owe $300.
 ### 4. Keep Track of Payments
 Document who paid what and when. This prevents misunderstandings. For instance, if Parent A pays $200 for sports fees and Parent B pays $100 for school supplies, record it as follows:
 
@@ -69,25 +63,9 @@ You and your ex-partner have agreed to split your child's monthly expenses equal
 - School Fees: $400
 - Medical Bills: $200
 - Extracurricular Activities: $100
-
-**Total Expenses Calculation:**
-
-$$
-Total = 400 + 200 + 100 = 700
-$$
-
-**Each Parent's Share:**
-
-$$
-Owing = \frac{Total}{2} = \frac{700}{2} = 350
-$$
-
-If Parent A pays the entire $700 and Parent B has not contributed yet, Parent B owes Parent A:
-
-$$
-Amount_{owed} = 350
-$$
-
+**Total Expenses Calculation:** Adding school fees ($400), medical bills ($200), and extracurricular activities ($100) gives a total of $700.
+**Each Parent's Share:** Simply divide the total expenses by 2. For $700 in total expenses, each parent owes $350 (calculated as $700 ÷ 2 = $350).
+If Parent A pays the entire $700 and Parent B has not contributed yet, Parent B owes Parent A $350.
 ### Tracking Example
 - Parent A pays $700.
 - Parent B owes $350.

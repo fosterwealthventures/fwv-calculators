@@ -30,35 +30,12 @@ Employers are responsible for specific payroll taxes that can add substantially 
 - State Unemployment Tax Act (SUTA): varies by state, but for this example, let’s assume 2% on the first $7,000.
 
 **Calculation:**
-1. **Social Security Tax**: 
-   $$ 
-   SS = 50,000 \times 0.062 = 3,100 
-   $$
-   
-2. **Medicare Tax**: 
-   $$ 
-   M = 50,000 \times 0.0145 = 725 
-   $$
+1. **Social Security Tax**: 6.2% of $50,000 = $3,100
+2. **Medicare Tax**: 1.45% of $50,000 = $725
+3. **FUTA**: 6% of the first $7,000 = $420
+4. **SUTA**: 2% of the first $7,000 = $140
 
-3. **FUTA**: 
-   $$ 
-   FUTA = 7,000 \times 0.06 = 420 
-   $$
-
-4. **SUTA**: 
-   $$ 
-   SUTA = 7,000 \times 0.02 = 140 
-   $$
-
-Now, add these amounts to find the total payroll tax:
-
-$$ 
-Total\ Payroll\ Taxes = SS + M + FUTA + SUTA 
-$$
-
-$$ 
-Total\ Payroll\ Taxes = 3,100 + 725 + 420 + 140 = 4,385 
-$$
+Adding these together gives a total payroll tax of $4,385.
 
 ### Step 3: Include Employee Benefits
 
@@ -69,26 +46,14 @@ Next, consider the cost of employee benefits. This can include health insurance,
 - Other Benefits: $1,500 per year
 
 **Total Benefits Calculation:**
-$$ 
-Total\ Benefits = Health\ Insurance + Retirement\ Contributions + Other\ Benefits 
-$$
-
-$$ 
-Total\ Benefits = 5,000 + 2,000 + 1,500 = 8,500 
-$$
+Adding up health insurance ($5,000), retirement contributions ($2,000), and other benefits ($1,500) gives a total of $8,500 in benefits.
 
 ### Step 4: Calculate the True Cost of Hiring
 
 Now, you can calculate the total cost of hiring the employee by summing the gross salary, total payroll taxes, and total benefits.
 
 **Total Cost Calculation:**
-$$ 
-Total\ Cost = Gross\ Salary + Total\ Payroll\ Taxes + Total\ Benefits 
-$$
-
-$$ 
-Total\ Cost = 50,000 + 4,385 + 8,500 = 62,885 
-$$
+Adding the gross salary ($50,000), total payroll taxes ($4,385), and total benefits ($8,500) gives a total cost of $62,885.
 
 ### Step 5: Use the Employee Cost Calculator
 
@@ -111,42 +76,22 @@ Let’s summarize everything with a hypothetical example:
 **Scenario**: You are hiring a marketing manager at a gross salary of $70,000 per year.
 
 1. **Calculate Payroll Taxes**:
-   - Social Security: 
-   $$ 
-   SS = 70,000 \times 0.062 = 4,340 
-   $$
-   - Medicare: 
-   $$ 
-   M = 70,000 \times 0.0145 = 1,015 
-   $$
-   - FUTA: 
-   $$ 
-   FUTA = 7,000 \times 0.06 = 420 
-   $$
-   - SUTA: 
-   $$ 
-   SUTA = 7,000 \times 0.02 = 140 
-   $$
+   - Social Security: 6.2% of $70,000 = $4,340
+   - Medicare: 1.45% of $70,000 = $1,015
+   - FUTA: 6% of the first $7,000 = $420
+   - SUTA: 2% of the first $7,000 = $140
 
-   **Total Payroll Taxes**: 
-   $$ 
-   Total\ Payroll\ Taxes = 4,340 + 1,015 + 420 + 140 = 5,915 
-   $$
+   **Total Payroll Taxes**: Adding these together gives $5,915
 
 2. **Calculate Benefits**:
    - Health Insurance: $6,000
    - Retirement Contributions: $3,000
    - Other Benefits: $2,000
 
-   **Total Benefits**: 
-   $$ 
-   Total\ Benefits = 6,000 + 3,000 + 2,000 = 11,000 
-   $$
+   **Total Benefits**: Adding health insurance ($6,000), retirement contributions ($3,000), and other benefits ($2,000) gives $11,000
 
 3. **Calculate Total Cost**:
-   $$ 
-   Total\ Cost = 70,000 + 5,915 + 11,000 = 86,915 
-   $$
+Adding the gross salary ($70,000), total payroll taxes ($5,915), and total benefits ($11,000) gives a total cost of $86,915.
 
 Thus, the total cost of hiring the marketing manager is $86,915 per year.
 

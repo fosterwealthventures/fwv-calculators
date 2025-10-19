@@ -57,17 +57,9 @@ Suppose you run a bakery. Your fixed costs (rent, salaries) are $2,500, the vari
 - Selling Price per Unit = $4
 - Variable Cost per Unit = $1.50
 
-Using the formula:
+**How it works:** The calculator divides your fixed costs by the profit you make on each item sold (selling price minus the cost to make each item).
 
-$$
-BEP = \frac{Fixed Cost}{Selling Price - Variable Cost}
-$$
-
-Substituting the numbers:
-
-$$
-BEP = \frac{2500}{4 - 1.5} = \frac{2500}{2.5} = 1000
-$$
+**The math:** $2,500 fixed costs ÷ ($4 selling price - $1.50 cost per item) = $2,500 ÷ $2.50 profit per item = 1,000 items needed to break even.
 
 You need to sell 1,000 cupcakes to break even!
 
@@ -83,17 +75,9 @@ You invest $5,000 in a stock, and after one year, its value is $6,500.
 - Initial Investment = $5,000
 - Final Value = $6,500
 
-Using the formula:
+**How it works:** The calculator takes your profit (final value minus what you invested) and divides it by your original investment amount, then converts it to a percentage.
 
-$$
-ROI = \frac{Final Value - Initial Investment}{Initial Investment} \times 100
-$$
-
-Substituting the numbers:
-
-$$
-ROI = \frac{6500 - 5000}{5000} \times 100 = \frac{1500}{5000} \times 100 = 30\%
-$$
+**The math:** ($6,500 final value - $5,000 initial investment) ÷ $5,000 original investment × 100 = $1,500 profit ÷ $5,000 invested × 100 = 30% return.
 
 Your investment yielded a 30% return!
 
@@ -105,35 +89,14 @@ The Mortgage Calculator helps you determine your monthly mortgage payment based 
 #### Example
 You’re considering a $300,000 mortgage at an interest rate of 4% for 30 years.
 
-**Monthly payment calculation**:
-Using the formula:
+**How it works:** The mortgage calculator uses a standard formula that accounts for your loan amount, interest rate, and time period to determine what you'll pay each month. It considers how interest compounds over the life of the loan.
 
-$$
-M = P \frac{r(1 + r)^n}{(1 + r)^n - 1}
-$$
+**The key inputs:**
+- Loan amount: $300,000
+- Annual interest rate: 4% (which becomes about 0.333% per month)
+- Loan term: 30 years (360 monthly payments)
 
-Where:
-- \( M \) = monthly payment
-- \( P \) = loan principal
-- \( r \) = monthly interest rate
-- \( n \) = number of payments
-
-Substituting the numbers:
-- \( P = 300,000 \)
-- Monthly Interest Rate \( r = \frac{4\%}{12} = \frac{0.04}{12} = 0.00333 \)
-- Number of Payments \( n = 30 \times 12 = 360 \)
-
-Now calculate:
-
-$$
-M = 300000 \frac{0.00333(1 + 0.00333)^{360}}{(1 + 0.00333)^{360} - 1}
-$$
-
-This will give you approximately:
-
-$$
-M \approx 1432.25
-$$
+**The result:** Based on these numbers, your monthly payment would be approximately $1,432.25 per month.
 
 Your estimated monthly payment would be $1,432.25!
 
@@ -145,33 +108,15 @@ The Savings Growth Calculator shows how your savings will grow over time based o
 #### Example
 You start with $1,000, plan to contribute $100 monthly, and expect an annual interest rate of 5%.
 
-**Future value calculation**:
-Using the formula:
+**How it works:** This calculator shows how your money grows over time by combining your initial deposit with regular monthly contributions and compound interest (interest that earns interest on itself).
 
-$$
-FV = P \times (1 + r)^n + PMT \times \frac{(1 + r)^n - 1}{r}
-$$
+**The key inputs:**
+- Starting amount: $1,000
+- Monthly contribution: $100
+- Annual interest rate: 5% (about 0.417% per month)
+- Time period: 10 years (120 months)
 
-Where:
-- \( FV \) = future value
-- \( P \) = initial deposit
-- \( PMT \) = monthly contribution
-- \( r \) = monthly interest rate
-- \( n \) = number of months
-
-Substituting the numbers:
-- \( P = 1000 \)
-- \( PMT = 100 \)
-- Monthly Interest Rate \( r = \frac{5\%}{12} = \frac{0.05}{12} = 0.004167 \)
-- \( n = 10 \times 12 = 120 \)
-
-Now calculate:
-
-$$
-FV = 1000 \times (1 + 0.004167)^{120} + 100 \times \frac{(1 + 0.004167)^{120} - 1}{0.004167}
-$$
-
-This results in a future value of approximately $16,382.89.
+**The result:** After 10 years of consistent saving and compound interest, your savings would grow to approximately $16,382.89.
 
 ### 5. Debt Payoff Calculator
 
@@ -181,30 +126,14 @@ The Debt Payoff Calculator helps you strategize how to pay off debts faster. You
 #### Example
 You owe $10,000 at an interest rate of 6% and plan to pay $300 per month.
 
-Using the formula:
+**How it works:** This calculator determines how long it will take to pay off debt by considering your current balance, monthly payment amount, and interest rate. It uses a mathematical formula that accounts for how interest affects your payoff timeline.
 
-$$
-n = \frac{-\ln(1 - \frac{rA}{P}}{ \ln(1 + r)}
-$$
+**The key inputs:**
+- Current debt: $10,000
+- Monthly payment: $300
+- Annual interest rate: 6% (0.5% per month)
 
-Where:
-- \( n \) = number of months to pay off
-- \( A \) = total debt
-- \( P \) = monthly payment
-- \( r \) = monthly interest rate
-
-Substituting the numbers:
-- \( A = 10,000 \)
-- Monthly Payment \( P = 300 \)
-- Monthly Interest Rate \( r = \frac{6\%}{12} = 0.005 \)
-
-Now calculate:
-
-$$
-n = \frac{-\ln(1 - \frac{0.005 \times 10000}{300}}{ \ln(1 + 0.005)}
-$$
-
-This will give you approximately 35 months to pay off your debt!
+**The result:** At this payment rate with this interest rate, it would take approximately 35 months (about 3 years) to pay off the debt completely.
 
 ## Common Mistakes to Avoid
 
