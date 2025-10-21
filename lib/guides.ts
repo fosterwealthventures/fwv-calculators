@@ -104,3 +104,4 @@ export const GUIDES: Guide[] = [
 export const getAllGuides = (): Guide[] => GUIDES;
 export const findGuide = (slug: string): Guide | undefined =>
   GUIDES.find((g) => g.slug === slug);
+// app/guide/[slug]/page.tsx

@@ -54,6 +54,10 @@ type GenOptions = {
   cta?: boolean;
   imageSuggestions?: boolean;
   targetCalculators?: string[];
+  mainCalculator?: string;
+  intent?: string;
+  keywords?: string[];
+  meta_description?: string;
 };
 
 
@@ -68,6 +72,10 @@ export default function BlogGeneratorDevUI() {
   // ---- single generation controls
   const [topic, setTopic] = React.useState('');
   const [tone, setTone] = React.useState('Friendly & helpful');
+  const [intent, setIntent] = React.useState('');
+  const [keywords, setKeywords] = React.useState('');
+  const [metaDescription, setMetaDescription] = React.useState('');
+  const [mainCalculator, setMainCalculator] = React.useState('');
   const [options, setOptions] = React.useState<GenOptions>({
     template: 'howto',
     wordCountHint: 'standard',
@@ -78,6 +86,10 @@ export default function BlogGeneratorDevUI() {
     cta: true,
     imageSuggestions: true,
     targetCalculators: ['Break-even Calculator', 'ROI Calculator', 'Mortgage Calculator', 'Savings Growth Calculator'],
+    mainCalculator: '',
+    intent: '',
+    keywords: [],
+    meta_description: '',
   });
 
   const [loading, setLoading] = React.useState<null | 'preview' | 'publish'>(null);
@@ -85,6 +97,7 @@ export default function BlogGeneratorDevUI() {
   const [error, setError] = React.useState<string | null>(null);
   const [previewTab, setPreviewTab] = React.useState<'rendered' | 'raw'>('rendered');
   const [useFixedContent, setUseFixedContent] = React.useState(false);
+  const [disableLatexProcessing, setDisableLatexProcessing] = React.useState(false);
 
   // ---- bulk controls
   const [bulkText, setBulkText] = React.useState('');
@@ -120,6 +133,13 @@ export default function BlogGeneratorDevUI() {
     }
   }, []);
 
+  // Auto-check the fix checkbox when LaTeX issues are detected
+  React.useEffect(() => {
+    if (resp?.validation?.latex?.count && resp.validation.latex.count > 0 && !useFixedContent) {
+      setUseFixedContent(true);
+    }
+  }, [resp?.validation?.latex?.count, useFixedContent]);
+
   function toggle<K extends keyof GenOptions>(key: K) {
     setOptions((prev) => ({ ...prev, [key]: !prev[key] as any }));
   }
@@ -129,7 +149,25 @@ export default function BlogGeneratorDevUI() {
     setError(null);
     setResp(null);
     try {
-      const payload = { topic: topic.trim(), dryRun, options: { ...options, tone } };
+      // Process keywords into array
+      const processedKeywords = keywords.split(',')
+        .map(k => k.trim())
+        .filter(k => k.length > 0)
+        .slice(0, 8); // Limit to 8 keywords
+
+      const payload = {
+        topic: topic.trim(),
+        dryRun,
+        useFixedContent: !dryRun && useFixedContent, // Only apply fixes when actually publishing
+        options: {
+          ...options,
+          tone,
+          mainCalculator: mainCalculator.trim(),
+          intent: intent.trim(),
+          keywords: processedKeywords,
+          meta_description: metaDescription.trim()
+        }
+      };
       const r = await fetch('/api/admin/bloggen', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -143,6 +181,14 @@ export default function BlogGeneratorDevUI() {
     } finally {
       setLoading(null);
     }
+  }
+
+  // Apply fixes to content before publishing
+  function applyFixesToContent(content: string): string {
+    if (useFixedContent && resp?.validation?.latex?.fixedContent) {
+      return resp.validation.latex.fixedContent;
+    }
+    return content;
   }
 
   // ---- TOC (client-side from markdown)
@@ -173,21 +219,29 @@ export default function BlogGeneratorDevUI() {
     // Remove the first H1 title to avoid duplication (since we show it above)
     const withoutDuplicateTitle = withoutFrontmatter.replace(/^(#\s+[^\n]+)\n/, '');
 
-    // Fix LaTeX expressions that aren't properly formatted
-    return withoutDuplicateTitle
-      .replace(/\[ \\text{([^}]+)} \]/g, '$$$1$$')  // Convert [ \text{...} ] to $$...$$
-      .replace(/\\text{([^}]+)}/g, '$\\text{$1}$')  // Convert \text{...} to $\text{...}$
-      .replace(/\\\\/g, '\\')  // Fix double backslashes
-      .replace(/\$\$([^$]+)\$\$/g, (match, content) => {  // Ensure display math is properly formatted
-        // If content doesn't have LaTeX commands, keep as is
-        if (!content.includes('\\')) return match;
-        return `$$$${content}$$$`;
-      })
-      .replace(/\$([^$]+)\$/g, (match, content) => {  // Ensure inline math is properly formatted
-        // If content doesn't have LaTeX commands, keep as is
-        if (!content.includes('\\')) return match;
-        return `$${content}$`;
-      });
+    // Fix LaTeX expressions that aren't properly formatted - be extremely conservative
+    let processed = withoutDuplicateTitle;
+
+    // Skip LaTeX processing if disabled or if no actual LaTeX content detected
+    if (!disableLatexProcessing) {
+      // Only apply LaTeX fixes if there's actual LaTeX content (contains LaTeX commands)
+      const hasLatexContent = /\\[a-zA-Z]+/.test(processed);
+
+      if (hasLatexContent) {
+        processed = processed
+          .replace(/\[ \\text{([^}]+)} \]/g, '$$$1$$')  // Convert [ \text{...} ] to $$...$$
+          .replace(/\\text{([^}]+)}/g, '$\\text{$1}$')  // Convert \text{...} to $\text{...}$
+          .replace(/\\\\/g, '\\')  // Fix double backslashes
+          .replace(/\$\$([^$]*\\[^$]*)\$\$/g, (match, content) => {  // Only fix display math that actually contains LaTeX commands
+            return `$$$${content}$$$`;
+          })
+          .replace(/\$([^$]*\\[^$]*)\$/g, (match, content) => {  // Only fix inline math that actually contains LaTeX commands
+            return `$${content}$`;
+          });
+      }
+    }
+
+    return processed;
   }, [resp?.markdown, selectedBulkPost, bulkRows]);
 
   // ---- bulk client loop (3 at a time)
@@ -217,9 +271,16 @@ export default function BlogGeneratorDevUI() {
         try {
           console.log(`Processing topic ${idx + 1}/${topics.length}: ${t.substring(0, 50)}...`);
 
+          // Process keywords into array
+          const processedKeywords = keywords.split(',')
+            .map(k => k.trim())
+            .filter(k => k.length > 0)
+            .slice(0, 8); // Limit to 8 keywords
+
           const payload = {
             topic: t,
             dryRun,
+            useFixedContent: !dryRun && useFixedContent, // Only apply fixes when actually publishing
             options: {
               template: options.template,
               wordCountHint: options.wordCountHint,
@@ -230,6 +291,10 @@ export default function BlogGeneratorDevUI() {
               cta: options.cta,
               imageSuggestions: options.imageSuggestions,
               targetCalculators: options.targetCalculators,
+              mainCalculator: mainCalculator.trim(),
+              intent: intent.trim(),
+              keywords: processedKeywords,
+              meta_description: metaDescription.trim(),
             }
           };
 
@@ -268,11 +333,24 @@ export default function BlogGeneratorDevUI() {
     setBulkRunning(false);
   }
 
-  const disabled = !topic.trim() || !!loading;
+  // Validation checks
+  const isIntentValid = intent.trim().length > 0 && intent.trim().length <= 160;
+  const isMetaDescriptionValid = metaDescription.trim().length > 0 && metaDescription.trim().length <= 160;
+  const processedKeywords = keywords.split(',')
+    .map(k => k.trim())
+    .filter(k => k.length > 0)
+    .slice(0, 8);
+  const areKeywordsValid = processedKeywords.length <= 8;
+
+  const disabled = !topic.trim() || !mainCalculator.trim() || !isIntentValid || !isMetaDescriptionValid || !areKeywordsValid || !!loading;
 
   // Clear/refresh function
   const clearForm = () => {
     setTopic('');
+    setIntent('');
+    setKeywords('');
+    setMetaDescription('');
+    setMainCalculator('');
     setResp(null);
     setError(null);
     setSelectedBulkPost(null);
@@ -281,6 +359,7 @@ export default function BlogGeneratorDevUI() {
     setBulkProgress({ done: 0, total: 0 });
     setPreviewTab('rendered');
     setUseFixedContent(false);
+    setDisableLatexProcessing(false);
   };
 
   return (
@@ -288,15 +367,140 @@ export default function BlogGeneratorDevUI() {
       <h1 className="text-2xl font-semibold mb-2">Blog Generator — Dev UI v4 ✅</h1>
       <p className="text-sm text-gray-600 mb-6">Templates, length, tone, TOC, image suggestions, categories/tags, related posts, and bulk generation.</p>
 
-      {/* Topic */}
-      <label htmlFor="topic" className="block text-sm font-medium mb-2">Topic</label>
-      <input
-        id="topic"
-        className="w-full border rounded px-3 py-2 mb-4"
-        placeholder="e.g., Explain how to calculate ROI and annualized ROI for small business investments"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-      />
+      {/* Topic and Main Calculator */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div>
+          <label htmlFor="topic" className="block text-sm font-medium mb-2">Topic</label>
+          <input
+            id="topic"
+            className="w-full border rounded px-3 py-2"
+            placeholder="e.g., Explain how to calculate ROI and annualized ROI for small business investments"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="mainCalculator" className="block text-sm font-medium mb-2">
+            Main Calculator <span className="text-amber-600">*</span>
+          </label>
+          <select
+            id="mainCalculator"
+            className="w-full border rounded px-3 py-2"
+            value={mainCalculator}
+            onChange={(e) => setMainCalculator(e.target.value)}
+            required
+          >
+            <option value="">Select main calculator...</option>
+            <option value="Shopping Budget Calculator">Shopping Budget Calculator</option>
+            <option value="Break-even Calculator">Break-even Calculator</option>
+            <option value="ROI Calculator">ROI Calculator</option>
+            <option value="Mortgage Calculator">Mortgage Calculator</option>
+            <option value="Savings Growth Calculator">Savings Growth Calculator</option>
+            <option value="Debt Payoff Calculator">Debt Payoff Calculator</option>
+            <option value="Employee Cost Calculator">Employee Cost Calculator</option>
+            <option value="Expense Split Calculator">Expense Split Calculator</option>
+            <option value="Split-Order Calculator">Split-Order Calculator</option>
+            <option value="Simple vs Compound Interest Calculator">Simple vs Compound Interest Calculator</option>
+            <option value="Restaurant Tips Calculator">Restaurant Tips Calculator</option>
+            <option value="Freelance Rate Calculator">Freelance Rate Calculator</option>
+          </select>
+          <div className="mt-1 text-xs text-gray-500">
+            This calculator will be the primary focus of the entire article with detailed examples and step-by-step guidance
+          </div>
+          {mainCalculator && (
+            <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-xs text-green-800">
+              <div className="flex items-center gap-2">
+                <span className="text-green-600">✅</span>
+                <div>
+                  <strong>Main Calculator:</strong> {mainCalculator}
+                  <div className="mt-1 text-green-700">
+                    This calculator will be featured prominently throughout the entire article with detailed examples
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* SEO Fields */}
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
+        <div className={`border rounded p-6 ${intent.trim() && !isIntentValid ? 'border-red-300 bg-red-50' : ''}`}>
+          <label htmlFor="intent" className="block text-sm font-medium mb-2">
+            Search Intent <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="intent"
+            className={`w-full border rounded px-3 py-2 text-sm h-16 resize-vertical ${intent.trim() && !isIntentValid ? 'border-red-300' : ''}`}
+            placeholder="e.g., Users want to understand how to calculate ROI to make better investment decisions"
+            value={intent}
+            onChange={(e) => setIntent(e.target.value.slice(0, 160))}
+            maxLength={160}
+            required
+          />
+          <div className="mt-1 text-xs text-gray-500 text-right">
+            {intent.length}/160 characters
+          </div>
+          {intent.trim() && !isIntentValid && (
+            <div className="mt-1 text-xs text-red-600">
+              Search intent is required and must be 160 characters or less
+            </div>
+          )}
+        </div>
+
+        <div className="border rounded p-6">
+          <label htmlFor="keywords" className="block text-sm font-medium mb-2">
+            Focus Keywords
+          </label>
+          <input
+            id="keywords"
+            className="w-full border rounded px-3 py-2 text-sm"
+            placeholder="ROI, return on investment, investment analysis, business metrics"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+          />
+          <div className="mt-1 text-xs text-gray-500">
+            Comma-separated keywords (max 8)
+          </div>
+          {keywords.trim() && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {keywords.split(',')
+                .map(k => k.trim())
+                .filter(k => k.length > 0)
+                .slice(0, 8)
+                .map((keyword, index) => (
+                  <span key={index} className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                    {keyword}
+                  </span>
+                ))}
+            </div>
+          )}
+        </div>
+
+        <div className={`border rounded p-6 ${metaDescription.trim() && !isMetaDescriptionValid ? 'border-red-300 bg-red-50' : ''}`}>
+          <label htmlFor="meta_description" className="block text-sm font-medium mb-2">
+            Meta Description <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="meta_description"
+            className={`w-full border rounded px-3 py-2 text-sm h-20 resize-vertical ${metaDescription.trim() && !isMetaDescriptionValid ? 'border-red-300' : ''}`}
+            placeholder="A comprehensive guide to calculating ROI and annualized ROI for small business investments with practical examples."
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value.slice(0, 160))}
+            maxLength={160}
+            required
+          />
+          <div className="mt-1 text-xs text-gray-500 text-right">
+            {metaDescription.length}/160 characters
+          </div>
+          {metaDescription.trim() && !isMetaDescriptionValid && (
+            <div className="mt-1 text-xs text-red-600">
+              Meta description is required and must be 160 characters or less
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Template / Length / Tone */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -409,9 +613,23 @@ Examples:
                   : resp ? (resp.saved ? 'Saved ✅' : 'Preview only (not saved)')
                     : 'No preview yet. Click "Preview (dry run)" or select a bulk post below.'}
             </div>
-            <div className="flex gap-1">
-              <button className={`text-xs px-2 py-1 rounded ${previewTab === 'rendered' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`} onClick={() => setPreviewTab('rendered')}>Rendered</button>
-              <button className={`text-xs px-2 py-1 rounded ${previewTab === 'raw' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`} onClick={() => setPreviewTab('raw')}>Raw</button>
+            <div className="flex gap-1 items-center">
+              <div className="flex gap-1">
+                <button className={`text-xs px-2 py-1 rounded ${previewTab === 'rendered' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`} onClick={() => setPreviewTab('rendered')}>Rendered</button>
+                <button className={`text-xs px-2 py-1 rounded ${previewTab === 'raw' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`} onClick={() => setPreviewTab('raw')}>Raw</button>
+              </div>
+              <div className="flex items-center gap-2 ml-4">
+                <input
+                  type="checkbox"
+                  id="disable-latex-processing"
+                  checked={disableLatexProcessing}
+                  onChange={(e) => setDisableLatexProcessing(e.target.checked)}
+                  className="rounded border-gray-300 text-gray-600 focus:ring-gray-500"
+                />
+                <label htmlFor="disable-latex-processing" className="text-xs text-gray-600">
+                  Disable LaTeX processing
+                </label>
+              </div>
             </div>
           </div>
 
@@ -456,17 +674,23 @@ Examples:
                       ))}
                     </ul>
 
-                    <div className="mt-2 flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id="use-fixed-content"
-                        checked={useFixedContent}
-                        onChange={(e) => setUseFixedContent(e.target.checked)}
-                        className="rounded border-amber-300 text-amber-600 focus:ring-amber-500"
-                      />
-                      <label htmlFor="use-fixed-content" className="text-xs text-amber-800">
-                        Use auto-fixed LaTeX formatting (recommended)
-                      </label>
+                    <div className="mt-3 p-3 bg-amber-100 border border-amber-200 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <input
+                          type="checkbox"
+                          id="use-fixed-content"
+                          checked={useFixedContent}
+                          onChange={(e) => setUseFixedContent(e.target.checked)}
+                          className="rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+                        />
+                        <label htmlFor="use-fixed-content" className="text-sm font-medium text-amber-800">
+                          ✅ Apply LaTeX fixes when publishing
+                        </label>
+                      </div>
+                      <p className="text-xs text-amber-700 ml-6">
+                        When enabled, auto-fixed content will be saved to the published post. Leave unchecked to keep original formatting.
+                        <strong>Note:</strong> Preview shows fixes for display only - published content may differ until you check this box and publish.
+                      </p>
                     </div>
                   </div>
                 )}
