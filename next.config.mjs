@@ -40,35 +40,19 @@ const nextConfig = {
 
     const allowVercelLive = isPreview ? ' https://vercel.live' : '';
 
-    // AdSense-friendly CSP (includes adtrafficquality.google and friends)
+    // Comprehensive CSP for Google Ads, Funding Choices CMP, GTM, and GA4
     const csp = [
       "default-src 'self'",
-      "base-uri 'self'",
-      "object-src 'none'",
-      "frame-ancestors 'self'",
-
-      // Scripts (add vercel.live only on preview)
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com" + allowVercelLive,
-      "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://www.googletagservices.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net https://www.google-analytics.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://*.adservice.google.com" + allowVercelLive,
-
-      // XHR/fetch/WebSocket endpoints used by Ads/Analytics
-      "connect-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.adservice.google.com https://*.adtrafficquality.google",
-
-      // Beacons/pixels
-      "img-src 'self' data: blob: https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://www.google-analytics.com https://www.googletagmanager.com",
-
-      // Styles & fonts
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://consent.google.com https://gads-gpt-private.googlesyndication.com https://ep2.adtrafficquality.google" + allowVercelLive,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
-
-      // Ad iframes
-      "frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://googleads.g.doubleclick.net https://securepubads.g.doubleclick.net",
-
-      // Misc
+      "img-src 'self' data: blob: https://www.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://fundingchoicesmessages.google.com https://consent.google.com https://ep2.adtrafficquality.google",
+      "frame-src 'self' https://www.googletagmanager.com https://www.google.com https://fundingchoicesmessages.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://consent.google.com https://ep2.adtrafficquality.google",
       "worker-src 'self' blob:",
-      "media-src 'self' blob: data:",
-      "form-action 'self'",
-      "upgrade-insecure-requests",
+      "child-src 'self' blob:",
+      "base-uri 'self'",
+      "form-action 'self' https://www.google.com"
     ].join('; ');
 
     return [
