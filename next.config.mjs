@@ -40,15 +40,16 @@ const nextConfig = {
 
     const allowVercelLive = isPreview ? ' https://vercel.live' : '';
 
-    // Comprehensive CSP for Google Ads, Funding Choices CMP, GTM, and GA4
+    // Final unified CSP for Ads/CMP + Analytics with wildcard for adtrafficquality
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://consent.google.com https://gads-gpt-private.googlesyndication.com https://ep2.adtrafficquality.google" + allowVercelLive,
+      // Important: include wildcard for ad traffic quality endpoints (ep1/ep2/etc)
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://consent.google.com https://gads-gpt-private.googlesyndication.com https://*.adtrafficquality.google" + allowVercelLive,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https://www.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://fundingchoicesmessages.google.com https://consent.google.com https://ep2.adtrafficquality.google",
-      "frame-src 'self' https://www.googletagmanager.com https://www.google.com https://fundingchoicesmessages.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://consent.google.com https://ep2.adtrafficquality.google",
+      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://fundingchoicesmessages.google.com https://consent.google.com https://*.adtrafficquality.google",
+      "frame-src 'self' https://www.googletagmanager.com https://www.google.com https://fundingchoicesmessages.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://consent.google.com https://*.adtrafficquality.google",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
       "base-uri 'self'",
