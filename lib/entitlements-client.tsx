@@ -18,6 +18,7 @@ export type CalcId =
   | "interest"
   | "freelancer-rate"
   | "tip-split"
+  | "tip-split-by-order" // Plus
   | "savings" // Plus
   | "debt-payoff" // Plus
   | "employee-cost" // Pro A

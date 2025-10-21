@@ -30,20 +30,23 @@ To understand the effectiveness of mental math versus digital tools, we'll explo
 **Scenario**: You want to calculate your monthly mortgage payment for a $300,000 loan with an interest rate of 4% over 30 years.
 
 **Mental Math Approach**: 
-1. Convert the interest rate to a monthly rate: 
-   $$ r = \frac{4\%}{12} = \frac{0.04}{12} = 0.00333 $$
+1. Convert the interest rate to a monthly rate:
+   r = 4% ÷ 12 = 0.04 ÷ 12 = 0.00333
+   
 2. Calculate the number of payments:
-   $$ n = 30 \text{ years} \times 12 \text{ months/year} = 360 $$
+   n = 30 years × 12 months/year = 360
+   
 3. Use the formula for the monthly mortgage payment:
-   $$ M = P \frac{r(1 + r)^n}{(1 + r)^n - 1} $$
+   M = P × [r(1 + r)^n] ÷ [(1 + r)^n - 1]
+   
    Where:
-   - $M$ = monthly payment
-   - $P$ = principal loan amount ($300,000$)
-   - $r$ = monthly interest rate ($0.00333$)
-   - $n$ = number of payments ($360$)
+   - M = monthly payment
+   - P = principal loan amount ($300,000)
+   - r = monthly interest rate (0.00333)
+   - n = number of payments (360)
 
    Plugging in the numbers:
-   $$ M = 300000 \frac{0.00333(1 + 0.00333)^{360}}{(1 + 0.00333)^{360} - 1} $$
+   M = 300,000 × [0.00333(1 + 0.00333)^360] ÷ [(1 + 0.00333)^360 - 1]
 
    Calculating this manually can lead to errors, especially if you lose track of the intermediate steps.
 
@@ -60,9 +63,10 @@ Instead of wrestling with the calculations, you can use our [Mortgage Calculator
 
 **Mental Math Approach**:
 1. Calculate the profit:
-   $$ Profit = Total Return - Investment = 12000 - 10000 = 2000 $$
+   Profit = Total Return - Investment = $12,000 - $10,000 = $2,000
+   
 2. Calculate ROI using the formula:
-   $$ ROI = \frac{Profit}{Investment} \times 100 = \frac{2000}{10000} \times 100 = 20\% $$
+   ROI = (Profit ÷ Investment) × 100 = ($2,000 ÷ $10,000) × 100 = 20%
 
 **Digital Tool Approach**:
 With our [ROI Calculator](/calculators), you can enter your investment and returns, and the calculator will provide the ROI instantly without the risk of making a mistake.
@@ -77,15 +81,16 @@ With our [ROI Calculator](/calculators), you can enter your investment and retur
 
 **Mental Math Approach**:
 1. Use the formula for compound interest:
-   $$ A = P(1 + r)^t $$
+   A = P(1 + r)^t
+   
    Where:
-   - $A$ = the amount of money accumulated after n years, including interest.
-   - $P$ = principal amount ($5,000$)
-   - $r$ = annual interest rate (0.05)
-   - $t$ = number of years (10)
+   - A = the amount of money accumulated after n years, including interest
+   - P = principal amount ($5,000)
+   - r = annual interest rate (0.05)
+   - t = number of years (10)
 
    Plugging in the numbers:
-   $$ A = 5000(1 + 0.05)^{10} = 5000(1.62889) = 8144.47 $$
+   A = 5,000(1 + 0.05)^10 = 5,000(1.62889) = $8,144.47
 
    This step can be tricky without a calculator, especially when it comes to raising numbers to powers.
 

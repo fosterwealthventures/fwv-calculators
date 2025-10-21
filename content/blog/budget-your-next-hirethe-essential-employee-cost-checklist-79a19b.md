@@ -39,18 +39,16 @@ As an employer, you are responsible for certain payroll taxes. In the U.S., the 
 For our example:
 
 - **Social Security and Medicare**: 
-$$
-Payroll \, Taxes = Gross \, Salary \times 0.0765 = 60,000 \times 0.0765 = 4,590
-$$
+**Payroll taxes calculation:**
+Payroll Taxes = Gross Salary × 0.0765 = $60,000 × 0.0765 = $4,590
 
 ### Step 3: Add Benefits
 
 Benefits can vary widely, but a common estimate is that benefits add approximately 30% to the salary. This includes health insurance, retirement contributions, and other perks.
 
 Using our example:
-$$
-Benefits = Gross \, Salary \times 0.30 = 60,000 \times 0.30 = 18,000
-$$
+**Benefits calculation:**
+Benefits = Gross Salary × 0.30 = $60,000 × 0.30 = $18,000
 
 ### Step 4: Equipment and Supplies
 
@@ -68,15 +66,11 @@ Finally, consider the overhead costs. If you estimate this to be $3,000 annually
 
 Now we can summarize the total costs involved in hiring our Marketing Specialist:
 
-\[
-\text{Total Cost} = \text{Gross Salary} + \text{Payroll Taxes} + \text{Benefits} + \text{Equipment} + \text{Training} + \text{Overhead}
-\]
+**Total cost formula:**
+Total Cost = Gross Salary + Payroll Taxes + Benefits + Equipment + Training + Overhead
 
-Substituting in the numbers:
-
-\[
-\text{Total Cost} = 60,000 + 4,590 + 18,000 + 2,000 + 1,000 + 3,000 = 88,590
-\]
+**Total cost calculation:**
+Total Cost = $60,000 + $4,590 + $18,000 + $2,000 + $1,000 + $3,000 = $88,590
 
 Thus, the total budget needed to hire this employee would be **$88,590** for the first year.
 
@@ -88,43 +82,37 @@ Let’s explore a couple of scenarios to illustrate how these costs might vary.
 
 - **Gross Salary**: $80,000
 - **Payroll Taxes**: 
-$$
-80,000 \times 0.0765 = 6,120
-$$
+**Payroll taxes calculation:**
+$80,000 × 0.0765 = $6,120
 - **Benefits**: 
-$$
-80,000 \times 0.30 = 24,000
-$$
+**Benefits calculation:**
+$80,000 × 0.30 = $24,000
 - **Equipment**: $3,000
 - **Training**: $1,500
 - **Overhead**: $3,500
 
 Calculating the total cost:
 
-\[
-\text{Total Cost} = 80,000 + 6,120 + 24,000 + 3,000 + 1,500 + 3,500 = 118,120
-\]
+**Total cost calculation:**
+Total Cost = $80,000 + $6,120 + $24,000 + $3,000 + $1,500 + $3,500 = $118,120
 
 ### Example 2: Customer Service Representative
 
 - **Gross Salary**: $40,000
 - **Payroll Taxes**: 
-$$
-40,000 \times 0.0765 = 3,060
-$$
+**Payroll taxes calculation:**
+$40,000 × 0.0765 = $3,060
 - **Benefits**: 
-$$
-40,000 \times 0.30 = 12,000
-$$
+**Benefits calculation:**
+$40,000 × 0.30 = $12,000
 - **Equipment**: $1,500
 - **Training**: $800
 - **Overhead**: $2,000
 
 Calculating the total cost:
 
-\[
-\text{Total Cost} = 40,000 + 3,060 + 12,000 + 1,500 + 800 + 2,000 = 59,360
-\]
+**Total cost calculation:**
+Total Cost = $40,000 + $3,060 + $12,000 + $1,500 + $800 + $2,000 = $59,360
 
 ## FAQs
 

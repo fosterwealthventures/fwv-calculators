@@ -35,9 +35,8 @@ Let’s say you’re considering investing in a local organic farm that reflects
 
 3. **Calculate ROI** using the formula:
 
-   $$
-   ROI = \frac{Net \, Profit}{Cost \, of \, Investment} \times 100
-   $$
+   **ROI formula:**
+   ROI = (Net Profit ÷ Cost of Investment) × 100
 
    Where:
    - Net Profit = Annual Returns - Cost of Investment
@@ -48,14 +47,10 @@ Let’s say you’re considering investing in a local organic farm that reflects
    - Cost of Investment = $10,000
 
    First, calculate the net profit:
-   $$ 
-   Net \, Profit = 2500 - 10000 = -7500 
-   $$
+   Net Profit = $2,500 - $10,000 = -$7,500
 
    Now plug into the ROI formula:
-   $$
-   ROI = \frac{-7500}{10000} \times 100 = -75\%
-   $$
+   ROI = (-$7,500 ÷ $10,000) × 100 = -75%
 
 In this scenario, the negative ROI indicates that this investment may not be the best financial decision, despite its alignment with your values. 
 
@@ -81,36 +76,29 @@ Imagine you want to save for a community project that aligns with your values. Y
 
 Using the **Savings Growth Calculator**, we can calculate the future value of your savings. The future value can be approximated with the formula:
 
-$$
-FV = P \times \frac{(1 + r)^{nt} - 1}{r}
-$$
+**Future value formula:**
+FV = P × [(1 + r)^(nt) - 1] ÷ r
 
 Where:
-- \( P \) = monthly contribution
-- \( r \) = monthly interest rate
-- \( n \) = number of times interest is compounded per year
-- \( t \) = number of years
+- P = monthly contribution
+- r = monthly interest rate
+- n = number of times interest is compounded per year
+- t = number of years
 
 Plugging in the numbers:
-- \( P = 200 \)
-- \( r = \frac{0.05}{12} \approx 0.004167 \)
-- \( n = 12 \)
-- \( t = 5 \)
+- P = 200
+- r = 0.05 ÷ 12 ≈ 0.004167
+- n = 12
+- t = 5
 
 Now calculate:
-$$
-FV = 200 \times \frac{(1 + 0.004167)^{60} - 1}{0.004167}
-$$
+FV = 200 × [(1 + 0.004167)^60 - 1] ÷ 0.004167
 
 Calculating the expression inside the parentheses:
-$$
-(1 + 0.004167)^{60} \approx 1.28368
-$$
+(1 + 0.004167)^60 ≈ 1.28368
 
 Plugging that back into the formula gives:
-$$
-FV \approx 200 \times \frac{1.28368 - 1}{0.004167} \approx 200 \times 68.016 = 13603.2
-$$
+FV ≈ 200 × (1.28368 - 1) ÷ 0.004167 ≈ 200 × 68.016 = $13,603.20
 
 After 5 years, you will have approximately $13,603.20 saved for your community project—an excellent way to align financial goals with your values!
 

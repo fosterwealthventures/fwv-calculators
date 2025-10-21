@@ -115,7 +115,26 @@
 @layer components {
   .header-regal {
     @apply bg-plum-900 text-white border-b border-plum-700;
+  /* Make article headings purple like the guide titles, and darken body text */
+.article h1, .article h2, .article h3 { @apply text-purple-title; }
+.article p, .article li { @apply text-slate-900 dark:text-slate-200; }
+}
+/* Option A — Medium H1 scale (keeps the same look, just smaller) */
+.article h1 { @apply font-extrabold tracking-tight text-purple-title text-3xl; }
+
+@screen sm {
+  .article h1 { @apply text-4xl; }
+}
+
+/* Tailwind @apply can be fussy with arbitrary line-heights,
+   so set the lg step with raw CSS for reliability. */
+@screen lg {
+  .article h1 {
+    font-size: 2.75rem;   /* ≈ 44px */
+    line-height: 1.1;
   }
+}
+
   .nav-link-regal {
     @apply text-white/90 hover:text-aure-300 transition;
   }

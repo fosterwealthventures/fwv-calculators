@@ -42,29 +42,26 @@ export default function PriceClient() {
 
   const choose = (plan: PlanKey) => {
     try {
-      // Keep both keys in sync for compatibility
       localStorage.setItem("fwv.planId", plan);
       localStorage.setItem("fwv-plan", plan);
       document.cookie = `fwv_plan=${plan}; path=/; max-age=31536000; samesite=lax`;
-    } catch {
-      // no-op (intentionally ignoring errors in upgrade flow)
-    }
+    } catch { }
     const next = `${redirectTo}${redirectTo.includes("?") ? "&" : "?"}plan=${plan}`;
     router.replace(next);
   };
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Plans &amp; Pricing</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">
+        Plans &amp; Pricing
+      </h1>
       <p className="mt-2 text-gray-600">
         Pick the plan that fits today. You can always upgrade later.
       </p>
 
       {/* Billing cycle toggle */}
       <div className="mt-5 flex items-center gap-2">
-        <span
-          className={`text-sm ${cycle === "mo" ? "font-semibold" : "text-gray-500"}`}
-        >
+        <span className={`text-sm ${cycle === "mo" ? "font-semibold" : "text-gray-500"}`}>
           Monthly
         </span>
         <button
@@ -78,9 +75,7 @@ export default function PriceClient() {
             data-on={cycle === "yr"}
           />
         </button>
-        <span
-          className={`text-sm ${cycle === "yr" ? "font-semibold" : "text-gray-500"}`}
-        >
+        <span className={`text-sm ${cycle === "yr" ? "font-semibold" : "text-gray-500"}`}>
           Yearly
         </span>
         <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-800">
@@ -94,8 +89,7 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Free</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.free)}{" "}
-            <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.free)} <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>Access to free calculators</li>
@@ -113,13 +107,15 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm ring-1 ring-brand-green/20">
           <h3 className="text-lg font-semibold">Plus</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.plus)}{" "}
-            <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.plus)} <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>Remove all ads</li>
-            <li>Unlock Savings Growth calculator</li>
-            <li>Unlock Debt Payoff calculator</li>
+            <li>Unlock <strong>Savings Growth</strong> calculator</li>
+            <li>Unlock <strong>Debt Payoff</strong> calculator</li>
+            <li>
+              Unlock <strong>Split by Order (+ Shared Appetizers)</strong>
+            </li>
             <li>Keep access to all 6 free calculators</li>
           </ul>
           <button
@@ -134,8 +130,7 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Pro</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.pro)}{" "}
-            <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.pro)} <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>All Free benefits, no ads</li>
@@ -156,8 +151,7 @@ export default function PriceClient() {
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h3 className="text-lg font-semibold">Premium</h3>
           <div className="mt-1 text-2xl font-bold">
-            {fmtUSD(prices.premium)}{" "}
-            <span className="text-base font-normal">{suffix}</span>
+            {fmtUSD(prices.premium)} <span className="text-base font-normal">{suffix}</span>
           </div>
           <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
             <li>All Pro benefits</li>

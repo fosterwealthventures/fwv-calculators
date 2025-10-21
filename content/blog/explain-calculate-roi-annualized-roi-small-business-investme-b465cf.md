@@ -56,42 +56,37 @@ Investing in a small business can be both exciting and daunting. One of the most
 Suppose you purchase a rental property for $200,000. Your total income from renting the property over one year is $24,000, and your total expenses (mortgage, maintenance, taxes) amount to $18,000.
 
 1. Calculate Net Profit:
-   $$
-   Net\ Profit = Total\ Income - Total\ Expenses = 24000 - 18000 = 6000
-   $$
+   **Net profit calculation:**
+   Net Profit = Total Income - Total Expenses = $24,000 - $18,000 = $6,000
 
 2. Calculate ROI:
-   $$
-   ROI = \frac{6000}{200000} \times 100 = 3\%
-   $$
+   **ROI calculation:**
+   ROI = (Net Profit ÷ Initial Investment) × 100 = ($6,000 ÷ $200,000) × 100 = 3%
 
 3. Calculate Annualized ROI (assuming you held the property for 1 year):
-   $$
-   Annualized\ ROI = \left(1 + \frac{6000}{200000}\right)^{\frac{1}{1}} - 1 = 0.03 \Rightarrow 3\%
-   $$
+   **Annualized ROI calculation:**
+   Annualized ROI = (1 + (Net Profit ÷ Initial Investment))^(1 ÷ Number of Years) - 1
+   Annualized ROI = (1 + ($6,000 ÷ $200,000))^(1 ÷ 1) - 1 = 0.03 or 3%
 
 ### Example 2: Tech Startup Investment
 
 Imagine you invest $50,000 in a tech startup. After 3 years, the startup generates a total revenue of $200,000, and your total costs amount to $120,000.
 
 1. Calculate Net Profit:
-   $$
-   Net\ Profit = Total\ Revenue - Total\ Costs = 200000 - 120000 = 80000
-   $$
+   **Net profit calculation:**
+   Net Profit = Total Revenue - Total Costs = $200,000 - $120,000 = $80,000
 
 2. Calculate ROI:
-   $$
-   ROI = \frac{80000}{50000} \times 100 = 160\%
-   $$
+   **ROI calculation:**
+   ROI = (Net Profit ÷ Initial Investment) × 100 = ($80,000 ÷ $50,000) × 100 = 160%
 
 3. Calculate Annualized ROI:
-   $$
-   Annualized\ ROI = \left(1 + \frac{80000}{50000}\right)^{\frac{1}{3}} - 1
-   $$
-   Step-by-step calculation:
-   $$
-   Annualized\ ROI = \left(1 + 1.6\right)^{\frac{1}{3}} - 1 = (2.6)^{\frac{1}{3}} - 1 \approx 1.394 - 1 \approx 0.394 \Rightarrow 39.4\%
-   $$
+   **Annualized ROI calculation:**
+   Annualized ROI = (1 + (Net Profit ÷ Initial Investment))^(1 ÷ Number of Years) - 1
+   Annualized ROI = (1 + ($80,000 ÷ $50,000))^(1 ÷ 3) - 1
+   
+   **Step-by-step calculation:**
+   Annualized ROI = (1 + 1.6)^(1 ÷ 3) - 1 = (2.6)^(1 ÷ 3) - 1 ≈ 1.394 - 1 ≈ 0.394 or 39.4%
 
 ## FAQs
 

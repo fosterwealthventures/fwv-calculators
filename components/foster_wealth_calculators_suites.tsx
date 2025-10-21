@@ -5,15 +5,15 @@ import {
   DollarSign,
   Home,
   PiggyBank,
+  ShoppingCart,
   TrendingUp,
-  Users,
+  Users
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { AdBannerTop } from "@/components/ads";
 import PremiumResultCard from "@/components/ui/PremiumResultCard";
 import ProfessionalCard from "@/components/ui/ProfessionalCard";
 import ProfessionalInput from "@/components/ui/ProfessionalInput";
@@ -36,6 +36,10 @@ const ExpenseSplitDeluxe = dynamic(() => import("./ExpenseSplitDeluxe"), {
   ),
 });
 
+const ShoppingBudget = dynamic(() => import("./shopping-budget-calc"), {
+  ssr: false,
+  loading: () => (<div className="p-4 text-sm opacity-70">Loading Shopping Budget…</div>),
+});
 /** ----------------------------------------------------------------------------------------------
  *  Types & Registry
  * ---------------------------------------------------------------------------------------------- */
@@ -46,6 +50,8 @@ type CalcKey =
   | "interest"
   | "freelancer-rate"
   | "tip-split"
+  | "tip-split-by-order"
+  | "shopping-budget"
   | "savings"
   | "debt-payoff"
   | "employee-cost"
@@ -74,6 +80,11 @@ const calcMeta = {
     "tip-split": {
       name: "Tip & Tab Split",
       icon: DollarSign,
+      tier: "free" as const,
+    },
+    "shopping-budget": {
+      name: "Shopping Budget",
+      icon: ShoppingCart,
       tier: "free" as const,
     },
 
@@ -531,7 +542,7 @@ export default function FosterWealthCalculators({
   // if blank, default sharers to "everyone who entered something"
   const positiveOthers = parsedOthers.filter((v) => v > 0).length;
   const baseSharers = 1 + positiveOthers;
-  const sharers = Math.max(1, toNum(orderSharers) || baseSharers);
+  const sharers = Math.min(baseSharers, Math.max(1, toNum(orderSharers) || baseSharers));
 
   // Pre-tax allocation including shared
   const yourPre = parsedYour + (shared / sharers);
@@ -542,7 +553,9 @@ export default function FosterWealthCalculators({
 
   const tipSplit = useMemo(() => {
     const bill = parseFloat(tipInputs.bill) || 0;
-    const people = Math.max(parseInt(tipInputs.people || "1", 10) || 1, 1);
+    const rawPeople = Math.max(parseInt(tipInputs.people || "1", 10) || 1, 1);
+    const peopleCap = planId === "free" ? 4 : 100; // generous cap for paid
+    const people = Math.min(rawPeople, peopleCap);
     const discountValue = parseFloat(tipInputs.discountValue) || 0;
     const taxPct = (parseFloat(tipInputs.taxPct) || 0) / 100;
     const tipPct = (parseFloat(tipInputs.tipPct) || 0) / 100;
@@ -730,11 +743,7 @@ export default function FosterWealthCalculators({
             );
           })}
         </div>
-
-        {/* Top in-suite ad – show only for Free plan */}
-        <div className="mt-2">{planId === "free" ? <AdBannerTop /> : null}</div>
       </div>
-
       {/* Main calculator body */}
       <main className="fwv-container mt-4 flex-grow space-y-6 pb-10">
         {/* ROI */}
@@ -959,6 +968,17 @@ export default function FosterWealthCalculators({
                     value={tipInputs.people}
                     onChange={(v) => setTipInputs((s) => ({ ...s, people: v }))}
                   />
+                  {planId === "free" && (parseInt(tipInputs.people || "1", 10) || 1) > 4 && (
+                    <p className="mt-1 text-xs text-plum-800">
+                      Groups of 5+ are a <b>Plus</b> feature.{" "}
+                      <Link href="/pricing" className="underline">Upgrade to unlock larger groups</Link>.
+                    </p>
+                  )}
+                  {planId === "free" && (parseInt(tipInputs.people || "1", 10) || 1) > 4 && (
+                    <p className="mt-1 text-xs text-plum-700">
+                      Calculations currently use <b>4 people</b> on Free.
+                    </p>
+                  )}
 
                   <div className="flex items-center gap-3">
                     <ToggleGroup
@@ -1049,108 +1069,178 @@ export default function FosterWealthCalculators({
             </div>
 
             <div className="px-6 pb-6">
-              <div className="card-regal p-5">
-                <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">
-                  Split by Order (optional) — includes shared appetizers
-                </h3>
+              <Gate calc="tip-split-by-order">
+                <div className="card-regal p-5">
+                  <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">
+                    Split by Order (optional) — includes shared appetizers
+                  </h3>
 
-                <div className="grid gap-6 md:grid-cols-2">
-                  {/* Left: inputs */}
-                  <div className="space-y-4">
-                    <Input
-                      id="order_yours"
-                      label="Your order (pre-tax)"
-                      value={orderYour}
-                      onChange={setOrderYour}
-                      placeholder="e.g., 24.50"
-                    />
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {/* Left: inputs */}
+                    <div className="space-y-4">
+                      <Input
+                        id="order_yours"
+                        label="Your order (pre-tax)"
+                        value={orderYour}
+                        onChange={setOrderYour}
+                        placeholder="e.g., 24.50"
+                      />
 
-                    <div>
-                      <div className="mb-2 flex items-center justify-between">
-                        <label className="text-sm font-medium text-plum-900 dark:text-plum-100">
-                          Others' orders (pre-tax)
-                        </label>
-                        <button
-                          type="button"
-                          className="text-sm underline"
-                          onClick={() => setOrderOthers((arr) => [...arr, ""])}
-                        >
-                          + Add another
-                        </button>
+                      <div>
+                        <div className="mb-2 flex items-center justify-between">
+                          <label className="text-sm font-medium text-plum-900 dark:text-plum-100">
+                            Others' orders (pre-tax)
+                          </label>
+                          <button
+                            type="button"
+                            className="text-sm underline"
+                            onClick={() => setOrderOthers((arr) => [...arr, ""])}
+                          >
+                            + Add another
+                          </button>
+                        </div>
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {orderOthers.map((val, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <input
+                                type="number"
+                                inputMode="decimal"
+                                min="0"
+                                className="w-full rounded-xl border px-3 py-2"
+                                placeholder={`Order ${idx + 1}`}
+                                value={val}
+                                onChange={(e) => {
+                                  const next = [...orderOthers];
+                                  next[idx] = e.target.value;
+                                  setOrderOthers(next);
+                                }}
+                              />
+                              <button
+                                type="button"
+                                className="px-2 py-1 text-xs rounded-lg border"
+                                onClick={() =>
+                                  setOrderOthers((arr) => arr.filter((_, i) => i !== idx))
+                                }
+                                aria-label="Remove"
+                                title="Remove"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        {orderOthers.map((val, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input
-                              type="number"
-                              inputMode="decimal"
-                              min="0"
-                              className="w-full rounded-xl border px-3 py-2"
-                              placeholder={`Order ${idx + 1}`}
-                              value={val}
-                              onChange={(e) => {
-                                const next = [...orderOthers];
-                                next[idx] = e.target.value;
-                                setOrderOthers(next);
-                              }}
-                            />
-                            <button
-                              type="button"
-                              className="px-2 py-1 text-xs rounded-lg border"
-                              onClick={() =>
-                                setOrderOthers((arr) => arr.filter((_, i) => i !== idx))
-                              }
-                              aria-label="Remove"
-                              title="Remove"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Input
+                          id="order_shared"
+                          label="Shared items (appetizers, etc. — pre-tax)"
+                          value={orderShared}
+                          onChange={setOrderShared}
+                          placeholder="e.g., 18.00"
+                        />
+                        <Input
+                          id="order_sharers"
+                          label={`People sharing these items (default: ${baseSharers})`}
+                          value={orderSharers}
+                          onChange={setOrderSharers}
+                          placeholder={`${baseSharers}`}
+                        />
                       </div>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <Input
-                        id="order_shared"
-                        label="Shared items (appetizers, etc. — pre-tax)"
-                        value={orderShared}
-                        onChange={setOrderShared}
-                        placeholder="e.g., 18.00"
+                    {/* Right: results */}
+                    <div className="space-y-3">
+                      <KV label="Sum of personal orders + shared" value={fmtUSD(totalPre)} />
+                      <KV
+                        label="Your allocation ratio"
+                        value={yourRatio ? `${(yourRatio * 100).toFixed(2)}%` : "0%"}
                       />
-                      <Input
-                        id="order_sharers"
-                        label={`People sharing these items (default: ${baseSharers})`}
-                        value={orderSharers}
-                        onChange={setOrderSharers}
-                        placeholder={`${baseSharers}`}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Right: results */}
-                  <div className="space-y-3">
-                    <KV label="Sum of personal orders + shared" value={fmtUSD(totalPre)} />
-                    <KV
-                      label="Your allocation ratio"
-                      value={yourRatio ? `${(yourRatio * 100).toFixed(2)}%` : "0%"}
-                    />
-                    <div className="rounded-xl border p-4 bg-black/5 dark:bg-white/5">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-sm font-medium">You owe (of final bill)</span>
-                        <span className="text-2xl font-bold tracking-tight">
-                          {fmtUSD(yourOwe)}
-                        </span>
+                      <div className="rounded-xl border p-4 bg-black/5 dark:bg-white/5">
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-sm font-medium">You owe (of final bill)</span>
+                          <span className="text-2xl font-bold tracking-tight">
+                            {fmtUSD(yourOwe)}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-xs opacity-70">
+                          Uses your final bill above (after discount, tax & tip). Formula:
+                          (Your order + shared share) ÷ (All orders + shared) × Final bill.
+                        </p>
                       </div>
-                      <p className="mt-2 text-xs opacity-70">
-                        Uses your final bill above (after discount, tax & tip). Formula:
-                        (Your order + shared share) ÷ (All orders + shared) × Final bill.
-                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Gate>
+
+              {/* Fallback for Free users: blurred preview with CTA overlay */}
+              {planId === "free" && (
+                <div className="relative mt-4">
+                  <div className="pointer-events-none blur-[2px]">
+                    <div className="card-regal p-5">
+                      <h3 className="mb-4 text-sm font-semibold text-plum-900 dark:text-plum-100">
+                        Split by Order (Preview) — includes shared appetizers
+                      </h3>
+
+                      <div className="grid gap-6 md:grid-cols-2">
+                        {/* Left: preview inputs */}
+                        <div className="space-y-4">
+                          <div className="rounded-xl border bg-gray-50 p-3">
+                            <div className="text-xs text-gray-500 mb-2">Your order (pre-tax)</div>
+                            <div className="text-sm font-medium">$24.50</div>
+                          </div>
+
+                          <div className="rounded-xl border bg-gray-50 p-3">
+                            <div className="text-xs text-gray-500 mb-2">Others' orders (pre-tax)</div>
+                            <div className="text-sm font-medium">$18.75 + $22.00</div>
+                          </div>
+
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="rounded-xl border bg-gray-50 p-3">
+                              <div className="text-xs text-gray-500 mb-1">Shared items</div>
+                              <div className="text-sm font-medium">$18.00</div>
+                            </div>
+                            <div className="rounded-xl border bg-gray-50 p-3">
+                              <div className="text-xs text-gray-500 mb-1">People sharing</div>
+                              <div className="text-sm font-medium">3 people</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right: preview results */}
+                        <div className="space-y-3">
+                          <div className="rounded-xl border bg-gray-50 p-3">
+                            <div className="text-xs text-gray-500 mb-1">Sum of orders + shared</div>
+                            <div className="text-sm font-medium">$83.25</div>
+                          </div>
+                          <div className="rounded-xl border bg-gray-50 p-3">
+                            <div className="text-xs text-gray-500 mb-1">Your allocation ratio</div>
+                            <div className="text-sm font-medium">42.3%</div>
+                          </div>
+                          <div className="rounded-xl border p-4 bg-black/5 dark:bg-white/5">
+                            <div className="flex items-baseline justify-between">
+                              <span className="text-sm font-medium">You owe (of final bill)</span>
+                              <span className="text-lg font-bold tracking-tight">
+                                $41.25
+                              </span>
+                            </div>
+                            <p className="mt-2 text-xs opacity-70">
+                              Exact split including tax & tip
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Link href="/pricing" className="rounded-lg bg-plum-700 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-plum-800 transition-colors">
+                      Unlock with Plus
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
+
             <div className="px-6 pb-6">
               <ExplanationPanel title="How this works">
                 <ul className="ml-5 list-disc">
@@ -1178,6 +1268,16 @@ export default function FosterWealthCalculators({
                   </Link>
                 </p>
               </ExplanationPanel>
+            </div>
+          </section>
+        )}
+
+        {/* Shopping Budget */}
+        {activeCalc === "shopping-budget" && (
+          <section className="card-regal mt-4">
+            <Header title="Shopping Budget Calculator" />
+            <div className="p-0 md:p-0">
+              <ShoppingBudget />
             </div>
           </section>
         )}

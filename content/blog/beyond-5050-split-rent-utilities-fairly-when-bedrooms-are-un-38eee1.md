@@ -19,9 +19,8 @@ First, you need to know the total amount you’ll be splitting among housemates.
 
 Total expenses can be calculated as follows:
 
-$$
-Total = Rent + Utilities = 1800 + 300 = 2100
-$$
+**Total expenses calculation:**
+Total = Rent + Utilities = $1,800 + $300 = $2,100
 
 ### Step 2: Assign Value to Each Bedroom
 
@@ -37,58 +36,40 @@ Now let's assign a value to each bedroom based on size, amenities, and desirabil
 
 To calculate the proportional contribution for each room, divide the rent assigned to each room by the total rent. Here's how you can do it:
 
-For Room A:
-$$
-Proportion_{A} = \frac{900}{1800} = 0.5
-$$
+**For Room A:**
+Proportion for Room A = Room A rent ÷ Total rent = $900 ÷ $1,800 = 0.5 (or 50%)
 
-For Room B:
-$$
-Proportion_{B} = \frac{600}{1800} = 0.333
-$$
+**For Room B:**
+Proportion for Room B = Room B rent ÷ Total rent = $600 ÷ $1,800 = 0.333 (or 33.3%)
 
-For Room C:
-$$
-Proportion_{C} = \frac{300}{1800} = 0.167
-$$
+**For Room C:**
+Proportion for Room C = Room C rent ÷ Total rent = $300 ÷ $1,800 = 0.167 (or 16.7%)
 
 ### Step 4: Calculate Individual Shares of Utilities
 
 Now, apply these proportions to the total utilities:
 
-For Room A:
-$$
-Utilities_{A} = 0.5 \times 300 = 150
-$$
+**For Room A:**
+Utilities for Room A = Proportion for Room A × Total utilities = 0.5 × $300 = $150
 
-For Room B:
-$$
-Utilities_{B} = 0.333 \times 300 = 100
-$$
+**For Room B:**
+Utilities for Room B = Proportion for Room B × Total utilities = 0.333 × $300 = $100 (approximately)
 
-For Room C:
-$$
-Utilities_{C} = 0.167 \times 300 = 50
-$$
+**For Room C:**
+Utilities for Room C = Proportion for Room C × Total utilities = 0.167 × $300 = $50 (approximately)
 
 ### Step 5: Calculate Total Payments per Room
 
 Now, add the individual share of utilities to the room rent:
 
-For Room A:
-$$
-Total_{A} = Rent_{A} + Utilities_{A} = 900 + 150 = 1050
-$$
+**For Room A:**
+Total for Room A = Room A rent + Room A utilities = $900 + $150 = $1,050
 
-For Room B:
-$$
-Total_{B} = Rent_{B} + Utilities_{B} = 600 + 100 = 700
-$$
+**For Room B:**
+Total for Room B = Room B rent + Room B utilities = $600 + $100 = $700
 
-For Room C:
-$$
-Total_{C} = Rent_{C} + Utilities_{C} = 300 + 50 = 350
-$$
+**For Room C:**
+Total for Room C = Room C rent + Room C utilities = $300 + $50 = $350
 
 ### Summary of Total Payments
 

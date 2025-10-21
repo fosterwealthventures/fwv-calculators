@@ -19,52 +19,47 @@ Compound interest is the interest calculated on the initial principal, which als
 
 The formula to calculate the future value of an investment with compound interest is:
 
-$$
-FV = P \times (1 + r/n)^{nt}
-$$
+**Compound interest formula:**
+Future Value (FV) = P × (1 + r/n)^(nt)
 
 Where:
-- $FV$ = future value of the investment/loan, including interest
-- $P$ = principal investment amount (initial deposit)
-- $r$ = annual interest rate (decimal)
-- $n$ = number of times that interest is compounded per year
-- $t$ = number of years the money is invested or borrowed
+- FV = future value of the investment/loan, including interest
+- P = principal investment amount (initial deposit)
+- r = annual interest rate (decimal)
+- n = number of times that interest is compounded per year
+- t = number of years the money is invested or borrowed
 
 ### 2. The Power of Monthly Contributions
 
 Let’s say you invest $100 every month into a retirement account with an annual interest rate of 6%, compounded monthly. Here’s how you calculate the future value of this investment:
 
-1. Convert the annual interest rate to a monthly rate: 
-   $r = \frac{0.06}{12} = 0.005$.
+1. Convert the annual interest rate to a monthly rate:
+   r = 0.06 ÷ 12 = 0.005
    
 2. The total number of contributions over, say, 30 years is:
-   $n \times t = 12 \times 30 = 360$.
+   n × t = 12 × 30 = 360
 
 3. The formula for future value of a series of monthly contributions is:
 
-$$
-FV = P \times \frac{(1 + r/n)^{nt} - 1}{r/n}
-$$
+**Future value of monthly contributions formula:**
+FV = P × ((1 + r/n)^(nt) - 1) ÷ (r/n)
 
-Plugging in our values:
+**Plugging in our values:**
+FV = 100 × ((1 + 0.005)^360 - 1) ÷ 0.005
 
-$$
-FV = 100 \times \frac{(1 + 0.005)^{360} - 1}{0.005}
-$$
+**Calculating this step-by-step:**
 
-Calculating this step-by-step:
-
-- Calculate $(1 + 0.005)^{360}$:
-  $$(1.005)^{360} \approx 6.022575$$
+- Calculate (1 + 0.005)^360:
+  (1.005)^360 ≈ 6.022575
   
 - Subtract 1:
-  $$6.022575 - 1 \approx 5.022575$$
+  6.022575 - 1 ≈ 5.022575
   
-- Divide by $0.005$:
-  $$\frac{5.022575}{0.005} \approx 1004.515$$
+- Divide by 0.005:
+  5.022575 ÷ 0.005 ≈ 1004.515
   
-- Finally, multiply by $100$:
-  $$FV \approx 100 \times 1004.515 \approx 100451.50$$
+- Finally, multiply by 100:
+  FV ≈ 100 × 1004.515 ≈ $100,451.50
 
 In 30 years, your monthly contributions of $100 would grow to approximately **$100,451.50**!
 
@@ -75,19 +70,19 @@ The earlier you start saving, the more significant your investment will be due t
 Using our previous formula, let’s calculate the future value if you start at age 25 compared to age 35, both contributing for 30 years.
 
 - Starting at 25:
-  - $FV_{25} = 100 \times \frac{(1 + 0.005)^{360} - 1}{0.005} \approx 100451.50$.
+  - FV_25 = 100 × ((1 + 0.005)^360 - 1) ÷ 0.005 ≈ $100,451.50
 
 - Starting at 35 (only contributing for 20 years):
-  - $n \times t = 12 \times 20 = 240$.
+  - n × t = 12 × 20 = 240
   
-  $$FV_{35} = 100 \times \frac{(1 + 0.005)^{240} - 1}{0.005}$$
+  FV_35 = 100 × ((1 + 0.005)^240 - 1) ÷ 0.005
   
-Calculating this gives:
+**Calculating this gives:**
 
-- $(1.005)^{240} \approx 3.386$$
-- $3.386 - 1 \approx 2.386$
-- $\frac{2.386}{0.005} \approx 477.2$
-- $FV_{35} \approx 100 \times 477.2 \approx 47720$
+- (1.005)^240 ≈ 3.386
+- 3.386 - 1 ≈ 2.386
+- 2.386 ÷ 0.005 ≈ 477.2
+- FV_35 ≈ 100 × 477.2 ≈ $47,720
 
 **Result**: Starting at 25, you would have approximately **$100,451.50**, while starting at 35 yields around **$47,720**. That’s a difference of over **$52,731.50**!
 
@@ -105,15 +100,12 @@ To better understand your financial future, utilize our [Savings Growth Calculat
 
 As your income grows, consider increasing your monthly contributions. For instance, if you increase your contributions to $200 per month, recalculate:
 
-$$
-FV = 200 \times \frac{(1 + 0.005)^{360} - 1}{0.005}
-$$
+**Future value with increased contributions:**
+FV = 200 × ((1 + 0.005)^360 - 1) ÷ 0.005
 
-With the previous calculations, this would yield:
+**With the previous calculations, this would yield:**
 
-$$
-FV \approx 200 \times 1004.515 \approx 200903.00
-$$
+FV ≈ 200 × 1004.515 ≈ $200,903.00
 
 Now, you would have approximately **$200,903.00** at retirement with a $200 monthly contribution!
 

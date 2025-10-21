@@ -46,9 +46,8 @@ Next, consider how much your earning potential will increase after obtaining you
 
 Now that we have both the costs and the income difference, we can calculate the ROI. The formula for ROI is:
 
-$$
-ROI = \frac{(\text{Net Profit})}{\text{Total Investment}} \times 100
-$$
+**ROI formula:**
+ROI = (Net Profit ÷ Total Investment) × 100
 
 Where:
 
@@ -57,9 +56,8 @@ Where:
 
 **Lifetime earnings with degree:** Multiply annual income by 30 working years: $67,860 × 30 = $2,035,800 total earnings over your career.
 
-$$
-\text{Lifetime Earnings (High School)} = 40,612 \times 30 = 1,218,360
-$$
+**Lifetime earnings with high school diploma:**
+Lifetime Earnings (High School) = $40,612 × 30 = $1,218,360
 
 **Net profit from degree:** Subtract lifetime earnings without degree from lifetime earnings with degree: $2,035,800 - $1,218,360 = $817,440 additional earnings over your career.
 
@@ -71,14 +69,13 @@ $$
 
 To get a more realistic picture of ROI, adjust your earnings and costs for inflation. Assuming an average annual inflation rate of 2%, we can adjust the total cost and future earnings using the formula:
 
-$$
-\text{Adjusted Amount} = \text{Future Value} \times (1 + r)^n
-$$
+**Inflation adjustment formula:**
+Adjusted Amount = Future Value × (1 + r)^n
 
 Where:
 
-- \( r \) is the inflation rate (2% or 0.02)
-- \( n \) is the number of years
+- r is the inflation rate (2% or 0.02)
+- n is the number of years
 
 **Adjusted total cost for inflation:** Account for 2% annual inflation over 4 years: $92,000 × (1 + 0.02)^4 ≈ $92,000 × 1.082432 = $99,664 in today's dollars.
 

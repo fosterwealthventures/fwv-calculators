@@ -26,16 +26,16 @@ The first step in setting your freelance rate is to understand your costs. This 
    - Miscellaneous: $50
 
    Total Monthly Expenses:
-   $$
-   Expenses_{total} = 1200 + 200 + 300 + 150 + 100 + 50 = 2000
-   $$
+   
+   **Total expenses calculation:**
+   Total expenses = $1,200 + $200 + $300 + $150 + $100 + $50 = $2,000
 
 2. **Business Expenses**: Next, consider your business costs, which may include software subscriptions, website hosting, marketing expenses, and supplies. Let’s say your business expenses total $500 per month.
 
    Total Monthly Costs:
-   $$
-   Total_{costs} = Expenses_{total} + Business_{expenses} = 2000 + 500 = 2500
-   $$
+   
+   **Total costs calculation:**
+   Total costs = Total expenses + Business expenses = $2,000 + $500 = $2,500
 
 ### Step 2: Determine Your Desired Income
 
@@ -45,21 +45,18 @@ Now that you have a clear picture of your costs, it's time to determine how much
 
 To find your hourly rate, you need to consider how many billable hours you can realistically work in a month. Let’s assume you plan to work 20 hours a week, which totals:
 
-$$
-Hours_{per\ month} = 20 \times 4 = 80
-$$
+**Billable hours per month:**
+Hours per month = 20 hours per week × 4 weeks = 80 hours
 
 To find your required hourly rate, use the following formula:
 
-$$
-Hourly\ Rate = \frac{Total_{costs} + Desired\ income}{Hours_{per\ month}}
-$$
+**Hourly rate formula:**
+Hourly Rate = (Total costs + Desired income) ÷ Hours per month
 
 Plugging in our numbers:
 
-$$
-Hourly\ Rate = \frac{2500 + 4000}{80} = \frac{6500}{80} = 81.25
-$$
+**Hourly rate calculation:**
+Hourly Rate = ($2,500 + $4,000) ÷ 80 = $6,500 ÷ 80 = $81.25 per hour
 
 Now, you know that to cover your costs and achieve your desired income, you need to charge approximately $81.25 per hour.
 
@@ -87,25 +84,23 @@ Let’s run through a quick example based on the calculations we've done.
    - Transportation: $150
    - Miscellaneous: $100
    - **Total Living Expenses**: 
-   $$
-   Expenses_{total} = 1500 + 250 + 400 + 200 + 150 + 100 = 2600
-   $$
+   **Total expenses calculation:**
+   Total expenses = $1,500 + $250 + $400 + $200 + $150 + $100 = $2,600
 
 2. **Business Expenses**: $600 (software, marketing, etc.)
   
    **Total Monthly Costs**:
-   $$
-   Total_{costs} = 2600 + 600 = 3200
-   $$
+   
+   **Total costs calculation:**
+   Total costs = Total expenses + Business expenses = $2,600 + $600 = $3,200
 
 3. **Desired Income**: $5,000
 
 4. **Billable Hours**: 80 hours/month
 
 5. **Hourly Rate Calculation**:
-   $$
-   Hourly\ Rate = \frac{3200 + 5000}{80} = \frac{8200}{80} = 102.50
-   $$
+   **Hourly rate calculation:**
+   Hourly Rate = ($3,200 + $5,000) ÷ 80 = $8,200 ÷ 80 = $102.50 per hour
 
 Sarah should charge $102.50 per hour to cover her costs and meet her income goals.
 

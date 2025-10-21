@@ -1,22 +1,18 @@
 // app/guide/restaurant-tips-tabs-split/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
-import React from "react";
 
+import { RelatedLink, RelatedSection } from "@/components/GuideLinks";
 import GuideNav from "@/components/GuideNav";
-import { SocialShare, OpenCalculatorButton } from "@/components/GuideParts";
+import { OpenCalculatorButton, SocialShare } from "@/components/GuideParts";
 import {
-  NavText,
-  H1,
-  Quote,      // (free-style; not used on this page, kept for parity)
-  QuoteRef,   // (kept for parity)
-  Section,
-  H2,
-  List,
   CTAWrap,
+  H1,
+  H2,
   HelperText,
+  NavText,
+  Section
 } from "@/components/GuideTypography";
-import { RelatedSection, RelatedLink } from "@/components/GuideLinks";
 
 export const metadata: Metadata = {
   title: "Restaurant Tip & Tab Split—Discounts, Tax & Fair Splits",
@@ -44,6 +40,7 @@ export default function TipTabSplitGuide() {
     { q: "Should we tip on tax?", a: "Most groups tip on the discounted, pre-tax subtotal. Tipping on tax is uncommon." },
     { q: "What about auto-gratuity or service charge?", a: "If your receipt includes a service charge or auto-gratuity, set tip to 0% in the calculator." },
     { q: "Do we split before or after tip?", a: "Split the total after tax and tip so everyone contributes fairly to the final amount." },
+    { q: "Is Split by Order free?", a: "Split by Order (including shared appetizers) is included with the Plus plan and higher. The basic Tip & Tab Split remains free." },
   ];
   const howToSteps = [
     "Enter the bill amount and number of people.",
@@ -59,7 +56,7 @@ export default function TipTabSplitGuide() {
     headline: shareTitle,
     description: metadata.description,
     mainEntityOfPage: pageUrl,
-    dateModified: "2025-09-20T21:05:43Z",
+    dateModified: "2025-10-19T00:00:00Z",
     publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
   };
   const faqSchema = {
@@ -90,23 +87,17 @@ export default function TipTabSplitGuide() {
       {/* Page Title */}
       <H1>Restaurant Tip &amp; Tab Split — How to Handle Discounts &amp; Tax</H1>
 
-      {/* (Optional scripture pattern kept for consistency – not used on this guide)
-      <Quote>
-        “Whatever you do, work heartily, as for the Lord and not for men.” <QuoteRef>Colossians 3:23</QuoteRef>
-      </Quote>
-      */}
-
-      {/* Reading time (plain body text) */}
+      {/* Reading time */}
       <p className="mt-2 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
 
       {/* Main content sections */}
       <Section>
         <div>
-          <H2>What this calculator does</H2>
+          <H2>What this calculator does (Free)</H2>
           <p>
-            This calculator helps you take a messy shared bill and turn it into a clear per-person amount. You enter the
-            bill total, apply any discount, choose how tax is calculated, set a tip, and decide whether that tip is on the
-            discounted subtotal or the original amount. It then shows a clean final total and an even split so nobody is
+            The Free version helps you turn a messy shared bill into a clear per-person amount for up to <b>4 people</b>.
+            Enter the bill total, apply any discount, choose how tax is calculated, set a tip, and choose whether that tip
+            is on the discounted or original subtotal. The app shows a clean final total and an even split so nobody is
             guessing or overpaying.
           </p>
         </div>
@@ -114,27 +105,32 @@ export default function TipTabSplitGuide() {
         <div>
           <H2>How to use it</H2>
           <p>
-            Start by entering the Bill Amount exactly as shown before tax. Add the Number of People at the table. If you
-            have a coupon or promo code, choose whether it is a percent or fixed amount and enter that in the Discount
-            area. Set how tax should apply—most places tax the discounted subtotal. Then enter your Tip Percentage and
-            choose whether the tip should be based on the discounted subtotal or the original subtotal (many groups still
-            tip on the pre-discount amount to fairly reflect service).
+            Start by entering the Bill Amount before tax. Add the Number of People. If you have a coupon or promo code,
+            choose percent or fixed amount in Discount. Set how tax should apply—most places tax the discounted subtotal.
+            Then enter your Tip Percentage and choose whether the tip should be based on the discounted or the original
+            subtotal (some groups tip on the pre-discount amount to reflect service).
           </p>
           <p>
-            The calculator recomputes live: you will see the discounted subtotal, tax added, tip calculated, and final
-            total. It divides that by the number of people for a fair per-person contribution. If someone wants to round,
-            you can adjust after agreeing as a group. Try a sample: $80 bill, 10% discount, 8% tax, 18% tip on the
-            pre-discount subtotal, split four ways—watch how each choice changes the final share.
+            The calculator recomputes live: you’ll see the discounted subtotal, tax, tip, and final total. It divides that
+            by the number of people for a fair per-person contribution. Example: $80 bill, 10% discount, 8% tax, 18% tip
+            on the pre-discount subtotal, split four ways—watch how each choice changes the share.
           </p>
         </div>
 
         <div>
-          <H2>Pitfalls and tips</H2>
+          <H2>When to upgrade (Plus)</H2>
           <p>
-            The most common mistakes: tipping on the wrong base, applying tax before removing the discount, or adding a tip
-            when auto-gratuity is already included. If there is a service charge on the receipt, set tip to zero unless the
-            group decides to add more. When in doubt, show the screen so everyone understands the math—it removes pressure
-            and keeps things friendly.
+            For uneven orders, shared appetizers, groups of <b>5+</b>, or if you want exports, use
+            <span className="ml-2 rounded-md border px-1.5 py-0.5 text-[11px]">Plus</span> and switch to
+            <b> Split by Order</b>. It allocates tax and tip proportionally to each person’s items.
+          </p>
+        </div>
+
+        <div>
+          <H2>Pitfalls & tips</H2>
+          <p>
+            Common mistakes: tipping on the wrong base, applying tax before removing the discount, or adding a tip when a
+            service charge already applies. If there’s auto-gratuity, set Tip to 0% (or only the extra you want).
           </p>
         </div>
       </Section>
@@ -147,10 +143,10 @@ export default function TipTabSplitGuide() {
 
       {/* Related */}
       <RelatedSection title="Related">
-        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</RelatedLink>
-        <RelatedLink href="/guide/simple-vs-compound-interest" tag="Guide">
-          Simple vs. Compound Interest
+        <RelatedLink href="/guide/restaurant-split-by-order" tag="Guide">
+          Split by Order (+ Shared Appetizers)
         </RelatedLink>
+        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</RelatedLink>
       </RelatedSection>
 
       {/* Share */}
