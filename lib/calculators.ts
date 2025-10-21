@@ -130,13 +130,13 @@ export const CALCULATORS: CalcEntry[] = [
     },
 
     // --------------------
-    // Plus/Pro (adjusted based on requirements)
+    // Pro
     // --------------------
     {
         slug: "employee-cost",
         title: "Employee Cost",
         path: "/calculators/employee-cost",
-        tier: "plus",
+        tier: "pro",
         guide: "/guide/employee-cost",
         summary:
             "True employee cost with taxes, benefits, overhead, and utilization.",
@@ -146,7 +146,7 @@ export const CALCULATORS: CalcEntry[] = [
         slug: "expense-split-deluxe",
         title: "Expense Split Deluxe",
         path: "/calculators/expense-split-deluxe",
-        tier: "plus",
+        tier: "pro",
         guide: "/guide/expense-split-deluxe",
         summary:
             "Advanced restaurant bill split with shared items, service fees, tax, and rounding.",
