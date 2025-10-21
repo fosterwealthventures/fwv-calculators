@@ -2,6 +2,7 @@
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPost } from "@/lib/blog";
 import { marked } from "marked";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
@@ -10,6 +11,44 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const md = getPost(slug);
+  if (!md) return {};
+
+  // --- front-matter parsing ---
+  const fm = md.match(/^---([\s\S]*?)---/m)?.[1] ?? "";
+  const title =
+    fm.match(/title:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
+    slug.replace(/-/g, " ");
+
+  // Extract meta_description from front-matter, fall back to excerpt
+  const metaDescription =
+    fm.match(/meta_description:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
+    fm.match(/excerpt:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
+    "A practical financial guide from Foster Wealth Ventures";
+
+  return {
+    title,
+    description: metaDescription,
+    openGraph: {
+      title,
+      description: metaDescription,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: metaDescription,
+    },
+  };
 }
 
 export default async function BlogPostPage({
@@ -30,6 +69,12 @@ export default async function BlogPostPage({
   const date =
     fm.match(/date:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
     new Date().toISOString();
+
+  // Extract meta_description for JSON-LD, fall back to excerpt
+  const metaDescription =
+    fm.match(/meta_description:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
+    fm.match(/excerpt:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
+    "A practical financial guide from Foster Wealth Ventures";
 
   // strip front-matter + leading H1
   const body = md.replace(/^---[\s\S]*?---\s*/m, "");
@@ -58,6 +103,20 @@ export default async function BlogPostPage({
             }
           });
         `}
+      </Script>
+
+      {/* JSON-LD Structured Data */}
+      <Script id="article-json-ld" strategy="beforeInteractive" type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: title,
+          description: metaDescription,
+          author: { '@type': 'Organization', name: 'Foster Wealth Ventures' },
+          datePublished: date,
+          dateModified: date,
+          image: '/fwv-logo-gold.svg',
+        })}
       </Script>
 
       {/* HERO */}

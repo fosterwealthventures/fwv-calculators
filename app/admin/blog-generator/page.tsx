@@ -85,7 +85,7 @@ export default function BlogGeneratorDevUI() {
     internalLinks: true,
     cta: true,
     imageSuggestions: true,
-    targetCalculators: ['Break-even Calculator', 'ROI Calculator', 'Mortgage Calculator', 'Savings Growth Calculator'],
+    targetCalculators: ['Break-even Calculator', 'ROI Calculator', 'Mortgage Calculator', 'Savings Growth Calculator', 'Shopping Budget Calculator'],
     mainCalculator: '',
     intent: '',
     keywords: [],
@@ -392,21 +392,34 @@ export default function BlogGeneratorDevUI() {
             required
           >
             <option value="">Select main calculator...</option>
-            <option value="Shopping Budget Calculator">Shopping Budget Calculator</option>
-            <option value="Break-even Calculator">Break-even Calculator</option>
-            <option value="ROI Calculator">ROI Calculator</option>
-            <option value="Mortgage Calculator">Mortgage Calculator</option>
-            <option value="Savings Growth Calculator">Savings Growth Calculator</option>
-            <option value="Debt Payoff Calculator">Debt Payoff Calculator</option>
-            <option value="Employee Cost Calculator">Employee Cost Calculator</option>
-            <option value="Expense Split Calculator">Expense Split Calculator</option>
-            <option value="Split-Order Calculator">Split-Order Calculator</option>
-            <option value="Simple vs Compound Interest Calculator">Simple vs Compound Interest Calculator</option>
-            <option value="Restaurant Tips Calculator">Restaurant Tips Calculator</option>
-            <option value="Freelance Rate Calculator">Freelance Rate Calculator</option>
+
+            {/* FREE Calculators */}
+            <optgroup label="🆓 FREE Calculators">
+              <option value="Break-even Calculator">Break-even Calculator</option>
+              <option value="ROI Calculator">ROI Calculator</option>
+              <option value="Mortgage Calculator">Mortgage Calculator</option>
+              <option value="Simple vs Compound Interest Calculator">Simple vs Compound Interest Calculator</option>
+              <option value="Freelance Rate Calculator">Freelance Rate Calculator</option>
+              <option value="Tip & Tab Split Calculator">Tip & Tab Split Calculator</option>
+            </optgroup>
+
+            {/* PLUS Calculators */}
+            <optgroup label="⭐ PLUS Calculators">
+              <option value="Savings Growth Calculator">Savings Growth Calculator</option>
+              <option value="Debt Payoff Calculator">Debt Payoff Calculator</option>
+            </optgroup>
+
+            {/* PRO Calculators */}
+            <optgroup label="👑 PRO Calculators">
+              <option value="Employee Cost Calculator">Employee Cost Calculator</option>
+              <option value="Expense Split Deluxe Calculator">Expense Split Deluxe Calculator</option>
+              <option value="Split-Order Calculator">Split-Order Calculator</option>
+              <option value="Shopping Budget Calculator">Shopping Budget Calculator</option>
+              <option value="Restaurant Tips Calculator">Restaurant Tips Calculator</option>
+            </optgroup>
           </select>
           <div className="mt-1 text-xs text-gray-500">
-            This calculator will be the primary focus of the entire article with detailed examples and step-by-step guidance
+            Choose which calculator to feature prominently. FREE calculators are available to all users, PLUS/PRO require paid plans.
           </div>
           {mainCalculator && (
             <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-xs text-green-800">

@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 type Body = {
   topic?: string;
   dryRun?: boolean;
+  useFixedContent?: boolean;
   options?: {
     template?: 'howto' | 'listicle' | 'comparison' | 'deep-dive';
     wordCountHint?: 'short' | 'standard' | 'long';
@@ -19,6 +20,10 @@ type Body = {
     cta?: boolean;
     imageSuggestions?: boolean;
     targetCalculators?: string[];
+    mainCalculator?: string;
+    intent?: string;
+    keywords?: string[];
+    meta_description?: string;
   };
 };
 
@@ -79,7 +84,8 @@ function detectLatexIssues(content: string): { issues: string[], fixed: string }
   const issues: string[] = [];
   let fixed = content;
 
-  // Detect unescaped mathematical symbols that should be in LaTeX
+  // Detect unescaped mathematical symbols that should be in LaTeX - be more conservative
+  // Only detect actual mathematical symbols, not prices or common text patterns
   const mathSymbols = [
     { pattern: /(?<!\$)π(?!\$)/g, replacement: '$\\pi$', description: 'Unescaped pi symbol' },
     { pattern: /(?<!\$)±(?!\$)/g, replacement: '$\\pm$', description: 'Unescaped plus-minus' },
@@ -106,12 +112,12 @@ function detectLatexIssues(content: string): { issues: string[], fixed: string }
     }
   });
 
-  // Detect broken LaTeX expressions
+  // Detect broken LaTeX expressions - be more conservative
   const brokenLatexPatterns = [
     { pattern: /\[ \\text\{([^}]+)\} \]/g, description: 'Incorrect text formatting [ \\text{...} ]', hasReplacement: true },
     { pattern: /\\text\{([^}]+)\}/g, description: 'Text command in math mode', hasReplacement: true },
-    { pattern: /\$\$([^$\n]*[^\\])\$\$/g, description: 'Display math without proper escaping', hasReplacement: false },
-    { pattern: /\$([^$\n]*[^\\])\$/g, description: 'Inline math without proper escaping', hasReplacement: false },
+    { pattern: /\$\$([^$\n]*\\[^$\n]*)\$\$/g, description: 'Display math without proper escaping', hasReplacement: false },
+    { pattern: /\$([^$\n]*\\[^$\n]*)\$/g, description: 'Inline math without proper escaping', hasReplacement: false },
     { pattern: /\\\\/g, description: 'Double backslashes', hasReplacement: true },
   ];
 
@@ -223,7 +229,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: `Invalid JSON in request body: ${parseError}` }, { status: 400 });
     }
 
-    const { topic = '', dryRun = true, options = {} } = body;
+    const { topic = '', dryRun = true, useFixedContent = false, options = {} } = body;
     if (!topic.trim()) return NextResponse.json({ ok: false, error: 'Topic is required' }, { status: 400 });
 
     // knobs
@@ -266,12 +272,15 @@ export async function POST(req: Request) {
       ? `\n\n---\n**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](/calculators), [Break-even Calculator](/calculators), or [Mortgage Calculator](/calculators).\n`
       : '';
 
+    // Use meta_description if available, otherwise fall back to excerpt
+    const descriptionForSchema = options?.meta_description || excerpt;
+
     const schemaBlock = options.schema ? `\n\n<script type="application/ld+json">
 ${JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: title,
-      description: excerpt,
+      description: descriptionForSchema,
       author: { '@type': 'Organization', name: 'Foster Wealth Ventures' },
       datePublished: new Date().toISOString(),
       image: '/fwv-logo-gold.svg',
@@ -285,6 +294,20 @@ ${JSON.stringify({
     const toneNote = '';
     const images = options.imageSuggestions ? imageIdeas(topic) : [];
 
+    // Main calculator prominence
+    const mainCalculator = options?.mainCalculator || '';
+    const mainCalculatorPrompt = mainCalculator ? `
+
+CRITICAL: MAIN CALCULATOR INTEGRATION - THIS IS MANDATORY:
+- "${mainCalculator}" MUST be the primary calculator featured throughout this entire article
+- EVERY major section should reference and demonstrate ${mainCalculator}
+- Include AT LEAST 3-4 practical examples showing step-by-step usage of ${mainCalculator}
+- The article should read like a tutorial FOR ${mainCalculator} applied to the topic "${topic}"
+- Mention ${mainCalculator} in the introduction, every subsection, and conclusion
+- Show the EXACT URL format: [${mainCalculator}](/calculators) every time
+- Structure calculations and examples AROUND ${mainCalculator}'s functionality
+- Make ${mainCalculator} the HERO calculator - users should finish reading knowing exactly how to use it` : '';
+
     // --- Generate content using OpenAI API
     let markdown: string;
     let fullMarkdown: string;
@@ -292,6 +315,8 @@ ${JSON.stringify({
     const systemPrompt = `You are a senior financial content writer creating comprehensive, practical guides for a financial calculators website.
 
 Write in a ${options.tone || 'friendly and helpful'} tone for ${options.wordCountHint === 'short' ? 'concise' : options.wordCountHint === 'long' ? 'comprehensive' : 'balanced'} content.
+
+CRITICAL INSTRUCTION: This article MUST prominently feature and demonstrate the selected MAIN CALCULATOR throughout the entire content. The main calculator should be the central focus of the article, with extensive examples and step-by-step guidance showing exactly how to use it for the specific topic.
 
 Create a complete, informative blog post with:
 - Clear explanations of financial concepts
@@ -345,7 +370,9 @@ CONTENT REQUIREMENTS:
 2. Practical examples from business/finance
 3. Common pitfalls and how to avoid them
 4. Actionable next steps for readers
-5. Calculator recommendations pointing to /calculators on fosterwealthventures.store
+5. Calculator recommendations pointing to /calculators on fosterwealthventures.store${mainCalculatorPrompt}
+
+PRIMARY OBJECTIVE: This article must serve as a comprehensive tutorial for "${mainCalculator}". Every section should demonstrate practical applications of this calculator for the topic "${topic}". Readers should finish the article knowing exactly how to use ${mainCalculator} for their specific needs.
 
 Make it immediately useful for someone searching for "${topic}". Include specific numerical examples with proper mathematical notation.`;
 
@@ -386,6 +413,21 @@ Make it immediately useful for someone searching for "${topic}". Include specifi
 
       console.log('OpenAI API call successful, content length:', generatedContent.length);
 
+      // Extract SEO fields from options
+      const intent = options?.intent || '';
+      const keywords = options?.keywords || [];
+      const metaDescription = options?.meta_description || excerpt;
+      const mainCalculator = options?.mainCalculator || '';
+
+      // Apply LaTeX fixes if requested
+      let finalContent = generatedContent;
+      if (useFixedContent) {
+        const latexCheck = detectLatexIssues(generatedContent);
+        if (latexCheck.fixed) {
+          finalContent = latexCheck.fixed;
+        }
+      }
+
       // Generate preview markdown (without schema blocks or title H1)
       markdown = `---
 title: "${title}"
@@ -394,9 +436,13 @@ excerpt: "${excerpt}"
 image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
+main_calculator: "${mainCalculator}"
+intent: "${intent}"
+keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
+meta_description: "${metaDescription}"
 ---
 
-${generatedContent}
+${finalContent}
 
 ${internalLinksBlock}${ctaBlock}`;
 
@@ -408,9 +454,13 @@ excerpt: "${excerpt}"
 image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
+main_calculator: "${mainCalculator}"
+intent: "${intent}"
+keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
+meta_description: "${metaDescription}"
 ---
 
-${generatedContent}
+${finalContent}
 
 ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
 
@@ -463,17 +513,14 @@ ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
     } catch (error) {
       console.error('OpenAI API error:', error);
 
-      // Fallback content if OpenAI fails
-      markdown = `---
-title: "${title}"
-date: "${new Date().toISOString()}"
-excerpt: "${excerpt}"
-image: "/fwv-logo-gold.svg"
-category: "${categories[0]}"
-tags: [${tags.map(t => `"${t}"`).join(', ')}]
----
+      // Extract SEO fields from options for fallback content
+      const fallbackIntent = options?.intent || '';
+      const fallbackKeywords = options?.keywords || [];
+      const fallbackMetaDescription = options?.meta_description || excerpt;
+      const fallbackMainCalculator = options?.mainCalculator || '';
 
-# ${title}
+      // Apply LaTeX fixes if requested (for fallback content too)
+      let fallbackContent = `# ${title}
 
 I'm sorry, but I encountered an issue generating the full content. Here's a basic outline to help you understand ${topic.trim()}:
 
@@ -502,6 +549,29 @@ Use our calculators at [/calculators](/calculators) to run specific calculations
 
 ${internalLinksBlock}${ctaBlock}`;
 
+      if (useFixedContent) {
+        const latexCheck = detectLatexIssues(fallbackContent);
+        if (latexCheck.fixed) {
+          fallbackContent = latexCheck.fixed;
+        }
+      }
+
+      // Fallback content if OpenAI fails
+      markdown = `---
+title: "${title}"
+date: "${new Date().toISOString()}"
+excerpt: "${excerpt}"
+image: "/fwv-logo-gold.svg"
+category: "${categories[0]}"
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
+main_calculator: "${fallbackMainCalculator}"
+intent: "${fallbackIntent}"
+keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
+meta_description: "${fallbackMetaDescription}"
+---
+
+${fallbackContent}`;
+
       fullMarkdown = `---
 title: "${title}"
 date: "${new Date().toISOString()}"
@@ -509,36 +579,13 @@ excerpt: "${excerpt}"
 image: "/fwv-logo-gold.svg"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
+main_calculator: "${fallbackMainCalculator}"
+intent: "${fallbackIntent}"
+keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
+meta_description: "${fallbackMetaDescription}"
 ---
 
-# ${title}
-
-I'm sorry, but I encountered an issue generating the full content. Here's a basic outline to help you understand ${topic.trim()}:
-
-## Overview
-${topic.trim()} is an important financial concept that helps with investment analysis and business decision-making.
-
-## Key Components
-- **Input variables**: The data points needed for calculation
-- **Calculation method**: How to compute the results
-- **Interpretation**: Understanding what the numbers mean
-
-## Basic Example
-Let's say you invest $10,000 in a project that returns $12,000 after one year.
-
-The calculation would involve assessing the return relative to the initial investment and time period.
-
-## Common Applications
-- Investment analysis
-- Business project evaluation
-- Financial planning decisions
-
-## Next Steps
-Use our calculators at [/calculators](/calculators) to run specific calculations for your situation. Start with our [ROI Calculator](/calculators) or [Break-even Calculator](/calculators).
-
-> **Note**: This is fallback content. Please check your OpenAI API configuration for complete content generation.
-
-${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
+${fallbackContent}${schemaBlock}${faqBlock}`;
     }
 
     // Handle dry run vs save
