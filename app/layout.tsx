@@ -45,24 +45,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-plan={plan}>
       <head>
-        {/* Google Consent Mode v2 (no GTM, default deny) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent','default',{
-                'ad_storage':'denied',
-                'ad_user_data':'denied',
-                'ad_personalization':'denied',
-                'analytics_storage':'denied',
-                'functionality_storage':'granted',
-                'security_storage':'granted'
-              });
-            `,
-          }}
-        />
-        {/* CMP callback bridge: call window.onCmpConsentUpdate({ ads: true/false, analytics: true/false }) */}
+        {/* Google Consent Mode v2 — DEFAULTS (must run before any ads/analytics) */}
+        <Script id="consent-defaults" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('consent','default',{
+              'ad_storage':'denied',
+              'ad_user_data':'denied',
+              'ad_personalization':'denied',
+              'analytics_storage':'denied',
+              'functionality_storage':'granted',
+              'security_storage':'granted'
+            });
+            window.__consentDefaultsFired = true;
+          `}
+        </Script>
+        {/* CMP → Consent Mode bridge */}
         <Script id="cmp-bridge" strategy="afterInteractive">
           {`
   window.onCmpConsentUpdate = function (consent) {
@@ -77,7 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ad_personalization: ads ? 'granted' : 'denied',
         analytics_storage: analytics ? 'granted' : 'denied'
       });
-    } catch(e) { /* no-op */ }
+    } catch(e){}
   };
 `}
         </Script>
