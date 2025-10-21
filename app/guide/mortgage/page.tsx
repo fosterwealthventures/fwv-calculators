@@ -1,86 +1,115 @@
+import GuideNav from "@/components/GuideNav";
+import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { OpenCalculatorButton, RelatedSection, RelatedLink } from "@/components/GuideLinks";
-import { CALC_TIERS } from "@/lib/calc-tiers";
-import { NavText, H1, Quote, QuoteRef, Section, H2, List, CTAWrap, HelperText } from "@/components/GuideTypography";
 
-export const metadata = {
-  title: "Mortgage Payment Calculator — Guide | Foster Wealth Ventures",
-  description:
-    "Understand principal, interest, taxes, and insurance (PITI) and how rate, term, and down payment change your monthly.",
+export const metadata: Metadata = {
+  title: "Mortgage Guide",
+  description: "Payment, interest, and amortization explained.",
 };
 
-export default function MortgageGuide() {
+function Breadcrumb() {
   return (
-    <main>
-      <NavText>
-        <Link href="/guide" className="underline hover:no-underline">
-          ← Back to Guides
-        </Link>
-      </NavText>
+    <nav className="mb-4 text-sm text-gray-600">
+      <Link href="/" className="text-brand-green hover:underline">
+        Home
+      </Link>{" "}
+      &rsaquo;{" "}
+      <Link href="/guide" className="text-brand-green hover:underline">
+        Guides
+      </Link>{" "}
+      &rsaquo; <span>Mortgage</span>
+    </nav>
+  );
+}
 
-      <H1>Mortgage Payment — Guide</H1>
+export default function GuidePage() {
+  const pageUrl =
+    "https://www.fosterwealthventures.com/guide/mortgage";
+  const shareTitle = String(metadata.title ?? "");
 
-      <Quote>
-        "Prepare your work outside; get everything ready…" <QuoteRef>Proverbs 24:27</QuoteRef>
-      </Quote>
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: shareTitle,
+    description: "Payment, interest, and amortization explained.",
+    mainEntityOfPage: pageUrl,
+    dateModified: "2025-10-21T00:00:00Z",
+    publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
+  };
 
-      <Section>
-        <div>
-          <H2>What it does</H2>
-          <p>
-            Breaks your payment into principal & interest and optional
-            taxes/insurance. Compare PI vs PITI and see how term, rate, and down
-            payment shift affordability.
-          </p>
-        </div>
+  return (
+    <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
+      <Breadcrumb />
 
-        <div>
-          <H2>Key inputs</H2>
-          <List>
-            <li>Home price, down payment, loan term, interest rate</li>
-            <li>Property tax %, homeowners insurance, HOA (optional)</li>
-          </List>
-        </div>
+      <GuideHero
+        title="Mortgage — Guide"
+        subtitle="Payment, interest, and amortization breakdowns."
+        icon={null}
+      />
 
-        <div>
-          <H2>Payment breakdown</H2>
-          <p>
-            Your monthly payment has four main components (PITI):
-          </p>
-          <List>
-            <li><strong>Principal:</strong> Pays down the loan balance</li>
-            <li><strong>Interest:</strong> Cost of borrowing money</li>
-            <li><strong>Taxes:</strong> Property taxes (if escrowed)</li>
-            <li><strong>Insurance:</strong> Homeowners insurance (if escrowed)</li>
-          </List>
-        </div>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
 
-        <div>
-          <H2>Tips</H2>
-          <p>
-            Longer term lowers payment but increases total interest. Try rate
-            and down-payment scenarios to find your comfort zone. Lower rate or 
-            larger down payment reduces the monthly payment.
-          </p>
-        </div>
-      </Section>
+      <section>
+        <h2>What it does</h2>
+        <p>
+          Calculates monthly mortgage payments and shows how much goes toward principal vs interest over time.
+        </p>
+      </section>
 
-      <CTAWrap>
-        <OpenCalculatorButton
-          slug="mortgage"
-          tier={CALC_TIERS["mortgage"]}
-          className="mt-2"
-        />
-        <HelperText>
-          Free calculator. Try different terms and rates.
-        </HelperText>
-      </CTAWrap>
+      <section>
+        <h2>Inputs</h2>
+        <ul>
+          <li>Loan Amount</li>
+          <li>Interest Rate (annual)</li>
+          <li>Loan Term (years)</li>
+        </ul>
+      </section>
 
-      <RelatedSection title="Related">
-        <RelatedLink href="/guide/break-even">Break-Even Calculator</RelatedLink>
-        <RelatedLink href="/guide/roi">ROI Calculator</RelatedLink>
-        <RelatedLink href="/guide/savings-growth">Savings Growth</RelatedLink>
-      </RelatedSection>
+      <section>
+        <h2>Output</h2>
+        <ul>
+          <li>Monthly Payment</li>
+          <li>Total Interest Paid</li>
+          <li>Amortization table</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Example</h2>
+        <p>$300,000 loan at 6.5% for 30 years → Monthly payment: ~$1,896</p>
+      </section>
+
+      <section>
+        <h2>Tip</h2>
+        <p>Compare different loan terms to see how extra payments can save you thousands in interest.</p>
+      </section>
+
+      <section>
+        <CTAButton href="/calculators/mortgage" data-testid="try-matching-calc">
+          Open the Mortgage calculator
+        </CTAButton>
+      </section>
+
+      <div className="mt-6 not-prose">
+        <SocialShare url={pageUrl} title={shareTitle} />
+      </div>
+
+      <GuideNav
+        prev={{
+          href: "/guide/break-even",
+          title: "Break-Even",
+        }}
+        next={{
+          href: "/guide/interest",
+          title: "Interest (Simple/Compound)",
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
     </main>
   );
 }

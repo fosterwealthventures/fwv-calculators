@@ -4,7 +4,7 @@
 import HeaderNavCalculators from "@/components/HeaderNavCalculators";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Merged header:
@@ -20,6 +20,21 @@ import { useState } from "react";
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [calcOpen, setCalcOpen] = useState(false); // desktop dropdown
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setCalcOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header
@@ -44,13 +59,23 @@ export default function Header() {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
           {/* Calculators link + optional dropdown chevron */}
-          <div className="relative inline-flex items-center">
+          <div className="relative inline-flex items-center" ref={dropdownRef}>
             <Link href="/calculators" className="nav-link-regal text-white/90 hover:text-white">
               Calculators
             </Link>
             <button
               aria-label="Open calculators menu"
+              aria-expanded={calcOpen}
+              aria-haspopup="menu"
               onClick={() => setCalcOpen((v) => !v)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && calcOpen) {
+                  setCalcOpen(false);
+                } else if (e.key === 'ArrowDown' && !calcOpen) {
+                  e.preventDefault();
+                  setCalcOpen(true);
+                }
+              }}
               className="ml-1 rounded-md p-1 text-white/80 hover:bg-white/10"
             >
               <svg viewBox="0 0 20 20" className={`h-4 w-4 transition ${calcOpen ? "rotate-180" : ""}`}>
@@ -61,7 +86,7 @@ export default function Header() {
             {/* Dropdown */}
             {calcOpen && (
               <div
-                className="absolute right-0 top-full z-50 mt-2 w-[18rem] rounded-2xl border border-plum-800 bg-plum-900/95 p-1 shadow-xl"
+                className="absolute right-0 top-full z-50 mt-2 min-w-[280px] max-h-[70vh] overflow-y-auto rounded-xl border border-neutral-200 bg-white text-neutral-900 shadow-xl p-2 pointer-events-auto"
                 onMouseLeave={() => setCalcOpen(false)}
               >
                 <HeaderNavCalculators />
@@ -104,7 +129,7 @@ export default function Header() {
                   <path d="M5.5 7.5 10 12l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                 </svg>
               </summary>
-              <div className="mt-1 rounded-2xl border border-white/10 bg-plum-900/95 p-1">
+              <div className="mt-1 rounded-xl border border-neutral-200 bg-white text-neutral-900 shadow-xl p-2">
                 <HeaderNavCalculators />
               </div>
             </details>

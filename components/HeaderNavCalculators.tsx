@@ -6,12 +6,12 @@ import Link from "next/link";
 
 function TierBadge({ tier }: { tier: "free" | "plus" | "pro" }) {
     const styles: Record<string, string> = {
-        free: "bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-white",
-        plus: "bg-amber-500/20 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300",
-        pro: "bg-emerald-600/15 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+        free: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+        plus: "bg-amber-50 text-amber-800 border border-amber-200",
+        pro: "bg-violet-50 text-violet-800 border border-violet-200",
     };
     return (
-        <span className={`ml-2 rounded px-1.5 py-0.5 text-[10px] font-semibold ${styles[tier]}`}>
+        <span className={`ml-auto text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full ${styles[tier]}`}>
             {tier.toUpperCase()}
         </span>
     );
@@ -19,21 +19,21 @@ function TierBadge({ tier }: { tier: "free" | "plus" | "pro" }) {
 
 export default function HeaderNavCalculators() {
     return (
-        <div className="w-72 max-w-full p-2">
+        <div className="min-w-[280px] max-h-[70vh] overflow-y-auto p-2">
             {CALCULATORS.map((c) => (
                 <Link
                     key={c.slug}
                     href={c.path}
-                    className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                    className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 text-sm text-neutral-900"
                 >
                     <span className="truncate">{c.title}</span>
                     <TierBadge tier={c.tier} />
                 </Link>
             ))}
-            <div className="mt-2 border-t pt-2">
+            <div className="mt-2 border-t border-neutral-200 pt-2">
                 <Link
                     href="/calculators"
-                    className="block rounded-md px-3 py-2 text-sm font-medium text-brand-green hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-900 hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
                 >
                     View all calculators →
                 </Link>

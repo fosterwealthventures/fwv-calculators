@@ -63,10 +63,10 @@ export default async function BlogPostPage({
       {/* HERO */}
       <section className="bg-gradient-to-b from-[#2b1a3d] to-[#3b2a55] py-10">
         <div className="mx-auto max-w-7xl px-4 lg:px-6">
-          <nav className="mb-3 text-sm text-white/80" aria-label="Breadcrumb">
-            <Link href="/" className="hover:underline">Home</Link>
+          <nav className="hero-breadcrumbs mb-3 text-sm text-white/70" aria-label="Breadcrumb">
+            <Link href="/" className="text-white/90 hover:text-white underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-sm">Home</Link>
             <span className="mx-2">›</span>
-            <Link href="/blog" className="hover:underline">Blog</Link>
+            <Link href="/blog" className="text-white/90 hover:text-white underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-sm">Blog</Link>
           </nav>
 
           <p className="text-sm mb-2 text-plum-200/90">

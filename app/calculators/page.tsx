@@ -34,11 +34,9 @@ export default function CalculatorsIndex() {
                             <Link href={c.path} className="rounded-lg bg-purple-700 px-3 py-1.5 text-sm text-white hover:bg-purple-800">
                                 Open
                             </Link>
-                            {c.guide && (
-                                <Link href={c.guide} className="rounded-lg border px-3 py-1.5 text-sm hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
-                                    Guide
-                                </Link>
-                            )}
+                            <Link href={c.guide || `/guide/${c.slug}`} className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm text-neutral-800 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800">
+                                Guide
+                            </Link>
                         </div>
                     </article>
                 ))}

@@ -36,7 +36,7 @@ export const CALCULATORS: CalcEntry[] = [
         title: "ROI Calculator",
         path: "/calculators/roi",
         tier: "free",
-        guide: "/guide/roi-vs-annualized-roi",
+        guide: "/guide/roi",
         summary: "Quick return on investment math with optional annualization.",
         icon: "TrendingUp",
     },
@@ -45,6 +45,7 @@ export const CALCULATORS: CalcEntry[] = [
         title: "Break-Even",
         path: "/calculators/break-even",
         tier: "free",
+        guide: "/guide/break-even",
         summary: "Find the sales volume needed to cover fixed and variable costs.",
         icon: "BarChart3",
     },
@@ -53,6 +54,7 @@ export const CALCULATORS: CalcEntry[] = [
         title: "Mortgage",
         path: "/calculators/mortgage",
         tier: "free",
+        guide: "/guide/mortgage",
         summary: "Payment, interest, and amortization breakdowns.",
         icon: "Home",
     },
@@ -61,6 +63,7 @@ export const CALCULATORS: CalcEntry[] = [
         title: "Interest (Simple/Compound)",
         path: "/calculators/interest",
         tier: "free",
+        guide: "/guide/interest",
         summary: "Simple vs. compound growth with time and rate controls.",
         icon: "DollarSign",
     },
@@ -69,15 +72,16 @@ export const CALCULATORS: CalcEntry[] = [
         title: "Freelancer Rate",
         path: "/calculators/freelancer-rate",
         tier: "free",
+        guide: "/guide/freelancer-rate",
         summary: "Back into an hourly/day rate that covers costs and target income.",
         icon: "Users",
     },
     {
-        slug: "tip-split",
+        slug: "tip-and-tab-split",
         title: "Tip & Tab Split",
-        path: "/calculators/tip-split",
+        path: "/calculators/tip-and-tab-split",
         tier: "free",
-        guide: "/guide/restaurant-tips-tabs-split",
+        guide: "/guide/tip-and-tab-split",
         summary:
             "Split a restaurant bill and tips fairly across diners with optional tax/tip handling.",
         icon: "UtensilsCrossed",
@@ -97,10 +101,11 @@ export const CALCULATORS: CalcEntry[] = [
     // Plus
     // --------------------
     {
-        slug: "savings",
+        slug: "savings-growth",
         title: "Savings Growth",
-        path: "/calculators/savings",
+        path: "/calculators/savings-growth",
         tier: "plus",
+        guide: "/guide/savings-growth",
         summary: "Recurring deposits with interest; visualize balance over time.",
         icon: "PiggyBank",
     },
@@ -109,28 +114,30 @@ export const CALCULATORS: CalcEntry[] = [
         title: "Debt Payoff",
         path: "/calculators/debt-payoff",
         tier: "plus",
+        guide: "/guide/debt-payoff",
         summary: "Snowball/avalanche projections with total interest saved.",
         icon: "DollarSign",
     },
     {
         slug: "split-by-order",
-        title: "Split by Order (+ Shared Appetizers)",
+        title: "Split by Order (+ Shared Apps)",
         path: "/calculators/split-by-order",
         tier: "plus",
-        guide: "/guide/restaurant-split-by-order",
+        guide: "/guide/split-by-order",
         summary:
             "Assign each dish to people, handle shared items and appetizers, and split precisely.",
         icon: "Utensils",
     },
 
     // --------------------
-    // Pro
+    // Plus/Pro (adjusted based on requirements)
     // --------------------
     {
         slug: "employee-cost",
         title: "Employee Cost",
         path: "/calculators/employee-cost",
-        tier: "pro",
+        tier: "plus",
+        guide: "/guide/employee-cost",
         summary:
             "True employee cost with taxes, benefits, overhead, and utilization.",
         icon: "Users",
@@ -139,7 +146,8 @@ export const CALCULATORS: CalcEntry[] = [
         slug: "expense-split-deluxe",
         title: "Expense Split Deluxe",
         path: "/calculators/expense-split-deluxe",
-        tier: "pro",
+        tier: "plus",
+        guide: "/guide/expense-split-deluxe",
         summary:
             "Advanced restaurant bill split with shared items, service fees, tax, and rounding.",
         icon: "Utensils",
