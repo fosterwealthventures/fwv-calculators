@@ -1,5 +1,5 @@
 /** Shopping Budget Calculator page route */
-"use client";
+
 import ShoppingBudget from "@/components/shopping-budget-calc";
 
 export const metadata = {
