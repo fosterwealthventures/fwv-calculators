@@ -74,6 +74,136 @@ function imageIdeas(topic: string) {
   ];
 }
 
+// Spell checking and LaTeX validation functions
+function detectLatexIssues(content: string): { issues: string[], fixed: string } {
+  const issues: string[] = [];
+  let fixed = content;
+
+  // Detect unescaped mathematical symbols that should be in LaTeX
+  const mathSymbols = [
+    { pattern: /(?<!\$)π(?!\$)/g, replacement: '$\\pi$', description: 'Unescaped pi symbol' },
+    { pattern: /(?<!\$)±(?!\$)/g, replacement: '$\\pm$', description: 'Unescaped plus-minus' },
+    { pattern: /(?<!\$)≥(?!\$)/g, replacement: '$\\geq$', description: 'Unescaped greater than or equal' },
+    { pattern: /(?<!\$)≤(?!\$)/g, replacement: '$\\leq$', description: 'Unescaped less than or equal' },
+    { pattern: /(?<!\$)√(?!\$)/g, replacement: '$\\sqrt{}$', description: 'Unescaped square root' },
+    { pattern: /(?<!\$)∑(?!\$)/g, replacement: '$\\sum$', description: 'Unescaped summation' },
+    { pattern: /(?<!\$)∞(?!\$)/g, replacement: '$\\infty$', description: 'Unescaped infinity' },
+    { pattern: /(?<!\$)α(?!\$)/g, replacement: '$\\alpha$', description: 'Unescaped alpha' },
+    { pattern: /(?<!\$)β(?!\$)/g, replacement: '$\\beta$', description: 'Unescaped beta' },
+    { pattern: /(?<!\$)γ(?!\$)/g, replacement: '$\\gamma$', description: 'Unescaped gamma' },
+    { pattern: /(?<!\$)δ(?!\$)/g, replacement: '$\\delta$', description: 'Unescaped delta' },
+    { pattern: /(?<!\$)θ(?!\$)/g, replacement: '$\\theta$', description: 'Unescaped theta' },
+    { pattern: /(?<!\$)λ(?!\$)/g, replacement: '$\\lambda$', description: 'Unescaped lambda' },
+    { pattern: /(?<!\$)μ(?!\$)/g, replacement: '$\\mu$', description: 'Unescaped mu' },
+    { pattern: /(?<!\$)σ(?!\$)/g, replacement: '$\\sigma$', description: 'Unescaped sigma' },
+  ];
+
+  mathSymbols.forEach(({ pattern, replacement, description }) => {
+    const matches = content.match(pattern);
+    if (matches) {
+      issues.push(`Found ${matches.length} instance(s) of ${description}`);
+      fixed = fixed.replace(pattern, replacement as string);
+    }
+  });
+
+  // Detect broken LaTeX expressions
+  const brokenLatexPatterns = [
+    { pattern: /\[ \\text\{([^}]+)\} \]/g, description: 'Incorrect text formatting [ \\text{...} ]', hasReplacement: true },
+    { pattern: /\\text\{([^}]+)\}/g, description: 'Text command in math mode', hasReplacement: true },
+    { pattern: /\$\$([^$\n]*[^\\])\$\$/g, description: 'Display math without proper escaping', hasReplacement: false },
+    { pattern: /\$([^$\n]*[^\\])\$/g, description: 'Inline math without proper escaping', hasReplacement: false },
+    { pattern: /\\\\/g, description: 'Double backslashes', hasReplacement: true },
+  ];
+
+  brokenLatexPatterns.forEach(({ pattern, description, hasReplacement }) => {
+    const matches = content.match(pattern);
+    if (matches && matches.length > 0) {
+      issues.push(`Found ${matches.length} potentially broken LaTeX expressions (${description})`);
+      if (hasReplacement) {
+        if (pattern.source.includes('\\\\')) {
+          fixed = fixed.replace(pattern, '\\');
+        } else if (pattern.source.includes('\\text\\{')) {
+          fixed = fixed.replace(pattern, (match: string, p1: string) => `$\\text{${p1}}$`);
+        } else if (pattern.source.includes('\\[ \\\\text\\{')) {
+          fixed = fixed.replace(pattern, (match: string, p1: string) => `$$${p1}$$`);
+        }
+      }
+    }
+  });
+
+  // Check for mismatched LaTeX delimiters
+  const displayMathCount = (content.match(/\$\$/g) || []).length;
+  const inlineMathCount = (content.match(/(?<!\$)\$(?!\$)/g) || []).length;
+
+  if (displayMathCount % 2 !== 0) {
+    issues.push('Mismatched display math delimiters ($$) - odd number detected');
+  }
+
+  if (inlineMathCount % 2 !== 0) {
+    issues.push('Mismatched inline math delimiters ($) - odd number detected');
+  }
+
+  return { issues, fixed };
+}
+
+function basicSpellCheck(content: string): { misspelled: string[], suggestions: Record<string, string[]> } {
+  // Common financial and business misspellings
+  const commonMisspellings: Record<string, string[]> = {
+    'calculater': ['calculator'],
+    'recieve': ['receive'],
+    'seperate': ['separate'],
+    'definately': ['definitely'],
+    'neccessary': ['necessary'],
+    'accomodate': ['accommodate'],
+    'begining': ['beginning'],
+    'occured': ['occurred'],
+    'occuring': ['occurring'],
+    'untill': ['until'],
+    'thier': ['their'],
+    'teh': ['the'],
+    'adress': ['address'],
+    'bussiness': ['business'],
+    'sucess': ['success'],
+    'sucessful': ['successful'],
+    'proffesional': ['professional'],
+    'oppurtunity': ['opportunity'],
+    'intrest': ['interest'],
+    'investmant': ['investment'],
+    'finacial': ['financial'],
+    'reveneu': ['revenue'],
+    'expence': ['expense'],
+    'profitt': ['profit'],
+    'assest': ['asset'],
+    'liablity': ['liability'],
+    'amortization': ['amortization'],
+    'depreciation': ['depreciation'],
+    'principal': ['principal'],
+    'principle': ['principle'],
+    'capitol': ['capital'],
+    'affect': ['affect', 'effect'],
+    'effect': ['effect', 'affect'],
+  };
+
+  // Remove HTML tags and special characters, then extract words
+  const cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/[^\w\s]/g, ' ');
+  const words = cleanContent.toLowerCase().match(/\b[a-z]+\b/g) || [];
+
+  const misspelled = words.filter(word => {
+    // Skip very short words and common financial abbreviations
+    if (word.length < 3 || ['roi', 'irr', 'npv', 'pv', 'fv', 'pmi', 'apy', 'apr'].includes(word)) {
+      return false;
+    }
+    return commonMisspellings[word];
+  });
+
+  const suggestions: Record<string, string[]> = {};
+  misspelled.forEach(word => {
+    suggestions[word] = commonMisspellings[word] || [];
+  });
+
+  return { misspelled: [...new Set(misspelled)], suggestions };
+}
+
 export async function POST(req: Request) {
   try {
     console.log('=== NEW REQUEST TO BLOG GENERATOR ===');
@@ -284,6 +414,10 @@ ${generatedContent}
 
 ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
 
+      // Run validation checks
+      const spellCheck = basicSpellCheck(generatedContent);
+      const latexCheck = detectLatexIssues(generatedContent);
+
       const meta = {
         categories,
         tags,
@@ -291,8 +425,32 @@ ${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
         related,
       };
 
+      // Prepare validation warnings
+      const validationWarnings = {
+        spelling: {
+          misspelled: spellCheck.misspelled,
+          suggestions: spellCheck.suggestions,
+          count: spellCheck.misspelled.length
+        },
+        latex: {
+          issues: latexCheck.issues,
+          count: latexCheck.issues.length,
+          fixedContent: latexCheck.fixed
+        },
+        hasIssues: spellCheck.misspelled.length > 0 || latexCheck.issues.length > 0
+      };
+
       if (dryRun) {
-        return NextResponse.json({ ok: true, saved: false, slug, title, excerpt, markdown, meta });
+        return NextResponse.json({
+          ok: true,
+          saved: false,
+          slug,
+          title,
+          excerpt,
+          markdown,
+          meta,
+          validation: validationWarnings
+        });
       }
 
       // Save to content/blog/{slug}.md (use full version with schema blocks)
