@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: { page: string } })
   return {
     title: `Blog — Page ${pageNum} | Foster Wealth Calculators`,
     description: `Latest posts, page ${pageNum}.`,
+    alternates: { canonical: `/blog/page/${pageNum}` },
   };
 }
 
@@ -87,4 +88,3 @@ export default function BlogIndexPage({ params }: { params: { page: string } }) 
     </main>
   );
 }
-

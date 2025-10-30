@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { suggestFromTopic } from '../../../lib/blog/suggestCalculator';
 
 // Import KaTeX CSS for math rendering
 // KaTeX styling for better integration with our brand
@@ -147,6 +148,28 @@ export default function BlogGeneratorDevUI() {
     setOptions((prev) => ({ ...prev, [key]: !prev[key] as any }));
   }
 
+  // Auto-suggest calculators when topic changes and mainCalculator is empty
+  React.useEffect(() => {
+    const t = topic.trim();
+    if (!t) return;
+    if (!mainCalculator.trim()) {
+      const s = suggestFromTopic(t);
+      setMainCalculator(s.main);
+      setOptions((prev) => ({
+        ...prev,
+        targetCalculators: s.targets,
+      }));
+    }
+  }, [topic]);
+
+  function handleSuggest() {
+    const t = topic.trim();
+    if (!t) return;
+    const s = suggestFromTopic(t);
+    setMainCalculator(s.main);
+    setOptions((prev) => ({ ...prev, targetCalculators: s.targets }));
+  }
+
   async function run(dryRun: boolean) {
     setLoading(dryRun ? 'preview' : 'publish');
     setError(null);
@@ -158,6 +181,9 @@ export default function BlogGeneratorDevUI() {
         .filter(k => k.length > 0)
         .slice(0, 8); // Limit to 8 keywords
 
+      // If no mainCalculator was manually selected, auto-suggest from topic
+      const suggestion = !mainCalculator.trim() ? suggestFromTopic(topic.trim()) : null;
+
       const payload = {
         topic: topic.trim(),
         dryRun,
@@ -165,10 +191,14 @@ export default function BlogGeneratorDevUI() {
         options: {
           ...options,
           tone,
-          mainCalculator: mainCalculator.trim(),
+          mainCalculator: mainCalculator.trim() || suggestion?.main || '',
           intent: intent.trim(),
           keywords: processedKeywords,
-          meta_description: metaDescription.trim()
+          meta_description: metaDescription.trim(),
+          targetCalculators:
+            (options.targetCalculators && options.targetCalculators.length > 0)
+              ? options.targetCalculators
+              : (suggestion?.targets || options.targetCalculators)
         }
       };
       const r = await fetch('/api/admin/bloggen', {
@@ -223,7 +253,11 @@ export default function BlogGeneratorDevUI() {
     const withoutDuplicateTitle = withoutFrontmatter.replace(/^(#\s+[^\n]+)\n/, '');
 
     // Fix LaTeX expressions that aren't properly formatted - be extremely conservative
-    let processed = withoutDuplicateTitle;
+    // Escape currency dollars so they don't open inline math spans
+    // Example: $300,000 ... $400 would be parsed as one math block and collapse spaces
+    const currencyEscaped = withoutDuplicateTitle.replace(/\$(?=\d)/g, '\\$');
+
+    let processed = currencyEscaped;
 
     // Skip LaTeX processing if disabled or if no actual LaTeX content detected
     if (!disableLatexProcessing) {
@@ -280,6 +314,9 @@ export default function BlogGeneratorDevUI() {
             .filter(k => k.length > 0)
             .slice(0, 8); // Limit to 8 keywords
 
+          // If no mainCalculator is set in the UI, auto-suggest per topic row
+          const suggestion = !mainCalculator.trim() ? suggestFromTopic(t.trim()) : null;
+
           const payload = {
             topic: t,
             dryRun,
@@ -295,8 +332,11 @@ export default function BlogGeneratorDevUI() {
               cta: options.cta,
               ctaVariant: ctaVariant,
               imageSuggestions: options.imageSuggestions,
-              targetCalculators: options.targetCalculators,
-              mainCalculator: mainCalculator.trim(),
+              targetCalculators:
+                (options.targetCalculators && options.targetCalculators.length > 0)
+                  ? options.targetCalculators
+                  : (suggestion?.targets || options.targetCalculators),
+              mainCalculator: mainCalculator.trim() || suggestion?.main || '',
               intent: intent.trim(),
               keywords: processedKeywords,
               meta_description: metaDescription.trim(),
@@ -389,6 +429,14 @@ export default function BlogGeneratorDevUI() {
         <div>
           <label htmlFor="mainCalculator" className="block text-sm font-medium mb-2">
             Main Calculator <span className="text-amber-600">*</span>
+            <button
+              type="button"
+              onClick={handleSuggest}
+              className="ml-2 text-xs px-2 py-1 rounded border border-gray-300 hover:bg-gray-50"
+              title="Suggest based on topic"
+            >
+              Suggest
+            </button>
           </label>
           <select
             id="mainCalculator"
@@ -406,27 +454,39 @@ export default function BlogGeneratorDevUI() {
               <option value="Mortgage Calculator">Mortgage Calculator</option>
               <option value="Simple vs Compound Interest Calculator">Simple vs Compound Interest Calculator</option>
               <option value="Freelance Rate Calculator">Freelance Rate Calculator</option>
+              <option value="Restaurant Tips Calculator">Restaurant Tips Calculator</option>
               <option value="Tip & Tab Split Calculator">Tip & Tab Split Calculator</option>
+              <option value="Shopping Budget Calculator">Shopping Budget Calculator</option>
             </optgroup>
 
             {/* PLUS Calculators */}
             <optgroup label="⭐ PLUS Calculators">
               <option value="Savings Growth Calculator">Savings Growth Calculator</option>
               <option value="Debt Payoff Calculator">Debt Payoff Calculator</option>
+              <option value="Split by Order Calculator">Split by Order Calculator</option>
             </optgroup>
 
             {/* PRO Calculators */}
             <optgroup label="👑 PRO Calculators">
               <option value="Employee Cost Calculator">Employee Cost Calculator (PRO)</option>
               <option value="Expense Split Deluxe Calculator">Expense Split Deluxe Calculator (PRO)</option>
-              <option value="Split-Order Calculator">Split-Order Calculator (PRO)</option>
-              <option value="Shopping Budget Calculator">Shopping Budget Calculator (PRO)</option>
-              <option value="Restaurant Tips Calculator">Restaurant Tips Calculator (PRO)</option>
             </optgroup>
           </select>
           <div className="mt-1 text-xs text-gray-500">
             Choose which calculator to feature prominently. FREE = all users, PLUS = paid subscribers, PRO = premium subscribers.
           </div>
+          {options.targetCalculators?.length ? (
+            <div className="mt-2 text-xs text-gray-700">
+              <div className="mb-1 font-medium">Suggested supporting calculators:</div>
+              <div className="flex flex-wrap gap-1">
+                {options.targetCalculators.map((t, i) => (
+                  <span key={i} className="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
           {mainCalculator && (
             <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-xs text-green-800">
               <div className="flex items-center gap-2">

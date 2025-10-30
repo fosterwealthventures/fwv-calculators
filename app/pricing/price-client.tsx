@@ -40,10 +40,11 @@ async function startCheckout(plan: PlanKey, cycle: Billing) {
 
 const btnBase =
   "w-full rounded-xl px-4 py-3 font-semibold shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60";
+// Use palettes defined in tailwind.config.ts (plum/aure), not brand-* aliases
 const btnGold =
-  `${btnBase} bg-brand-gold text-black hover:opacity-90 focus-visible:ring-brand-gold/70`;
+  `${btnBase} bg-aure-500 text-plum-900 hover:bg-aure-600 focus-visible:ring-aure-400/70`;
 const btnPlum =
-  `${btnBase} bg-brand-purple text-white hover:bg-brand-purple/80 focus-visible:ring-brand-purple/70 border border-brand-purple`;
+  `${btnBase} bg-plum-600 text-white hover:bg-plum-700 focus-visible:ring-plum-500/70 border border-plum-600`;
 const btnNeutral =
   `${btnBase} bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-300`;
 

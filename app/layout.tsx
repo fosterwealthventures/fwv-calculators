@@ -84,13 +84,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Google AdSense verification + loader */}
         <meta name="google-adsense-account" content="ca-pub-7798339637698835" />
         {/* AdSense auto ads – ONE global tag only */}
-        <Script
-          id="adsbygoogle-init"
-          strategy="afterInteractive"
+        <script
           async
           crossOrigin="anonymous"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
-        />
+        ></script>
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>

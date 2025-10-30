@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { suggestFromTopic } from '../../../../lib/blog/suggestCalculator';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -148,6 +149,10 @@ function imageIdeas(topic: string) {
 function detectLatexIssues(content: string): { issues: string[], fixed: string } {
   const issues: string[] = [];
   let fixed = content;
+
+  // Escape currency dollar signs to avoid accidental inline math spanning text
+  // Turns $300,000 into \$300,000
+  fixed = fixed.replace(/\$(?=\d)/g, '\\$');
 
   // Detect unescaped mathematical symbols that should be in LaTeX - be more conservative
   // Only detect actual mathematical symbols, not prices or common text patterns
@@ -297,6 +302,20 @@ export async function POST(req: Request) {
     const { topic = '', dryRun = true, useFixedContent = false, options = {} } = body;
     if (!topic.trim()) return NextResponse.json({ ok: false, error: 'Topic is required' }, { status: 400 });
 
+    // Auto-suggest calculators if not provided
+    try {
+      const t = topic.trim();
+      const suggestion = suggestFromTopic(t);
+      if (!(options as any).mainCalculator || !(options as any).mainCalculator?.trim?.()) {
+        (options as any).mainCalculator = suggestion.main;
+      }
+      if (!Array.isArray((options as any).targetCalculators) || !(options as any).targetCalculators?.length) {
+        (options as any).targetCalculators = suggestion.targets;
+      }
+    } catch (_) {
+      // best-effort; do not fail request on suggestion issues
+    }
+
     // knobs
     const lengthText =
       options.wordCountHint === 'short' ? '~700 words, concise, scannable'
@@ -329,9 +348,26 @@ export async function POST(req: Request) {
 
     // internal links
     const utm = (target: string) => `${target}${target.includes('?') ? '&' : '?'}utm_source=blog&utm_medium=link&utm_campaign=${slug}`;
+    const calcLinkByName: Record<string, string> = {
+      'ROI Calculator': '/calculators/roi',
+      'Break-even Calculator': '/calculators/break-even',
+      'Mortgage Calculator': '/calculators/mortgage',
+      'Simple vs Compound Interest Calculator': '/calculators/interest',
+      'Savings Growth Calculator': '/calculators/savings-growth',
+      'Debt Payoff Calculator': '/calculators/debt-payoff',
+      'Employee Cost Calculator': '/calculators/employee-cost',
+      'Expense Split Calculator': '/calculators/expense-split-deluxe',
+      'Restaurant Tips Calculator': '/calculators/tip-and-tab-split',
+      'Freelance Rate Calculator': '/calculators/freelancer-rate',
+      'Shopping Budget Calculator': '/calculators/shopping-budget',
+      'Split by Order Calculator': '/calculators/split-by-order',
+    };
     const internalLinksBlock =
       options.internalLinks && Array.isArray(options.targetCalculators) && options.targetCalculators.length
-        ? `\n\n### Try our calculators\n${options.targetCalculators.slice(0, 5).map(n => `- [${n}](${utm('/calculators')})`).join('\n')}\n`
+        ? `\n\n### Try our calculators\n${options.targetCalculators
+            .slice(0, 5)
+            .map((n) => `- [${n}](${utm(calcLinkByName[n] || '/calculators')})`)
+            .join('\n')}\n`
         : '';
 
     // contextual guide link by main calculator
@@ -344,11 +380,13 @@ export async function POST(req: Request) {
       'Debt Payoff Calculator': '/guide/debt-payoff',
       'Freelance Rate Calculator': '/guide/freelancer-rate',
       'Restaurant Tips Calculator': '/guide/restaurant-tips-tabs-split',
+      'Shopping Budget Calculator': '/guide/shopping-budget',
+      'Split by Order Calculator': '/guide/split-by-order',
     };
     const guideLinksBlock = (() => {
       const link = guideByCalc[options?.mainCalculator || ''];
       if (!link) return '';
-      return `\n\n### Learn the method\nSee our step-by-step guide: [${options?.mainCalculator}](${utm(link)})\n`;
+      return `\n\n### Learn more\nSee our step-by-step guide: [${options?.mainCalculator}](${utm(link)})\n`;
     })();
 
     const ctaBlock = options.cta

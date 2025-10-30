@@ -1,10 +1,12 @@
 // app/blog/page.tsx
 import BlogCard from "@/components/BlogCard";
 import { getAllPosts } from "@/lib/blog";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Blog | Foster Wealth Calculators",
   description: "Latest posts, guides, and updates.",
+  alternates: { canonical: "/blog" },
 };
 
 type Post = {
@@ -19,17 +21,25 @@ export const revalidate = 3600;
 
 const PAGE_SIZE = 12;
 
-export default function BlogIndex({
+export default async function BlogIndex({
   searchParams,
 }: {
-  searchParams?: { page?: string };
+  // In Next 15+, searchParams is a Promise and must be awaited
+  searchParams?: Promise<{ page?: string }>;
 }) {
+  const sp = (await searchParams) ?? {};
+
+  // Normalize query-style pagination to the canonical path style
+  const requested = Number(sp.page ?? 1) || 1;
+  if (requested > 1) {
+    redirect(`/blog/page/${requested}`);
+  }
   const allPosts = (getAllPosts?.() ?? []) as Post[];
   const total = allPosts.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const page = Math.min(
     totalPages,
-    Math.max(1, Number(searchParams?.page ?? 1) || 1)
+    Math.max(1, requested)
   );
   const start = (page - 1) * PAGE_SIZE;
   const end = start + PAGE_SIZE;
