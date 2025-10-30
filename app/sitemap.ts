@@ -1,5 +1,6 @@
 // app/sitemap.ts (or root-level sitemap.ts depending on your setup)
 import { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blog";
 
 // Prefer env, fall back to your .store domain
 const base =
@@ -90,5 +91,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  return [...staticRoutes, ...guideRoutes];
+  const posts = getAllPosts();
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
+    url: `${base}/blog/${p.slug}`,
+    lastModified: new Date(p.date || now),
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
+  return [...staticRoutes, ...guideRoutes, ...blogRoutes];
 }

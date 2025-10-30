@@ -1,6 +1,6 @@
 // app/blog/[slug]/page.tsx
 import PostContainer from "@/components/PostContainer";
-import { getAllPosts, getPost } from "@/lib/blog";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { marked } from "marked";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -19,21 +19,12 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-
-  const md = getPost(slug);
-  if (!md) return {};
-
-  // --- front-matter parsing ---
-  const fm = md.match(/^---([\s\S]*?)---/m)?.[1] ?? "";
-  const title =
-    fm.match(/title:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    slug.replace(/-/g, " ");
-
-  // Extract meta_description from front-matter, fall back to excerpt
+  const parsed = getPostBySlug(slug);
+  if (!parsed) return {};
+  const { meta } = parsed;
+  const title = meta.title;
   const metaDescription =
-    fm.match(/meta_description:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    fm.match(/excerpt:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    "A practical financial guide from Foster Wealth Ventures";
+    meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
 
   return {
     title,
@@ -58,26 +49,14 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
 
-  const md = getPost(slug);
-  if (!md) return notFound();
+  const parsed = getPostBySlug(slug);
+  if (!parsed) return notFound();
+  const { meta, body } = parsed;
+  const title = meta.title;
+  const date = meta.date;
+  const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
 
-  // --- front-matter parsing ---
-  const fm = md.match(/^---([\s\S]*?)---/m)?.[1] ?? "";
-  const title =
-    fm.match(/title:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    slug.replace(/-/g, " ");
-  const date =
-    fm.match(/date:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    new Date().toISOString();
-
-  // Extract meta_description for JSON-LD, fall back to excerpt
-  const metaDescription =
-    fm.match(/meta_description:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    fm.match(/excerpt:\s*["']?(.+?)["']?\s*$/m)?.[1] ??
-    "A practical financial guide from Foster Wealth Ventures";
-
-  // strip front-matter + leading H1
-  const body = md.replace(/^---[\s\S]*?---\s*/m, "");
+  // strip leading H1 if present to avoid duplicate titles
   const cleanBody = body.replace(/^\s*#\s+.+?\n+/, "");
 
   // markdown → HTML

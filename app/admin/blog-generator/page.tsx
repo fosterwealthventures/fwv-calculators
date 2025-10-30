@@ -75,7 +75,10 @@ export default function BlogGeneratorDevUI() {
   const [intent, setIntent] = React.useState('');
   const [keywords, setKeywords] = React.useState('');
   const [metaDescription, setMetaDescription] = React.useState('');
+  const [metaTitle, setMetaTitle] = React.useState('');
   const [mainCalculator, setMainCalculator] = React.useState('');
+  const [ctaVariant, setCtaVariant] = React.useState<'pricing' | 'upgrade' | 'calculators'>('calculators');
+  const [schemaHowTo, setSchemaHowTo] = React.useState(false);
   const [options, setOptions] = React.useState<GenOptions>({
     template: 'howto',
     wordCountHint: 'standard',
@@ -287,14 +290,17 @@ export default function BlogGeneratorDevUI() {
               tone: tone,
               schema: options.schema,
               faqSchema: options.faqSchema,
+              schemaHowTo: schemaHowTo,
               internalLinks: options.internalLinks,
               cta: options.cta,
+              ctaVariant: ctaVariant,
               imageSuggestions: options.imageSuggestions,
               targetCalculators: options.targetCalculators,
               mainCalculator: mainCalculator.trim(),
               intent: intent.trim(),
               keywords: processedKeywords,
               meta_description: metaDescription.trim(),
+              meta_title: metaTitle.trim(),
             }
           };
 
@@ -507,6 +513,18 @@ export default function BlogGeneratorDevUI() {
           <div className="mt-1 text-xs text-gray-500 text-right">
             {metaDescription.length}/160 characters
           </div>
+          <div className="mt-4">
+            <label htmlFor="meta_title" className="block text-sm font-medium mb-2">Meta Title (optional)</label>
+            <input
+              id="meta_title"
+              className="w-full border rounded px-3 py-2 text-sm"
+              placeholder="Include main keyword and calculator, ~60 chars"
+              value={metaTitle}
+              onChange={(e) => setMetaTitle(e.target.value.slice(0, 60))}
+              maxLength={60}
+            />
+            <div className="mt-1 text-xs text-gray-500 text-right">{metaTitle.length}/60 characters</div>
+          </div>
           {metaDescription.trim() && !isMetaDescriptionValid && (
             <div className="mt-1 text-xs text-red-600">
               Meta description is required and must be 160 characters or less
@@ -568,9 +586,21 @@ Examples:
         <div className="grid grid-cols-2 gap-y-2">
           <label className="flex items-center gap-2"><input type="checkbox" checked={!!options.schema} onChange={() => toggle('schema')} />Schema Markup</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={!!options.faqSchema} onChange={() => toggle('faqSchema')} />FAQ Schema</label>
+          <label className="flex items-center gap-2"><input type="checkbox" checked={!!schemaHowTo} onChange={() => setSchemaHowTo(v => !v)} />HowTo Schema</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={!!options.internalLinks} onChange={() => toggle('internalLinks')} />Internal Links</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={!!options.cta} onChange={() => toggle('cta')} />Call-to-Action</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={!!options.imageSuggestions} onChange={() => toggle('imageSuggestions')} />Image Suggestions</label>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">CTA Variant</label>
+            <select className="w-full border rounded px-3 py-2 text-sm" value={ctaVariant} onChange={(e) => setCtaVariant(e.target.value as any)}>
+              <option value="calculators">Link to Calculators</option>
+              <option value="pricing">Link to Pricing</option>
+              <option value="upgrade">Link to Upgrade</option>
+            </select>
+          </div>
         </div>
 
         <div className="mt-4">

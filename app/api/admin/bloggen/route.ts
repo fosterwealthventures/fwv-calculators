@@ -16,16 +16,81 @@ type Body = {
     tone?: string;
     schema?: boolean;
     faqSchema?: boolean;
+    schemaHowTo?: boolean;
     internalLinks?: boolean;
     cta?: boolean;
+    ctaVariant?: 'pricing' | 'upgrade' | 'calculators';
     imageSuggestions?: boolean;
     targetCalculators?: string[];
     mainCalculator?: string;
     intent?: string;
     keywords?: string[];
     meta_description?: string;
+    meta_title?: string;
   };
 };
+
+const baseUrl = (process.env.SITE_URL || 'https://www.fosterwealthventures.store').replace(/\/+$/, '');
+
+function truncate(s: string, max = 160) {
+  const t = s.trim();
+  if (t.length <= max) return t;
+  return t.slice(0, max - 1).trimEnd() + '…';
+}
+
+function computeReadingTime(text: string) {
+  const words = (text || '').split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function extractSection(markdown: string, headingRe: RegExp) {
+  const lines = (markdown || '').split(/\r?\n/);
+  let inSection = false;
+  const out: string[] = [];
+  for (const line of lines) {
+    if (/^##\s+/.test(line)) {
+      if (inSection) break; // next H2 ends section
+      inSection = headingRe.test(line);
+      continue;
+    }
+    if (inSection) out.push(line);
+  }
+  return out.join('\n').trim();
+}
+
+function extractFaqs(markdown: string) {
+  const section = extractSection(markdown, /^##\s+faqs?/i);
+  if (!section) return [] as Array<{ question: string; answer: string }>;
+  const lines = section.split(/\r?\n/);
+  const faqs: Array<{ question: string; answer: string }> = [];
+  let currentQ: string | null = null;
+  let currentA: string[] = [];
+  for (const line of lines) {
+    const h3 = /^###\s+(.+)$/i.exec(line);
+    if (h3) {
+      if (currentQ) faqs.push({ question: currentQ, answer: currentA.join('\n').trim() });
+      currentQ = h3[1].trim();
+      currentA = [];
+    } else if (currentQ) {
+      if (/^##\s+/.test(line)) break; // safety
+      currentA.push(line);
+    }
+  }
+  if (currentQ) faqs.push({ question: currentQ, answer: currentA.join('\n').trim() });
+  return faqs.filter(f => f.question && f.answer);
+}
+
+function extractHowToSteps(markdown: string) {
+  const section = extractSection(markdown, /^##\s+how\s+to\s+use/i);
+  if (!section) return [] as string[];
+  const steps: string[] = [];
+  const lines = section.split(/\r?\n/);
+  for (const ln of lines) {
+    const m = /^\s*(?:[-*]|\d+[\.)])\s+(.+)$/.exec(ln);
+    if (m) steps.push(m[1].trim());
+  }
+  return steps.slice(0, 8);
+}
 
 function betterSlugify(s: string) {
   // lowercase, strip non-word, collapse spaces to hyphens, drop stopwords, trim to ~60 chars
@@ -263,17 +328,35 @@ export async function POST(req: Request) {
       .map(p => ({ title: p.title, slug: p.slug }));
 
     // internal links
+    const utm = (target: string) => `${target}${target.includes('?') ? '&' : '?'}utm_source=blog&utm_medium=link&utm_campaign=${slug}`;
     const internalLinksBlock =
       options.internalLinks && Array.isArray(options.targetCalculators) && options.targetCalculators.length
-        ? `\n\n### Try our calculators\n${options.targetCalculators.slice(0, 5).map(n => `- [${n}](/calculators)`).join('\n')}\n`
+        ? `\n\n### Try our calculators\n${options.targetCalculators.slice(0, 5).map(n => `- [${n}](${utm('/calculators')})`).join('\n')}\n`
         : '';
 
+    // contextual guide link by main calculator
+    const guideByCalc: Record<string, string> = {
+      'ROI Calculator': '/guide/roi',
+      'Break-even Calculator': '/guide/break-even',
+      'Mortgage Calculator': '/guide/mortgage',
+      'Simple vs Compound Interest Calculator': '/guide/simple-vs-compound-interest',
+      'Savings Growth Calculator': '/guide/savings-growth',
+      'Debt Payoff Calculator': '/guide/debt-payoff',
+      'Freelance Rate Calculator': '/guide/freelancer-rate',
+      'Restaurant Tips Calculator': '/guide/restaurant-tips-tabs-split',
+    };
+    const guideLinksBlock = (() => {
+      const link = guideByCalc[options?.mainCalculator || ''];
+      if (!link) return '';
+      return `\n\n### Learn the method\nSee our step-by-step guide: [${options?.mainCalculator}](${utm(link)})\n`;
+    })();
+
     const ctaBlock = options.cta
-      ? `\n\n---\n**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](/calculators), [Break-even Calculator](/calculators), or [Mortgage Calculator](/calculators).\n`
+      ? `\n\n---\n**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](${utm('/calculators')}), [Break-even Calculator](${utm('/calculators')}), or [Mortgage Calculator](${utm('/calculators')}).\n`
       : '';
 
     // Use meta_description if available, otherwise fall back to excerpt
-    const descriptionForSchema = options?.meta_description || excerpt;
+    const descriptionForSchema = truncate(options?.meta_description || excerpt, 160);
 
     const schemaBlock = options.schema ? `\n\n<script type="application/ld+json">
 ${JSON.stringify({
@@ -428,6 +511,11 @@ Make it immediately useful for someone searching for "${topic}". Include specifi
         }
       }
 
+      // Compute derived SEO fields
+      const metaTitle = (options?.meta_title || `${topic.trim()} | ${mainCalculator || 'Foster Wealth Calculators'}`).slice(0, 60);
+      const canonical = `${baseUrl}/blog/${slug}`;
+      const readingTime = computeReadingTime(finalContent);
+
       // Generate preview markdown (without schema blocks or title H1)
       markdown = `---
 title: "${title}"
@@ -440,11 +528,16 @@ main_calculator: "${mainCalculator}"
 intent: "${intent}"
 keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${metaDescription}"
+meta_title: "${metaTitle}"
+canonical: "${canonical}"
+og_image: "/blog/${slug}/opengraph-image"
+reading_time: ${readingTime}
+noindex: false
 ---
 
 ${finalContent}
 
-${internalLinksBlock}${ctaBlock}`;
+${internalLinksBlock}${guideLinksBlock}${ctaBlock}`;
 
       // Generate full markdown (with schema blocks for saving)
       fullMarkdown = `---
@@ -458,11 +551,16 @@ main_calculator: "${mainCalculator}"
 intent: "${intent}"
 keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${metaDescription}"
+meta_title: "${metaTitle}"
+canonical: "${canonical}"
+og_image: "/blog/${slug}/opengraph-image"
+reading_time: ${readingTime}
+noindex: false
 ---
 
 ${finalContent}
 
-${internalLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
+${internalLinksBlock}${guideLinksBlock}${ctaBlock}${schemaBlock}${faqBlock}`;
 
       // Run validation checks
       const spellCheck = basicSpellCheck(generatedContent);
@@ -556,6 +654,9 @@ ${internalLinksBlock}${ctaBlock}`;
         }
       }
 
+      const fallbackMetaTitle = (options?.meta_title || `${title} | ${fallbackMainCalculator || 'Foster Wealth Calculators'}`).slice(0, 60);
+      const canonical = `${baseUrl}/blog/${slug}`;
+      const readingTime = computeReadingTime(fallbackContent);
       // Fallback content if OpenAI fails
       markdown = `---
 title: "${title}"
@@ -567,7 +668,12 @@ tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${fallbackMainCalculator}"
 intent: "${fallbackIntent}"
 keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
-meta_description: "${fallbackMetaDescription}"
+meta_description: "${truncate(fallbackMetaDescription, 160)}"
+meta_title: "${fallbackMetaTitle}"
+canonical: "${canonical}"
+og_image: "/blog/${slug}/opengraph-image"
+reading_time: ${readingTime}
+noindex: false
 ---
 
 ${fallbackContent}`;
@@ -582,7 +688,12 @@ tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${fallbackMainCalculator}"
 intent: "${fallbackIntent}"
 keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
-meta_description: "${fallbackMetaDescription}"
+meta_description: "${truncate(fallbackMetaDescription, 160)}"
+meta_title: "${fallbackMetaTitle}"
+canonical: "${canonical}"
+og_image: "/blog/${slug}/opengraph-image"
+reading_time: ${readingTime}
+noindex: false
 ---
 
 ${fallbackContent}${schemaBlock}${faqBlock}`;

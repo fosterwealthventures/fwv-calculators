@@ -1,4 +1,4 @@
-// app/pricing/page.tsx — SERVER component (no "use client")
+// app/pricing/page.tsx — SERVER component (clean)
 import PriceClient from "./price-client";
 
 export const metadata = {
@@ -20,39 +20,7 @@ export default function PricingPage() {
   return (
     <main className="fwv-container py-6 space-y-6">
       <PriceClient />
-
-      {/* Deep-link CTAs: set plan cookie server-side then redirect to calculators */}
-      <section className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Plus (unlocks Savings + Debt; open Savings by default) */}
-        <a
-          className="card p-4 text-center hover:shadow-md transition"
-          href="/api/plan?to=plus&calc=savings"
-        >
-          See Plus calculators
-        </a>
-
-        {/* Pro (Pro Choice; choose which to open) */}
-        <a
-          className="card p-4 text-center hover:shadow-md transition"
-          href="/api/plan?to=pro&calc=employee-cost"
-        >
-          See Pro — Employee Cost
-        </a>
-        <a
-          className="card p-4 text-center hover:shadow-md transition"
-          href="/api/plan?to=pro&calc=expense-split-deluxe"
-        >
-          See Pro — Expense Split Deluxe
-        </a>
-
-        {/* Premium (everything; showcase your best) */}
-        <a
-          className="card p-4 text-center hover:shadow-md transition"
-          href="/api/plan?to=premium&calc=expense-split-deluxe"
-        >
-          See Premium calculators
-        </a>
-      </section>
+      {/* Removed legacy anchors to /api/plan */}
     </main>
   );
 }

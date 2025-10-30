@@ -1,5 +1,6 @@
 // app/layout.tsx
 import Header from "@/components/Header";
+import CmpBanner from "@/components/consent/CmpBanner";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -82,11 +83,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </Script>
         {/* Google AdSense verification + loader */}
         <meta name="google-adsense-account" content="ca-pub-7798339637698835" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7798339637698835"
-          crossOrigin="anonymous"
-        />
         {/* AdSense auto ads – ONE global tag only */}
         <Script
           id="adsbygoogle-init"
@@ -105,6 +101,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main" className="mx-auto max-w-6xl px-4 py-6">
             {children}
           </main>
+
+          {/* Simple in-house CMP banner (non-TCF) */}
+          <CmpBanner />
 
           <Footer />
         </EntitlementsProvider>

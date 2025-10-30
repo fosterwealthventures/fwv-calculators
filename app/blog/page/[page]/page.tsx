@@ -1,11 +1,10 @@
-// app/blog/page.tsx
+// app/blog/page/[page]/page.tsx
 import BlogCard from "@/components/BlogCard";
 import { getAllPosts } from "@/lib/blog";
 
-export const metadata = {
-  title: "Blog | Foster Wealth Calculators",
-  description: "Latest posts, guides, and updates.",
-};
+export const revalidate = 3600;
+
+const PAGE_SIZE = 12;
 
 type Post = {
   slug: string;
@@ -15,22 +14,21 @@ type Post = {
   tags?: string[];
   category?: string;
 };
-export const revalidate = 3600;
 
-const PAGE_SIZE = 12;
+export async function generateMetadata({ params }: { params: { page: string } }) {
+  const pageNum = Number(params.page || 1) || 1;
+  return {
+    title: `Blog — Page ${pageNum} | Foster Wealth Calculators`,
+    description: `Latest posts, page ${pageNum}.`,
+  };
+}
 
-export default function BlogIndex({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) {
+export default function BlogIndexPage({ params }: { params: { page: string } }) {
   const allPosts = (getAllPosts?.() ?? []) as Post[];
   const total = allPosts.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const page = Math.min(
-    totalPages,
-    Math.max(1, Number(searchParams?.page ?? 1) || 1)
-  );
+  const page = Math.min(totalPages, Math.max(1, Number(params.page || 1) || 1));
+
   const start = (page - 1) * PAGE_SIZE;
   const end = start + PAGE_SIZE;
   const posts = allPosts.slice(start, end);
@@ -39,9 +37,7 @@ export default function BlogIndex({
     <main className="mx-auto w-full max-w-6xl lg:max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-purple-title">Blog</h1>
       {!posts.length ? (
-        <p className="mt-6 text-sm text-neutral-600">
-          No posts yet. Add <code>.md</code>/<code>.mdx</code> files to <code>content/blog</code>.
-        </p>
+        <p className="mt-6 text-sm text-neutral-600">No posts on this page.</p>
       ) : (
         <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((p) => (
@@ -91,3 +87,4 @@ export default function BlogIndex({
     </main>
   );
 }
+
