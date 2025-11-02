@@ -42,10 +42,7 @@ export default function GuidePage() {
       />
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
 
-      {/* In-content ad (auto-gated to free contexts) */}
-      <div className="not-prose my-4">
-        <AdInContent />
-      </div>
+      {/* (ad moved lower to avoid spacing under title) */}
 
       <section>
         <h2>What it does</h2>
@@ -53,6 +50,11 @@ export default function GuidePage() {
           Turns your income goal, weeks off, billable hours, and overhead into a minimum hourly rate. Prevents the common error of dividing income by 2,000 hours.
         </p>
       </section>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-6">
+        <AdInContent />
+      </div>
 
       <section>
         <h2>How to use it</h2>

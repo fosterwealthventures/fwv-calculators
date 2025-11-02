@@ -20,12 +20,23 @@ const INCONTENT_SLOT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT;
 const INCONTENT_FORMAT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_FORMAT || "auto"; // "auto" or "fluid"
 const INCONTENT_LAYOUT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_LAYOUT; // e.g., "in-article" when format = fluid
 
+function hasAdsConsentCookie() {
+  if (typeof document === "undefined") return false;
+  try {
+    return /(?:^|; )fwv_cmp_ads=1(?:;|$)/.test(document.cookie);
+  } catch {
+    return false;
+  }
+}
+
 export function AdInContent() {
   const isPaidContext = useIsPaidContext();
   const { planId, hydrated } = useEntitlements();
   // Hide ads for any paid subscriber or paid context
   if (!hydrated) return null; // avoid flicker until we know plan
   if (planId !== "free" || isPaidContext) return null;
+  // Hide until the user has granted ads consent to avoid large empty placeholders
+  if (!hasAdsConsentCookie()) return null;
   useAdsensePush();
   if (!AD_CLIENT || !INCONTENT_SLOT) {
     // Render nothing if not configured; avoids validation errors during build.

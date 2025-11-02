@@ -1,5 +1,6 @@
 import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
+import Breadcrumb from "@/components/Breadcrumb";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdInContent } from "@/components/ads";
@@ -9,20 +10,7 @@ export const metadata: Metadata = {
     description: "Determine your sales volume to cover fixed and variable costs.",
 };
 
-function Breadcrumb() {
-    return (
-        <nav className="mb-4 text-sm text-gray-600">
-            <Link href="/" className="text-brand-green hover:underline">
-                Home
-            </Link>{" "}
-            &rsaquo;{" "}
-            <Link href="/guide" className="text-brand-green hover:underline">
-                Guides
-            </Link>{" "}
-            &rsaquo; <span>Break-Even</span>
-        </nav>
-    );
-}
+// Use shared Breadcrumb for consistency
 
 export default function GuidePage() {
     const pageUrl =
@@ -41,7 +29,7 @@ export default function GuidePage() {
 
     return (
         <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
-            <Breadcrumb />
+            <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/break-even", label: "Break-Even" }]} />
 
             <GuideHero
                 title="Break-Even — Guide"

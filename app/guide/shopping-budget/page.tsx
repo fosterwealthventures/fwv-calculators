@@ -1,6 +1,7 @@
 // app/guide/shopping-budget/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { AdInContent } from "@/components/ads";
 
 import { RelatedLink, RelatedSection } from "@/components/GuideLinks";
@@ -21,23 +22,10 @@ export const metadata: Metadata = {
         "A practical guide to planning your cart, including tax, and tracking what you have left. Add items, edit inline, and see remaining vs budget in real time.",
 };
 
-function Breadcrumb() {
-    return (
-        <NavText>
-            <Link href="/" className="text-brand-green hover:underline">
-                Home
-            </Link>{" "}
-            &rsaquo;{" "}
-            <Link href="/guide" className="text-brand-green hover:underline">
-                Guides
-            </Link>{" "}
-            &rsaquo; <span>Shopping Budget</span>
-        </NavText>
-    );
-}
+// Use shared breadcrumb component
 
 export default function ShoppingBudgetGuide() {
-    const pageUrl = "https://www.fosterwealthventures.com/guide/shopping-budget";
+    const pageUrl = "https://fosterwealthventures.store/guide/shopping-budget";
     const shareTitle = String(metadata.title ?? "");
 
     // FAQ / How-to for schema
@@ -102,7 +90,7 @@ export default function ShoppingBudgetGuide() {
     return (
         <main>
             {/* Navigation */}
-            <Breadcrumb />
+            <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/shopping-budget", label: "Shopping Budget" }]} />
 
             {/* Page Title */}
             <H1>Shopping Budget — Plan Your Cart & Stay Under Budget</H1>
@@ -111,11 +99,6 @@ export default function ShoppingBudgetGuide() {
             <p className="mt-2 text-sm text-gray-600">
                 Estimated reading time: 3–4 minutes
             </p>
-
-            {/* In-content ad (auto-gated to free contexts) */}
-            <div className="not-prose my-4">
-                <AdInContent />
-            </div>
 
             {/* Main content sections */}
             <Section>
@@ -173,6 +156,11 @@ export default function ShoppingBudgetGuide() {
             </Section>
 
             {/* CTA */}
+            {/* In-content ad moved lower to avoid large gap under the title */}
+            <div className="not-prose my-6">
+                <AdInContent />
+            </div>
+
             <CTAWrap>
                 <OpenCalculatorButton slug="shopping-budget" className="mt-2" />
                 <HelperText>

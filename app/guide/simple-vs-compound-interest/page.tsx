@@ -55,10 +55,7 @@ export default function GuidePage() {
 
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3 minutes</p>
 
-      {/* In-content ad (auto-gated to free contexts) */}
-      <div className="not-prose my-4">
-        <AdInContent />
-      </div>
+      {/* (ad moved lower to avoid spacing under title) */}
 
       {/* What it does */}
       <section>
@@ -86,6 +83,11 @@ export default function GuidePage() {
           </li>
         </ul>
       </section>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-6">
+        <AdInContent />
+      </div>
 
       {/* How to use it */}
       <section>

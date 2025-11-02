@@ -1,5 +1,6 @@
 import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
+import Breadcrumb from "@/components/Breadcrumb";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdInContent } from "@/components/ads";
@@ -9,20 +10,7 @@ export const metadata: Metadata = {
   description: "Payment, interest, and amortization explained.",
 };
 
-function Breadcrumb() {
-  return (
-    <nav className="mb-4 text-sm text-gray-600">
-      <Link href="/" className="text-brand-green hover:underline">
-        Home
-      </Link>{" "}
-      &rsaquo;{" "}
-      <Link href="/guide" className="text-brand-green hover:underline">
-        Guides
-      </Link>{" "}
-      &rsaquo; <span>Mortgage</span>
-    </nav>
-  );
-}
+// Use shared Breadcrumb for consistency
 
 export default function GuidePage() {
   const pageUrl =
@@ -41,7 +29,7 @@ export default function GuidePage() {
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
-      <Breadcrumb />
+      <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/mortgage", label: "Mortgage" }]} />
 
       <GuideHero
         title="Mortgage — Guide"
@@ -50,11 +38,7 @@ export default function GuidePage() {
       />
 
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
-
-      {/* In-content ad (auto-gated to free contexts) */}
-      <div className="not-prose my-4">
-        <AdInContent />
-      </div>
+      {/* (ad moved lower to avoid spacing under title) */}
 
       <section>
         <h2>What it does</h2>
@@ -62,6 +46,11 @@ export default function GuidePage() {
           Calculates monthly mortgage payments and shows how much goes toward principal vs interest over time.
         </p>
       </section>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-6">
+        <AdInContent />
+      </div>
 
       <section>
         <h2>Inputs</h2>
