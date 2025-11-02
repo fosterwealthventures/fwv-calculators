@@ -28,7 +28,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/break-even-made-simple";
+    "https://fosterwealthventures.store/guide/break-even-made-simple";
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">

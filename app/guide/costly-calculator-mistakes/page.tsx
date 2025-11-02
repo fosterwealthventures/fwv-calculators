@@ -33,7 +33,7 @@ function Breadcrumb() {
 
 export default function CostlyCalculatorMistakesGuide() {
   const pageUrl =
-    "https://fosterwealthventures.com/guide/costly-calculator-mistakes";
+    "https://fosterwealthventures.store/guide/costly-calculator-mistakes";
   const shareTitle = String(metadata.title ?? "");
 
   return (

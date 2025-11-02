@@ -28,7 +28,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/roi-vs-annualized-roi";
+    "https://fosterwealthventures.store/guide/roi-vs-annualized-roi";
   const shareTitle = String(metadata.title ?? "");
 
   const schema = {

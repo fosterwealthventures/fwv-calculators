@@ -25,7 +25,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
     const pageUrl =
-        "https://www.fosterwealthventures.com/guide/interest";
+        "https://fosterwealthventures.store/guide/interest";
     const shareTitle = String(metadata.title ?? "");
 
     const schema = {

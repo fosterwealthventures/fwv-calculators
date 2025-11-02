@@ -2,6 +2,7 @@ import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdInContent } from "@/components/ads";
 
 export const metadata: Metadata = {
   title: "Mortgage Guide",
@@ -25,7 +26,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/mortgage";
+    "https://fosterwealthventures.store/guide/mortgage";
   const shareTitle = String(metadata.title ?? "");
 
   const schema = {
@@ -49,6 +50,11 @@ export default function GuidePage() {
       />
 
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-4">
+        <AdInContent />
+      </div>
 
       <section>
         <h2>What it does</h2>

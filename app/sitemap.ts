@@ -5,7 +5,7 @@ import { getAllPosts } from "@/lib/blog";
 // Prefer env, fall back to your .store domain
 const base =
   process.env.SITE_URL?.replace(/\/+$/, "") ||
-  "https://www.fosterwealthventures.store";
+  "https://fosterwealthventures.store";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

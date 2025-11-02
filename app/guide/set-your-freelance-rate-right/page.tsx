@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdInContent } from "@/components/ads";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
@@ -27,7 +28,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/set-your-freelance-rate-right";
+    "https://fosterwealthventures.store/guide/set-your-freelance-rate-right";
   const shareTitle = String(metadata.title ?? "");
 
   // (Schemas retained if previously used)
@@ -40,6 +41,11 @@ export default function GuidePage() {
         icon={null}
       />
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-4">
+        <AdInContent />
+      </div>
 
       <section>
         <h2>What it does</h2>

@@ -32,7 +32,7 @@ function Breadcrumb() {
 
 export default function TipTabSplitGuide() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/restaurant-tip-tab-split";
+    "https://fosterwealthventures.store/guide/restaurant-tip-tab-split";
   const shareTitle = String(metadata.title ?? "");
 
   // FAQ / How-to for schema

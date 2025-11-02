@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdInContent } from "@/components/ads";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 import React from "react";
@@ -28,7 +29,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
   const pageUrl =
-    "https://www.fosterwealthventures.com/guide/simple-vs-compound-interest";
+    "https://fosterwealthventures.store/guide/simple-vs-compound-interest";
 
   const schema = {
     "@context": "https://schema.org",
@@ -53,6 +54,11 @@ export default function GuidePage() {
       />
 
       <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3 minutes</p>
+
+      {/* In-content ad (auto-gated to free contexts) */}
+      <div className="not-prose my-4">
+        <AdInContent />
+      </div>
 
       {/* What it does */}
       <section>

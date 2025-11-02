@@ -25,7 +25,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
     const pageUrl =
-        "https://www.fosterwealthventures.com/guide/split-by-order";
+        "https://fosterwealthventures.store/guide/split-by-order";
     const shareTitle = String(metadata.title ?? "");
 
     const schema = {

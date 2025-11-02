@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
+import { AdInContent } from "@/components/ads";
 
 export const revalidate = 60;
 
@@ -121,6 +122,9 @@ export default async function BlogPostPage({
       </section>
 
       {/* ARTICLE + TOC are fully handled inside PostContainer */}
+      <div className="mx-auto max-w-3xl px-4 py-4">
+        <AdInContent />
+      </div>
       <PostContainer>
         <div
           className="article prose lg:prose-lg dark:prose-invert max-w-none"

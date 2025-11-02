@@ -1,6 +1,7 @@
 // app/guide/shopping-budget/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdInContent } from "@/components/ads";
 
 import { RelatedLink, RelatedSection } from "@/components/GuideLinks";
 import GuideNav from "@/components/GuideNav";
@@ -110,6 +111,11 @@ export default function ShoppingBudgetGuide() {
             <p className="mt-2 text-sm text-gray-600">
                 Estimated reading time: 3–4 minutes
             </p>
+
+            {/* In-content ad (auto-gated to free contexts) */}
+            <div className="not-prose my-4">
+                <AdInContent />
+            </div>
 
             {/* Main content sections */}
             <Section>

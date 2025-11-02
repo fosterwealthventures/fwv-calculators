@@ -32,7 +32,7 @@ function Breadcrumb() {
 
 export default function SplitByOrderGuide() {
     const pageUrl =
-        "https://www.fosterwealthventures.com/guide/restaurant-split-by-order";
+        "https://fosterwealthventures.store/guide/restaurant-split-by-order";
     const shareTitle = String(metadata.title ?? "");
 
     // FAQ / How-to (also used for schema)

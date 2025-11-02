@@ -25,7 +25,7 @@ function Breadcrumb() {
 
 export default function GuidePage() {
     const pageUrl =
-        "https://www.fosterwealthventures.com/guide/freelancer-rate";
+        "https://fosterwealthventures.store/guide/freelancer-rate";
     const shareTitle = String(metadata.title ?? "");
 
     const schema = {
