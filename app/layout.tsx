@@ -63,6 +63,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `}
         </Script>
         {/* CMP → Consent Mode bridge */}
+        {/* Google Funding Choices (certified CMP) */}
+        <Script
+          id="gfc-loader"
+          async
+          strategy="beforeInteractive"
+          src={`https://fundingchoicesmessages.google.com/i/${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}?ers=1`}
+        />
         <Script id="cmp-bridge" strategy="afterInteractive">
           {`
   window.onCmpConsentUpdate = function (consent) {
@@ -84,11 +91,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Google AdSense verification + loader */}
         <meta name="google-adsense-account" content="ca-pub-7798339637698835" />
         {/* AdSense auto ads – ONE global tag only */}
-        <script
-          async
-          crossOrigin="anonymous"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
-        ></script>
+        {plan === "free" && (
+          <script
+            async
+            crossOrigin="anonymous"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
+          ></script>
+        )}
+        <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
