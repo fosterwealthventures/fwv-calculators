@@ -16,7 +16,7 @@ const nextConfig = {
 
     const csp = [
       "default-src 'self'",
-      // Allow Adsterra ads
+      // Allow Adsterra ads and PWA functionality
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pl27994832.effectivegatecpm.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https: https://pl27994832.effectivegatecpm.com",
