@@ -14,6 +14,10 @@ export default function ShoppingBudget() {
     const [name, setName] = useState<string>("");
     const [price, setPrice] = useState<string>("");
     const [qty, setQty] = useState<string>("1");
+    // Weight-based pricing states
+    const [weightName, setWeightName] = useState<string>("");
+    const [weight, setWeight] = useState<string>("");
+    const [pricePerPound, setPricePerPound] = useState<string>("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editPrice, setEditPrice] = useState<string>("");
     const [editQty, setEditQty] = useState<string>("");
@@ -31,6 +35,19 @@ export default function ShoppingBudget() {
         if (!name.trim() || isNaN(p) || p < 0 || isNaN(q) || q <= 0) return;
         setItems((prev: LineItem[]) => [...prev, { id: Date.now(), name: name.trim(), price: p, quantity: q }]);
         setName(""); setPrice(""); setQty("1");
+    }
+
+    function addWeightItem() {
+        const w = parseFloat(weight); const ppp = parseFloat(pricePerPound);
+        if (!weightName.trim() || isNaN(w) || w <= 0 || isNaN(ppp) || ppp < 0) return;
+        const totalPrice = w * ppp;
+        setItems((prev: LineItem[]) => [...prev, {
+            id: Date.now(),
+            name: `${weightName.trim()} (${w} lbs @ ${currency.format(ppp)}/lb)`,
+            price: totalPrice,
+            quantity: 1
+        }]);
+        setWeightName(""); setWeight(""); setPricePerPound("");
     }
     function startEdit(id: number) {
         const it = items.find((i: LineItem) => i.id === id);
@@ -84,6 +101,53 @@ export default function ShoppingBudget() {
                         <PlusCircle className="h-4 w-4" /> Add
                     </button>
                 </div>
+            </section>
+
+            <section className="mb-6 rounded-2xl border bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+                <h3 className="mb-3 text-lg font-medium text-neutral-700 dark:text-neutral-200">Price by Weight</h3>
+                <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">For items sold by the pound (produce, meat, deli, etc.)</p>
+                <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto]">
+                    <input
+                        value={weightName}
+                        onChange={(e) => setWeightName(e.target.value)}
+                        placeholder="Item name (e.g., Apples)"
+                        className="rounded-lg border px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
+                        onKeyDown={(e) => e.key === "Enter" && addWeightItem()}
+                        aria-label="Weight item name"
+                    />
+                    <input
+                        type="number"
+                        step="0.01"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="Weight (lbs)"
+                        className="rounded-lg border px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
+                        onKeyDown={(e) => e.key === "Enter" && addWeightItem()}
+                        aria-label="Weight in pounds"
+                    />
+                    <input
+                        type="number"
+                        step="0.01"
+                        value={pricePerPound}
+                        onChange={(e) => setPricePerPound(e.target.value)}
+                        placeholder="$/lb"
+                        className="rounded-lg border px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
+                        onKeyDown={(e) => e.key === "Enter" && addWeightItem()}
+                        aria-label="Price per pound"
+                    />
+                    <button
+                        onClick={addWeightItem}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-3 py-2 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
+                        aria-label="Add weight-based item"
+                    >
+                        <PlusCircle className="h-4 w-4" /> Add by Weight
+                    </button>
+                </div>
+                {weight && pricePerPound && (
+                    <div className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+                        Total: {currency.format(parseFloat(weight || "0") * parseFloat(pricePerPound || "0"))}
+                    </div>
+                )}
             </section>
 
             <section className="mb-6 overflow-hidden rounded-2xl border bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
