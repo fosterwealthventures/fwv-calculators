@@ -31,17 +31,14 @@ export default function PrivacyPage() {
           <li>Show ads and measure their performance (if enabled)</li>
         </ul>
 
-        <h2 className="text-xl font-semibold text-brand-green">Cookies & Google AdSense</h2>
+        <h2 className="text-xl font-semibold text-brand-green">Cookies & Advertising</h2>
         <p>
-          We may show ads served by Google. Google and its partners use cookies to serve and measure ads based on
-          your visits to this and other sites. You can manage your choices via our consent banner, and learn more
-          about how Google uses data here: {" "}
-          <a className="underline text-brand-green" href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
-            How Google uses information from sites or apps that use its services
-          </a>
-          . You can also control ad personalization at {" "}
-          <a className="underline text-brand-green" href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
-            Google Ads Settings
+          We may display advertisements on our site through third-party advertising partners. These partners may use cookies
+          and similar technologies to serve personalized ads based on your visits to this and other sites. You can manage your
+          choices via our consent banner. To learn more about how advertising networks use data and to opt out of personalized
+          advertising, you can visit the {" "}
+          <a className="underline text-brand-green" href="https://www.networkadvertising.org/choices/" target="_blank" rel="noopener noreferrer">
+            Network Advertising Initiative opt-out page
           </a>
           .
         </p>

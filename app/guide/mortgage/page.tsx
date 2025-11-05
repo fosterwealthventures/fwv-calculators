@@ -1,9 +1,8 @@
+import { AdInContent } from "@/components/ads";
+import Breadcrumb from "@/components/Breadcrumb";
 import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
-import Breadcrumb from "@/components/Breadcrumb";
 import type { Metadata } from "next";
-import Link from "next/link";
-import { AdInContent } from "@/components/ads";
 
 export const metadata: Metadata = {
   title: "Mortgage Guide",
@@ -47,7 +46,7 @@ export default function GuidePage() {
         </p>
       </section>
 
-      {/* In-content ad (auto-gated to free contexts) */}
+      {/* Native banner ad */}
       <div className="not-prose my-6">
         <AdInContent />
       </div>

@@ -6,12 +6,12 @@ export const IS_PROD = VERCEL_ENV === 'production';
 
 // Public (safe) values
 export const ADS_CLIENT =
-  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-7798339637698835';
+  process.env.NEXT_PUBLIC_AD_CLIENT || '';
 
 // Enable ads everywhere unless explicitly disabled
 export const ADS_ENABLED =
-  (process.env.NEXT_PUBLIC_ADSENSE_ENABLED ?? 'true') === 'true';
+  (process.env.NEXT_PUBLIC_ADS_ENABLED ?? 'false') === 'true';
 
-// Turn ad test ON for non-prod by default
+// Turn ad test OFF by default until new network is configured
 export const ADS_ADTEST =
-  process.env.NEXT_PUBLIC_ADSENSE_ADTEST || (IS_PROD ? 'off' : 'on');
+  process.env.NEXT_PUBLIC_ADS_ADTEST || 'off';

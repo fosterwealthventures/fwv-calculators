@@ -45,6 +45,16 @@ export default function AboutPage() {
           <li>Consistent UX with clear inputs/outputs</li>
         </ul>
       </section>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold text-brand-green">
+          Content Policy
+        </h2>
+        <p className="text-gray-700">
+          All content and calculators on Foster Wealth Ventures are created or reviewed by our editorial team.
+          We sometimes use AI tools for formatting or idea generation, but every piece is personally verified for accuracy and clarity before publication.
+        </p>
+      </section>
     </main>
   );
 }

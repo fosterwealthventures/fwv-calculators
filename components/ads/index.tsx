@@ -1,24 +1,13 @@
 "use client";
 // components/ads/index.tsx
-// Lightweight AdSense components. Requires a valid AdSense client and slot.
+// Ad components for Adsterra native banners
 
-import * as React from "react";
 import { useIsPaidContext } from "@/adHooks";
 import { useEntitlements } from "@/lib/entitlements-client";
+import * as React from "react";
 
-function useAdsensePush() {
-  React.useEffect(() => {
-    try {
-      // @ts-ignore
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {}
-  }, []);
-}
-
-const AD_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-const INCONTENT_SLOT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_SLOT;
-const INCONTENT_FORMAT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_FORMAT || "auto"; // "auto" or "fluid"
-const INCONTENT_LAYOUT = process.env.NEXT_PUBLIC_ADSENSE_INCONTENT_LAYOUT; // e.g., "in-article" when format = fluid
+const AD_CLIENT = process.env.NEXT_PUBLIC_AD_CLIENT;
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === 'true';
 
 function hasAdsConsentCookie() {
   if (typeof document === "undefined") return false;
@@ -32,26 +21,29 @@ function hasAdsConsentCookie() {
 export function AdInContent() {
   const isPaidContext = useIsPaidContext();
   const { planId, hydrated } = useEntitlements();
+
   // Hide ads for any paid subscriber or paid context
   if (!hydrated) return null; // avoid flicker until we know plan
   if (planId !== "free" || isPaidContext) return null;
-  // Hide until the user has granted ads consent to avoid large empty placeholders
-  if (!hasAdsConsentCookie()) return null;
-  useAdsensePush();
-  if (!AD_CLIENT || !INCONTENT_SLOT) {
-    // Render nothing if not configured; avoids validation errors during build.
-    return null;
-  }
+  if (!ADS_ENABLED || !AD_CLIENT) return null;
+
+  // Load Adsterra script and render container
+  React.useEffect(() => {
+    const script = document.createElement('script')
+    script.async = true
+    script.setAttribute('data-cfasync', 'false')
+    script.src = '//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js'
+
+    const container = document.getElementById('container-1ae6deb893d2fba7115c6c32ef705246')
+    if (container && !container.querySelector('script')) {
+      container.appendChild(script)
+    }
+  }, [])
+
   return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: "block", textAlign: "center", margin: "16px 0" }}
-      data-ad-client={AD_CLIENT}
-      data-ad-slot={INCONTENT_SLOT}
-      data-ad-format={INCONTENT_FORMAT}
-      data-ad-layout={INCONTENT_LAYOUT}
-      data-full-width-responsive="true"
-    />
+    <div className="adsterra-native-banner" style={{ textAlign: "center", margin: "16px 0" }}>
+      <div id="container-1ae6deb893d2fba7115c6c32ef705246"></div>
+    </div>
   );
 }
 

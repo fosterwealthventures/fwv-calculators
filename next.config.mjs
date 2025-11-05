@@ -1,5 +1,5 @@
 /* eslint-env node */
-// Final Next.js config with unified CSP for Google Ads/CMP + Analytics (ESM)
+// Next.js config with basic CSP (ready for ad network configuration)
 
 const isDev = process.env.NODE_ENV !== 'production';
 const isPreview = process.env.VERCEL_ENV === 'preview';
@@ -16,13 +16,13 @@ const nextConfig = {
 
     const csp = [
       "default-src 'self'",
-      // Allow Google Ads/CMP/Analytics and ad traffic quality endpoints
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com https://*.googlesyndication.com https://*.doubleclick.net https://adservice.google.com https://*.adtrafficquality.google https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://www.googletagservices.com",
+      // Allow Adsterra ads
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pl27994832.effectivegatecpm.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https: https://www.google-analytics.com https://stats.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net",
+      "img-src 'self' data: blob: https: https://pl27994832.effectivegatecpm.com",
       "font-src 'self' data: https:",
-      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.adtrafficquality.google https://fundingchoicesmessages.google.com",
-      "frame-src 'self' https://www.googletagmanager.com https://*.google.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://adservice.google.com https://fundingchoicesmessages.google.com",
+      "connect-src 'self' https://pl27994832.effectivegatecpm.com",
+      "frame-src 'self' https://pl27994832.effectivegatecpm.com",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
       "base-uri 'self'",
