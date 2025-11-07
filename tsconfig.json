@@ -7,8 +7,19 @@
       }
     ],
     "allowJs": false,
-    "lib": ["dom", "dom.iterable", "esnext"]
-
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
+    "types": [
+      "node",
+      "next-auth"
+    ]
   },
   "include": [
     "**/*.d.ts",
@@ -17,5 +28,14 @@
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": [".next","node_modules","dist","scripts/**","tests","e2e","**/*.spec.ts","**/*.spec.tsx"]
+  "exclude": [
+    ".next",
+    "node_modules",
+    "dist",
+    "scripts/**",
+    "tests",
+    "e2e",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

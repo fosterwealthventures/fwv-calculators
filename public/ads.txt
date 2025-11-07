@@ -1,1 +1,3 @@
-# Ads.txt file - will be updated when new ad network is approved
+# Ads.txt file for Adsterra
+# Adsterra
+effectivegatecpm.com, 5392069, DIRECT, f08c47fec0942fa0

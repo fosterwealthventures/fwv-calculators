@@ -1,6 +1,8 @@
 // app/pricing/price-client.tsx — CLIENT (sends { plan } to /api/checkout)
 "use client";
 
+import { SignInButton } from "@/components/auth/SignInButton";
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -52,6 +54,7 @@ export default function PriceClient() {
   const [cycle, setCycle] = useState<Billing>("mo");
   const params = useSearchParams();
   const redirectTo = params.get("redirect") || "/";
+  const { data: session, status } = useSession();
 
   const prices = useMemo(
     () =>
@@ -115,7 +118,12 @@ export default function PriceClient() {
             <li>Ads supported</li>
           </ul>
           <div className="mt-6">
-            <button className={btnPlum}>Try Free Tools</button>
+            <button
+              className={btnPlum}
+              onClick={() => window.location.href = '/'}
+            >
+              Try Free Tools
+            </button>
             <p className="mt-2 text-xs text-muted-foreground">Access the 7 free calculators</p>
           </div>
         </div>
@@ -142,14 +150,21 @@ export default function PriceClient() {
             </li>
           </ul>
           <div className="mt-6">
-            <button
-              className={btnPlum}
-              data-plan="plus"
-              onClick={() => startCheckout("plus", cycle)}
-              aria-label="Upgrade to Plus"
-            >
-              Upgrade to Plus
-            </button>
+            {session ? (
+              <button
+                className={btnPlum}
+                data-plan="plus"
+                onClick={() => startCheckout("plus", cycle)}
+                aria-label="Upgrade to Plus"
+              >
+                Upgrade to Plus
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-600">Sign in to upgrade your plan</p>
+                <SignInButton />
+              </div>
+            )}
             <p className="mt-2 text-xs text-muted-foreground">
               Remove ads & unlock Savings + Debt + Split by Order
             </p>
@@ -176,22 +191,31 @@ export default function PriceClient() {
             <li className="ml-4">• Expense Split Deluxe</li>
           </ul>
           <div className="mt-6 grid gap-3">
-            <button
-              className={btnPlum}
-              data-plan="pro_employee"
-              onClick={() => startCheckout("pro_employee", cycle)}
-              aria-label="Choose Pro – Employee Cost"
-            >
-              Choose Employee Cost
-            </button>
-            <button
-              className={btnPlum}
-              data-plan="pro_split"
-              onClick={() => startCheckout("pro_split", cycle)}
-              aria-label="Choose Pro – Expense Split Deluxe"
-            >
-              Choose Expense Split Deluxe
-            </button>
+            {session ? (
+              <>
+                <button
+                  className={btnPlum}
+                  data-plan="pro_employee"
+                  onClick={() => startCheckout("pro_employee", cycle)}
+                  aria-label="Choose Pro – Employee Cost"
+                >
+                  Choose Employee Cost
+                </button>
+                <button
+                  className={btnPlum}
+                  data-plan="pro_split"
+                  onClick={() => startCheckout("pro_split", cycle)}
+                  aria-label="Choose Pro – Expense Split Deluxe"
+                >
+                  Choose Expense Split Deluxe
+                </button>
+              </>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-600">Sign in to upgrade your plan</p>
+                <SignInButton />
+              </div>
+            )}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
             All Free + Plus calculators included
@@ -217,14 +241,21 @@ export default function PriceClient() {
             <li>Priority support</li>
           </ul>
           <div className="mt-6">
-            <button
-              className={btnPlum}
-              data-plan="premium"
-              onClick={() => startCheckout("premium", cycle)}
-              aria-label="Join Premium"
-            >
-              Join Premium
-            </button>
+            {session ? (
+              <button
+                className={btnPlum}
+                data-plan="premium"
+                onClick={() => startCheckout("premium", cycle)}
+                aria-label="Join Premium"
+              >
+                Join Premium
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-600">Sign in to upgrade your plan</p>
+                <SignInButton />
+              </div>
+            )}
             <p className="mt-2 text-xs text-muted-foreground">Full suite + priority support</p>
           </div>
         </div>

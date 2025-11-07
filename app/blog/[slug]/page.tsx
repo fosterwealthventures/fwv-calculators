@@ -1,12 +1,12 @@
 // app/blog/[slug]/page.tsx
+import { AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
-import { marked } from "marked";
+import marked from "marked";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
-import { AdInContent } from "@/components/ads";
 
 export const revalidate = 60;
 

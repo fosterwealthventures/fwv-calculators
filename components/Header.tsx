@@ -1,7 +1,10 @@
 // components/Header.tsx
 "use client";
 
+import { SignInButton } from "@/components/auth/SignInButton";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import HeaderNavCalculators from "@/components/HeaderNavCalculators";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -20,13 +23,19 @@ import { useEffect, useRef, useState } from "react";
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [calcOpen, setCalcOpen] = useState(false); // desktop dropdown
+  const [authOpen, setAuthOpen] = useState(false); // auth dropdown
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const authDropdownRef = useRef<HTMLDivElement>(null);
+  const { data: session, status } = useSession();
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setCalcOpen(false);
+      }
+      if (authDropdownRef.current && !authDropdownRef.current.contains(event.target as Node)) {
+        setAuthOpen(false);
       }
     }
 
@@ -103,6 +112,57 @@ export default function Header() {
           <HeaderLink href="/contact">Contact</HeaderLink>
           <HeaderLink href="/privacy">Privacy</HeaderLink>
           <HeaderLink href="/terms">Terms</HeaderLink>
+
+          {/* Authentication dropdown */}
+          <div className="relative inline-flex items-center" ref={authDropdownRef}>
+            <button
+              onClick={() => setAuthOpen((v) => !v)}
+              aria-expanded={authOpen}
+              aria-haspopup="menu"
+              className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white/90 hover:bg-white/10"
+            >
+              <span>{status === "loading" ? "Loading..." : session ? "Account" : "Sign In"}</span>
+              <svg viewBox="0 0 20 20" className={`h-4 w-4 transition ${authOpen ? "rotate-180" : ""}`}>
+                <path d="M5.5 7.5 10 12l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </button>
+
+            {/* Auth dropdown */}
+            {authOpen && (
+              <div
+                className="absolute right-0 top-full z-50 mt-2 min-w-[200px] max-h-[70vh] overflow-y-auto rounded-xl border border-neutral-200 bg-white text-neutral-900 shadow-xl p-4 pointer-events-auto"
+                onMouseLeave={() => setAuthOpen(false)}
+              >
+                {status === "loading" ? (
+                  <div className="flex items-center justify-center py-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                  </div>
+                ) : session ? (
+                  <div className="space-y-3">
+                    <div className="border-b border-gray-200 pb-2">
+                      <p className="text-sm font-medium text-gray-900 truncate">{session.user?.email}</p>
+                      <p className="text-xs text-gray-500">Signed in</p>
+                    </div>
+                    <Link
+                      href="/account"
+                      className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setAuthOpen(false)}
+                    >
+                      Account Settings
+                    </Link>
+                    <div className="pt-2 border-t border-gray-200">
+                      <SignOutButton />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-700">Sign in to access your subscription across devices</p>
+                    <SignInButton />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Mobile: hamburger */}
@@ -158,6 +218,32 @@ export default function Header() {
             <MobileLink href="/terms" onClick={() => setMobileOpen(false)}>
               Terms
             </MobileLink>
+
+            {/* Authentication section */}
+            <div className="border-t border-plum-800 mt-2 pt-2">
+              {status === "loading" ? (
+                <div className="flex items-center justify-center py-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                </div>
+              ) : session ? (
+                <div className="space-y-2">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-white truncate">{session.user?.email}</p>
+                    <p className="text-xs text-white/70">Signed in</p>
+                  </div>
+                  <MobileLink href="/account" onClick={() => setMobileOpen(false)}>
+                    Account Settings
+                  </MobileLink>
+                  <div className="px-3 py-2">
+                    <SignOutButton />
+                  </div>
+                </div>
+              ) : (
+                <div className="px-3 py-2">
+                  <SignInButton />
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       )}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adsterra Script Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Adsterra Script Test</h1>
+
+    <div class="container info">
+        <h2>Test Information</h2>
+        <p>This page tests if the Adsterra script loads and executes correctly.</p>
+        <p><strong>Site ID:</strong> 5392069</p>
+        <p><strong>Zone ID:</strong> 1ae6deb893d2fba7115c6c32ef705246</p>
+    </div>
+
+    <div class="container">
+        <h2>Ad Container</h2>
+        <div id="container-1ae6deb893d2fba7115c6c32ef705246">Loading ad...</div>
+    </div>
+
+    <div class="container info">
+        <h2>Debug Information</h2>
+        <div id="debug-info">Loading debug information...</div>
+    </div>
+
+    <script>
+        // Log when script starts loading
+        console.log('Starting Adsterra script test');
+
+        // Track script loading
+        let scriptLoaded = false;
+        let scriptExecuted = false;
+
+        // Create a function to update debug info
+        function updateDebugInfo() {
+            const debugInfo = document.getElementById('debug-info');
+            const container = document.getElementById('container-1ae6deb893d2fba7115c6c32ef705246');
+
+            debugInfo.innerHTML = `
+                <p><strong>Script Loaded:</strong> ${scriptLoaded ? 'Yes' : 'No'}</p>
+                <p><strong>Script Executed:</strong> ${scriptExecuted ? 'Yes' : 'No'}</p>
+                <p><strong>Container Found:</strong> ${container ? 'Yes' : 'No'}</p>
+                <p><strong>Container Content:</strong></p>
+                <pre>${container ? container.innerHTML : 'Container not found'}</pre>
+                <p><strong>Container Children Count:</strong> ${container ? container.children.length : 'N/A'}</p>
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                <p><strong>Cookies:</strong> ${document.cookie}</p>
+            `;
+        }
+
+        // Initial debug info
+        updateDebugInfo();
+
+        // Create and load the script
+        const script = document.createElement('script');
+        script.async = true;
+        script.setAttribute('data-cfasync', 'false');
+        script.src = '//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js';
+
+        // Track when script loads
+        script.onload = function () {
+            scriptLoaded = true;
+            console.log('Adsterra script loaded successfully');
+            updateDebugInfo();
+
+            // Check if script executed after a delay
+            setTimeout(function () {
+                const container = document.getElementById('container-1ae6deb893d2fba7115c6c32ef705246');
+                if (container && container.children.length > 0) {
+                    scriptExecuted = true;
+                    console.log('Adsterra script appears to have executed');
+                } else {
+                    console.log('Adsterra script loaded but may not have executed');
+                }
+                updateDebugInfo();
+            }, 3000);
+        };
+
+        // Track if script fails to load
+        script.onerror = function () {
+            console.error('Failed to load Adsterra script');
+            updateDebugInfo();
+        };
+
+        // Add script to page
+        document.head.appendChild(script);
+
+        // Update debug info every second for 10 seconds
+        let counter = 0;
+        const interval = setInterval(function () {
+            counter++;
+            updateDebugInfo();
+
+            if (counter >= 10) {
+                clearInterval(interval);
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>

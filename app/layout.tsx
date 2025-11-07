@@ -2,6 +2,7 @@
 import CmpBanner from "@/components/consent/CmpBanner";
 import Header from "@/components/Header";
 import PWAInstaller from "@/components/PWAInstaller";
+import { SessionProvider } from "@/components/SessionProvider";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -104,66 +105,68 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
-        <EntitlementsProvider>
-          <PWAInstaller />
-          <Header />
+        <SessionProvider>
+          <EntitlementsProvider>
+            <PWAInstaller />
+            <Header />
 
-          {/* PWA Install Banner */}
-          <div id="pwa-install-banner" className="bg-emerald-600 text-white p-3 text-center">
-            <div className="max-w-6xl mx-auto flex items-center justify-between">
-              <span>📱 Install Foster Wealth Calculators app for quick access!</span>
-              <div className="flex gap-2">
-                <button id="pwa-install-button" className="bg-white text-emerald-600 px-4 py-1 rounded font-medium hover:bg-emerald-50 transition-colors">
-                  Install App
-                </button>
-                <button id="pwa-install-manual" className="bg-emerald-700 text-white px-4 py-1 rounded font-medium hover:bg-emerald-800 transition-colors">
-                  How to Install
-                </button>
-                <button id="pwa-dismiss-button" className="text-white hover:text-emerald-200 px-2">
-                  ✕
+            {/* PWA Install Banner */}
+            <div id="pwa-install-banner" className="bg-emerald-600 text-white p-3 text-center">
+              <div className="max-w-6xl mx-auto flex items-center justify-between">
+                <span>📱 Install Foster Wealth Calculators app for quick access!</span>
+                <div className="flex gap-2">
+                  <button id="pwa-install-button" className="bg-white text-emerald-600 px-4 py-1 rounded font-medium hover:bg-emerald-50 transition-colors">
+                    Install App
+                  </button>
+                  <button id="pwa-install-manual" className="bg-emerald-700 text-white px-4 py-1 rounded font-medium hover:bg-emerald-800 transition-colors">
+                    How to Install
+                  </button>
+                  <button id="pwa-dismiss-button" className="text-white hover:text-emerald-200 px-2">
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* PWA Install Instructions Modal */}
+            <div id="pwa-instructions" className="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md mx-4">
+                <h3 className="text-lg font-bold mb-4">How to Install the App</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium">Chrome/Edge:</span>
+                    <span>Click the install icon (⊕) in the address bar or use the "Install App" button above</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium">Safari:</span>
+                    <span>Click the share icon (📤) and select "Add to Home Screen"</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium">Firefox:</span>
+                    <span>Click the menu icon (⋮) and select "Install"</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-medium">Mobile:</span>
+                    <span>Look for "Add to Home Screen" prompt in your browser</span>
+                  </div>
+                </div>
+                <button id="pwa-close-instructions" className="mt-4 w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700">
+                  Got it!
                 </button>
               </div>
             </div>
-          </div>
 
-          {/* PWA Install Instructions Modal */}
-          <div id="pwa-instructions" className="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-              <h3 className="text-lg font-bold mb-4">How to Install the App</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="font-medium">Chrome/Edge:</span>
-                  <span>Click the install icon (⊕) in the address bar or use the "Install App" button above</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="font-medium">Safari:</span>
-                  <span>Click the share icon (📤) and select "Add to Home Screen"</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="font-medium">Firefox:</span>
-                  <span>Click the menu icon (⋮) and select "Install"</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="font-medium">Mobile:</span>
-                  <span>Look for "Add to Home Screen" prompt in your browser</span>
-                </div>
-              </div>
-              <button id="pwa-close-instructions" className="mt-4 w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700">
-                Got it!
-              </button>
-            </div>
-          </div>
+            {/* Single column content (no ad sidebar) */}
+            <main id="main" className="mx-auto max-w-6xl px-4 py-6">
+              {children}
+            </main>
 
-          {/* Single column content (no ad sidebar) */}
-          <main id="main" className="mx-auto max-w-6xl px-4 py-6">
-            {children}
-          </main>
+            {/* Simple in-house CMP banner (non-TCF) */}
+            <CmpBanner />
 
-          {/* Simple in-house CMP banner (non-TCF) */}
-          <CmpBanner />
-
-          <Footer />
-        </EntitlementsProvider>
+            <Footer />
+          </EntitlementsProvider>
+        </SessionProvider>
       </body>
     </html>
   );
