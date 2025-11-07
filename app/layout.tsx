@@ -87,7 +87,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Ad network meta tags will be added when new network is approved */}
         {plan === "free" && (
           <>
-            {/* Ad scripts will be added when new ad network is configured */}
+            {/* Adsterra Banner Script */}
+            <Script id="adsterra-banner" strategy="afterInteractive">
+              {`
+                (function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.async = true;
+                  js.setAttribute('data-cfasync', 'false');
+                  js.src = '//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js';
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'adsterra-banner'));
+              `}
+            </Script>
           </>
         )}
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
@@ -159,6 +172,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {/* Single column content (no ad sidebar) */}
             <main id="main" className="mx-auto max-w-6xl px-4 py-6">
               {children}
+
+              {/* Adsterra Banner Container - only shown for free plan users */}
+              {plan === "free" && (
+                <div className="mt-8">
+                  <div id="container-1ae6deb893d2fba7115c6c32ef705246" className="adsterra-native-banner" style={{ textAlign: "center", margin: "16px 0", border: "1px dashed #ccc", padding: "10px" }}>
+                    Ad container - ads should appear here
+                  </div>
+                </div>
+              )}
             </main>
 
             {/* Simple in-house CMP banner (non-TCF) */}
