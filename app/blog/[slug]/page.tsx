@@ -61,7 +61,7 @@ export default async function BlogPostPage({
   const cleanBody = body.replace(/^\s*#\s+.+?\n+/, "");
 
   // markdown → HTML
-  const html = marked.parse(cleanBody, { breaks: true, gfm: true }) as string;
+  const html = marked.parse(cleanBody, { breaks: true, gfm: true });
 
   // light KaTeX hook
   const processedHtml = html
