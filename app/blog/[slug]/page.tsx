@@ -2,8 +2,7 @@
 import { AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
-import marked from "marked";
-import DOMPurify from "isomorphic-dompurify";
+// dynamic marked import at render time
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -20,28 +19,25 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const { slug } = params;
-  const parsed = getPostBySlug(slug);
-  if (!parsed) return {};
-  const { meta } = parsed;
-  const title = meta.title;
-  const metaDescription =
-    meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
+  try {
+    const { slug } = params;
+    const parsed = getPostBySlug(slug);
+    if (!parsed) return {};
+    const { meta } = parsed;
+    const title = meta.title;
+    const metaDescription =
+      meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
 
-  return {
-    title,
-    description: metaDescription,
-    openGraph: {
+    return {
       title,
       description: metaDescription,
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description: metaDescription,
-    },
-  };
+      openGraph: { title, description: metaDescription, type: "article" },
+      twitter: { card: "summary_large_image", title, description: metaDescription },
+    };
+  } catch (e) {
+    console.error("[blog] generateMetadata error:", e);
+    return {};
+  }
 }
 
 export default async function BlogPostPage({
@@ -56,15 +52,16 @@ export default async function BlogPostPage({
   const { meta, body } = parsed;
   const title = meta.title;
   const date = meta.date;
-  const metaDescription =
-    meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
+  const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
 
   // strip leading H1 if present to avoid duplicate titles
   const cleanBody = (body || "").replace(/^\s*#\s+.+?\n+/, "");
 
-  // server-safe sanitizer (DOMPurify with fallback)
+  // server-safe sanitizer (lazy require DOMPurify; fallback to minimal scrub)
   function sanitizeHtml(html: string): string {
     try {
+      const req: any = (eval as any)("require");
+      const DOMPurify = req("isomorphic-dompurify");
       return DOMPurify.sanitize(html ?? "", { USE_PROFILES: { html: true } });
     } catch (e) {
       try {
@@ -84,7 +81,10 @@ export default async function BlogPostPage({
   // Markdown to HTML with guards
   let html = "" as string;
   try {
-    html = marked.parse(cleanBody, { breaks: true, gfm: true }) as string;
+    const mod: any = await import("marked");
+    const m: any = mod.marked || mod.default || mod;
+    const parse = typeof m.parse === "function" ? m.parse.bind(m) : m;
+    html = parse(cleanBody, { breaks: true, gfm: true }) as string;
   } catch (e) {
     console.error("marked.parse failed for slug:", slug, e);
     html = "<p>Sorry, this article could not be rendered.</p>";
@@ -133,7 +133,7 @@ export default async function BlogPostPage({
         <div className="mx-auto max-w-7xl px-4 lg:px-6">
           <nav className="hero-breadcrumbs mb-3 text-sm text-white/70" aria-label="Breadcrumb">
             <Link href="/" className="text-white/90 hover:text-white underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-sm">Home</Link>
-            <span className="mx-2">›</span>
+            <span className="mx-2">&gt;</span>
             <Link href="/blog" className="text-white/90 hover:text-white underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-sm">Blog</Link>
           </nav>
 
