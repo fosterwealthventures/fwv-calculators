@@ -34,7 +34,13 @@ export default async function BlogIndex({
   if (requested > 1) {
     redirect(`/blog/page/${requested}`);
   }
-  const allPosts = (getAllPosts?.() ?? []) as Post[];
+  let allPosts: Post[] = [];
+  try {
+    allPosts = (getAllPosts?.() ?? []) as Post[];
+  } catch (e) {
+    console.error('[blog] index load failed:', e);
+    allPosts = [];
+  }
   const total = allPosts.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const page = Math.min(

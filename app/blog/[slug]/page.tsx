@@ -3,6 +3,7 @@ import { AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import marked from "marked";
+import DOMPurify from "isomorphic-dompurify";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,10 +34,10 @@ export async function generateMetadata({
     openGraph: {
       title,
       description: metaDescription,
-      type: 'article',
+      type: "article",
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description: metaDescription,
     },
@@ -55,18 +56,46 @@ export default async function BlogPostPage({
   const { meta, body } = parsed;
   const title = meta.title;
   const date = meta.date;
-  const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
+  const metaDescription =
+    meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
 
   // strip leading H1 if present to avoid duplicate titles
-  const cleanBody = body.replace(/^\s*#\s+.+?\n+/, "");
+  const cleanBody = (body || "").replace(/^\s*#\s+.+?\n+/, "");
 
-  // markdown → HTML
-  const html = marked.parse(cleanBody, { breaks: true, gfm: true });
+  // server-safe sanitizer (DOMPurify with fallback)
+  function sanitizeHtml(html: string): string {
+    try {
+      return DOMPurify.sanitize(html ?? "", { USE_PROFILES: { html: true } });
+    } catch (e) {
+      try {
+        let out = html || "";
+        out = out.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "");
+        out = out.replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "");
+        out = out.replace(/<(?:iframe|object|embed)[\s\S]*?>[\s\S]*?<\/(?:iframe|object|embed)>/gi, "");
+        out = out.replace(/(href|src)\s*=\s*(["'])\s*javascript:[^"']*\2/gi, '$1="#"');
+        out = out.replace(/\son[a-z]+\s*=\s*(["']).*?\1/gi, "");
+        return out;
+      } catch {}
+      console.error("sanitizeHtml failed", e);
+      return html;
+    }
+  }
 
-  // light KaTeX hook
-  const processedHtml = html
-    .replace(/\$\$([^$]+)\$\$/g, '<div data-katex-display>$1</div>')
-    .replace(/(?<!\\)\$([^$]+)\$/g, '<span data-katex-inline>$1</span>');
+  // Markdown to HTML with guards
+  let html = "" as string;
+  try {
+    html = marked.parse(cleanBody, { breaks: true, gfm: true }) as string;
+  } catch (e) {
+    console.error("marked.parse failed for slug:", slug, e);
+    html = "<p>Sorry, this article could not be rendered.</p>";
+  }
+
+  // light KaTeX hook then sanitize
+  const processedHtml = sanitizeHtml(
+    (html || "")
+      .replace(/\$\$([^$]+)\$\$/g, '<div data-katex-display>$1</div>')
+      .replace(/(?<!\\)\$([^$]+)\$/g, '<span data-katex-inline>$1</span>')
+  );
 
   return (
     <>
@@ -88,14 +117,14 @@ export default async function BlogPostPage({
       {/* JSON-LD Structured Data */}
       <Script id="article-json-ld" strategy="beforeInteractive" type="application/ld+json">
         {JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Article',
+          "@context": "https://schema.org",
+          "@type": "Article",
           headline: title,
           description: metaDescription,
-          author: { '@type': 'Organization', name: 'Foster Wealth Ventures' },
+          author: { "@type": "Organization", name: "Foster Wealth Ventures" },
           datePublished: date,
           dateModified: date,
-          image: '/fwv-logo-gold.svg',
+          image: "/fwv-logo-gold.svg",
         })}
       </Script>
 
@@ -108,9 +137,7 @@ export default async function BlogPostPage({
             <Link href="/blog" className="text-white/90 hover:text-white underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-sm">Blog</Link>
           </nav>
 
-          <p className="text-sm mb-2 text-plum-200/90">
-            {new Date(date).toLocaleDateString()}
-          </p>
+          <p className="text-sm mb-2 text-plum-200/90">{new Date(date).toLocaleDateString()}</p>
 
           <h1
             className="font-extrabold leading-tight drop-shadow-sm text-plum-200 md:text-plum-100"
