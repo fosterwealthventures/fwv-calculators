@@ -63,21 +63,21 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
 
   const pick = (re: RegExp) => fm.match(re)?.[1]?.trim();
 
-  const title = pick(/(^|\n)title:\s*["']?(.+?)["']?\s*$/m);
-  const date = pick(/(^|\n)date:\s*["']?(.+?)["']?\s*$/m);
-  const excerpt = pick(/(^|\n)excerpt:\s*["']?(.+?)["']?\s*$/m);
-  const meta_description = pick(/(^|\n)meta_description:\s*["']?(.+?)["']?\s*$/m);
-  const category = pick(/(^|\n)category:\s*["']?(.+?)["']?\s*$/m);
-  const draftStr = pick(/(^|\n)draft:\s*(true|false)\s*$/im);
+  const title = pick(/title:\s*"(.+?)"/m) || pick(/title:\s*'(.+?)'/m) || pick(/title:\s*(.+)/m);
+  const date = pick(/date:\s*"(.+?)"/m) || pick(/date:\s*'(.+?)'/m) || pick(/date:\s*(.+)/m);
+  const excerpt = pick(/excerpt:\s*"(.+?)"/m) || pick(/excerpt:\s*'(.+?)'/m) || pick(/excerpt:\s*(.+)/m);
+  const meta_description = pick(/meta_description:\s*"(.+?)"/m) || pick(/meta_description:\s*'(.+?)'/m) || pick(/meta_description:\s*(.+)/m);
+  const category = pick(/category:\s*"(.+?)"/m) || pick(/category:\s*'(.+?)'/m) || pick(/category:\s*(.+)/m);
+  const draftStr = pick(/draft:\s*(true|false)\s*/im);
   const draft = draftStr ? /^true$/i.test(draftStr) : false;
 
   // tags: ["a", "b"] on a single line
   const tagsRaw = pick(/(^|\n)\s*tags:\s*\[(.*?)\]\s*$/m);
   const tags = tagsRaw
     ? tagsRaw
-        .split(',')
-        .map((s) => s.replace(/^[\s"']+|[\s"']+$/g, ""))
-        .filter(Boolean)
+      .split(',')
+      .map((s) => s.replace(/^[\s"']+|[\s"']+$/g, ""))
+      .filter(Boolean)
     : undefined;
 
   return {

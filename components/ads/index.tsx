@@ -1,13 +1,15 @@
 "use client";
 // components/ads/index.tsx
-// Ad components for Adsterra native banners
+// Native banner loader with client-side reload on route changes
 
 import { useIsPaidContext } from "@/adHooks";
 import { useEntitlements } from "@/lib/entitlements-client";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 
 const AD_CLIENT = process.env.NEXT_PUBLIC_AD_CLIENT;
-const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === 'true';
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+const AD_BASE = "//pl27994832.effectivegatecpm.com";
 
 function hasAdsConsentCookie() {
   if (typeof document === "undefined") return false;
@@ -18,75 +20,73 @@ function hasAdsConsentCookie() {
   }
 }
 
+function appendAdScript(containerId: string) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // If the network exposes reload() on the container, prefer that
+  const maybeReload = (container as any).reload;
+  if (typeof maybeReload === "function") {
+    try {
+      maybeReload();
+      return; // reloaded successfully
+    } catch {}
+  }
+
+  // Fallback: re-append the invoke script
+  // Remove any existing script children to avoid duplicates
+  Array.from(container.querySelectorAll("script")).forEach((s) => s.remove());
+  const script = document.createElement("script");
+  script.async = true;
+  script.setAttribute("data-cfasync", "false");
+  script.src = `${AD_BASE}/${AD_CLIENT}/invoke.js`;
+  container.appendChild(script);
+}
+
 export function AdInContent() {
   const isPaidContext = useIsPaidContext();
   const { planId, hydrated } = useEntitlements();
+  const pathname = usePathname();
 
-  // Debug logging
+  const containerId = React.useMemo(() => `container-${AD_CLIENT}`, []);
+
+  // Eligibility checks
+  if (!hydrated) return null; // avoid flicker until we know plan
+  if (planId !== "free") return null; // no ads for paid plans
+  if (isPaidContext) return null; // suppress ads on paid-context pages
+  if (!ADS_ENABLED) return null;
+  if (!AD_CLIENT) return null;
+  if (!hasAdsConsentCookie()) return null;
+
+  // Initial mount: ensure a script is present
   React.useEffect(() => {
-    console.log('AdInContent Debug:', {
-      hydrated,
-      planId,
-      isPaidContext,
-      ADS_ENABLED,
-      AD_CLIENT,
-      hasAdsConsent: hasAdsConsentCookie(),
-      cookies: document.cookie
-    });
-  }, [hydrated, planId, isPaidContext]);
-
-  // Hide ads for any paid subscriber or paid context
-  if (!hydrated) {
-    console.log('AdInContent: Not hydrated yet');
-    return null; // avoid flicker until we know plan
-  }
-  if (planId !== "free") {
-    console.log('AdInContent: Not free plan, planId =', planId);
-    return null;
-  }
-  if (isPaidContext) {
-    console.log('AdInContent: In paid context');
-    return null;
-  }
-  if (!ADS_ENABLED) {
-    console.log('AdInContent: Ads not enabled');
-    return null;
-  }
-  if (!AD_CLIENT) {
-    console.log('AdInContent: No ad client configured');
-    return null;
-  }
-  if (!hasAdsConsentCookie()) {
-    console.log('AdInContent: No ads consent cookie');
-    return null;
-  }
-
-  // Load Adsterra script and render container
-  React.useEffect(() => {
-    console.log('AdInContent: Loading ad script');
-    const script = document.createElement('script')
-    script.async = true
-    script.setAttribute('data-cfasync', 'false')
-    script.src = '//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js'
-
-    const container = document.getElementById('container-1ae6deb893d2fba7115c6c32ef705246')
-    if (container && !container.querySelector('script')) {
-      console.log('AdInContent: Appending script to container');
-      container.appendChild(script)
-    } else {
-      console.log('AdInContent: Container not found or script already exists');
+    const container = document.getElementById(containerId);
+    if (container && !container.querySelector("script")) {
+      appendAdScript(containerId);
     }
-  }, [])
+  }, [containerId]);
+
+  // Client-side navigation: ask the container to reload or re-append the script
+  React.useEffect(() => {
+    if (!pathname) return;
+    appendAdScript(containerId);
+  }, [pathname, containerId]);
 
   return (
-    <div className="adsterra-native-banner" style={{ textAlign: "center", margin: "16px 0", border: "1px dashed #ccc", padding: "10px" }}>
-      <div id="container-1ae6deb893d2fba7115c6c32ef705246">Ad container - ads should appear here</div>
+    <div
+      className="adsterra-native-banner"
+      style={{ textAlign: "center", margin: "16px 0", border: "1px dashed #ccc", padding: "10px" }}
+    >
+      <div id={containerId}>Ad container - ads should appear here</div>
     </div>
   );
 }
 
-export function AdBannerTop() { return null; }
-export function AdFooter() { return null; }
+export function AdBannerTop() {
+  return null;
+}
+export function AdFooter() {
+  return null;
+}
 
 export function AdGateFreeOnly({ children }: { children?: React.ReactNode }) {
   const isPaidContext = useIsPaidContext();
