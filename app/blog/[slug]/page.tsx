@@ -2,7 +2,7 @@
 import { AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
-import marked from "marked";
+import { marked } from "marked";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,9 +17,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
   const parsed = getPostBySlug(slug);
   if (!parsed) return {};
   const { meta } = parsed;
@@ -46,9 +46,9 @@ export async function generateMetadata({
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
 
   const parsed = getPostBySlug(slug);
   if (!parsed) return notFound();

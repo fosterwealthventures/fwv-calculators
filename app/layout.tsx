@@ -85,13 +85,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 `}
         </Script>
-        {/* Ad network meta tags will be added when new network is approved */}
-        {plan === "free" && (
-          <>
-            {/* Adsterra Banner Script */}
-            <Script id="adsterra-banner" strategy="afterInteractive" src="//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js" data-cfasync="false" />
-          </>
-        )}
+        {/* Ad network meta tags will be added when new network is approved.
+            Runtime ad loading is handled in components/ads; avoid injecting here to prevent duplicate scripts. */}
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
 
         {/* PWA Meta Tags */}
