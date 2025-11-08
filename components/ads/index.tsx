@@ -11,6 +11,15 @@ const AD_CLIENT = process.env.NEXT_PUBLIC_AD_CLIENT;
 const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 const AD_BASE = "//pl27994832.effectivegatecpm.com";
 
+function queryParam(name: string): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return new URLSearchParams(window.location.search).get(name);
+  } catch {
+    return null;
+  }
+}
+
 function hasAdsConsentCookie() {
   if (typeof document === "undefined") return false;
   try {
@@ -21,25 +30,28 @@ function hasAdsConsentCookie() {
 }
 
 function appendAdScript(containerId: string) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  // If the network exposes reload() on the container, prefer that
-  const maybeReload = (container as any).reload;
-  if (typeof maybeReload === "function") {
-    try {
-      maybeReload();
-      return; // reloaded successfully
-    } catch {}
-  }
+  try {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    // If the network exposes reload() on the container, prefer that
+    const maybeReload = (container as any).reload;
+    if (typeof maybeReload === "function") {
+      try {
+        maybeReload();
+        return; // reloaded successfully
+      } catch {}
+    }
 
-  // Fallback: re-append the invoke script
-  // Remove any existing script children to avoid duplicates
-  Array.from(container.querySelectorAll("script")).forEach((s) => s.remove());
-  const script = document.createElement("script");
-  script.async = true;
-  script.setAttribute("data-cfasync", "false");
-  script.src = `${AD_BASE}/${AD_CLIENT}/invoke.js`;
-  container.appendChild(script);
+    // Fallback: re-append the invoke script
+    Array.from(container.querySelectorAll("script")).forEach((s) => s.remove());
+    const script = document.createElement("script");
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+    script.src = `${AD_BASE}/${AD_CLIENT}/invoke.js`;
+    container.appendChild(script);
+  } catch (e) {
+    console.error("AdInContent appendAdScript error", e);
+  }
 }
 
 export function AdInContent() {
@@ -54,6 +66,10 @@ export function AdInContent() {
   if (planId !== "free") return null; // no ads for paid plans
   if (isPaidContext) return null; // suppress ads on paid-context pages
   if (!ADS_ENABLED) return null;
+  // Query kill switch: ?ads=0 or ?noads=1
+  const qpAds = queryParam("ads");
+  const qpNoAds = queryParam("noads");
+  if (qpAds === "0" || qpNoAds === "1") return null;
   if (!AD_CLIENT) return null;
   if (!hasAdsConsentCookie()) return null;
 
@@ -94,6 +110,33 @@ export function AdGateFreeOnly({ children }: { children?: React.ReactNode }) {
   if (!hydrated) return null;
   if (planId !== "free" || isPaidContext) return null;
   return <>{children}</>;
+}
+
+// Simple error boundary to prevent a bad ad load from crashing the app UI
+class AdErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(err: any) {
+    console.error("Ad component crashed", err);
+  }
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children as any;
+  }
+}
+
+// Guarded export for use in layout/pages
+export function AdInContentSafe() {
+  return (
+    <AdErrorBoundary>
+      <AdInContent />
+    </AdErrorBoundary>
+  );
 }
 
 export default {};

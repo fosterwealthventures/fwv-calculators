@@ -1,5 +1,5 @@
 // app/layout.tsx
-import { AdInContent } from "@/components/ads";
+import { AdInContentSafe } from "@/components/ads";
 import CmpBanner from "@/components/consent/CmpBanner";
 import Header from "@/components/Header";
 import PWAInstaller from "@/components/PWAInstaller";
@@ -7,7 +7,7 @@ import { SessionProvider } from "@/components/SessionProvider";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import Script from "next/script"; // ← added
+import Script from "next/script";
 import React from "react";
 import "./globals.css";
 
@@ -30,7 +30,7 @@ function Footer() {
   return (
     <footer className="w-full border-t mt-10">
       <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600 flex flex-wrap gap-4 items-center justify-between">
-        <div>© {new Date().getFullYear()} Foster Wealth Ventures</div>
+        <div>&copy; {new Date().getFullYear()} Foster Wealth Ventures</div>
         <div className="flex flex-wrap gap-4">
           <a className="hover:text-emerald-800" href="/about">About</a>
           <a className="hover:text-emerald-800" href="/blog">Blog</a>
@@ -49,11 +49,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-plan={plan}>
       <head>
-        {/* Google Consent Mode v2 — DEFAULTS (must run before any ads/analytics) */}
+        {/* Google Consent Mode v2 DEFAULTS (must run before any ads/analytics) */}
         <Script id="consent-defaults" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){window.dataLayer.push(arguments);}
+            function gtag(){window.dataLayer.push(arguments);} 
             gtag('consent','default',{
               'ad_storage':'denied',
               'ad_user_data':'denied',
@@ -66,7 +66,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `}
         </Script>
         {/* CMP → Consent Mode bridge */}
-        {/* Consent management will be configured with new ad network */}
         <Script id="cmp-bridge" strategy="afterInteractive">
           {`
   window.onCmpConsentUpdate = function (consent) {
@@ -74,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       var ads = !!(consent && consent.ads);
       var analytics = !!(consent && consent.analytics);
       window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);}
+      function gtag(){window.dataLayer.push(arguments);} 
       gtag('consent','update',{
         ad_storage: ads ? 'granted' : 'denied',
         ad_user_data: ads ? 'granted' : 'denied',
@@ -83,10 +82,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       });
     } catch(e){}
   };
-`}
+          `}
         </Script>
-        {/* Ad network meta tags will be added when new network is approved.
-            Runtime ad loading is handled in components/ads; avoid injecting here to prevent duplicate scripts. */}
+        {/* Ad meta placeholders only. Runtime ad loading is handled in components/ads. */}
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
 
         {/* PWA Meta Tags */}
@@ -98,7 +96,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="application-name" content="Foster Wealth Calculators" />
         <meta name="msapplication-TileColor" content="#059669" />
         <meta name="theme-color" content="#059669" />
-
       </head>
 
       <body className="min-h-screen bg-neutral-50 text-gray-900" suppressHydrationWarning>
@@ -110,7 +107,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {/* PWA Install Banner */}
             <div id="pwa-install-banner" className="bg-emerald-600 text-white p-3 text-center">
               <div className="max-w-6xl mx-auto flex items-center justify-between">
-                <span>📱 Install Foster Wealth Calculators app for quick access!</span>
+                <span>Install Foster Wealth Calculators app for quick access!</span>
                 <div className="flex gap-2">
                   <button id="pwa-install-button" className="bg-white text-emerald-600 px-4 py-1 rounded font-medium hover:bg-emerald-50 transition-colors">
                     Install App
@@ -118,9 +115,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <button id="pwa-install-manual" className="bg-emerald-700 text-white px-4 py-1 rounded font-medium hover:bg-emerald-800 transition-colors">
                     How to Install
                   </button>
-                  <button id="pwa-dismiss-button" className="text-white hover:text-emerald-200 px-2">
-                    ✕
-                  </button>
+                  <button id="pwa-dismiss-button" className="text-white hover:text-emerald-200 px-2">×</button>
                 </div>
               </div>
             </div>
@@ -132,15 +127,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start gap-2">
                     <span className="font-medium">Chrome/Edge:</span>
-                    <span>Click the install icon (⊕) in the address bar or use the "Install App" button above</span>
+                    <span>Click the install icon in the address bar or use the "Install App" button above</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-medium">Safari:</span>
-                    <span>Click the share icon (📤) and select "Add to Home Screen"</span>
+                    <span>Click the share icon and select "Add to Home Screen"</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-medium">Firefox:</span>
-                    <span>Click the menu icon (⋮) and select "Install"</span>
+                    <span>Click the menu icon and select "Install"</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-medium">Mobile:</span>
@@ -157,8 +152,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <main id="main" className="mx-auto max-w-6xl px-4 py-6">
               {children}
 
-              {/* Adsterra Banner - only shown for free plan users */}
-              {plan === "free" && <AdInContent />}
+              {/* Adsterra Banner - guarded and feature-flagged in component */}
+              {plan === "free" && <AdInContentSafe />}
             </main>
 
             {/* Simple in-house CMP banner (non-TCF) */}
@@ -171,3 +166,4 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   );
 }
+
