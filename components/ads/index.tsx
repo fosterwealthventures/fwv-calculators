@@ -60,8 +60,8 @@ export function AdInContent() {
   const pathname = usePathname();
 
   const containerId = React.useMemo(() => `container-${AD_CLIENT}`, []);
-
   // Eligibility checks
+  if (pathname?.startsWith("/blog")) return null;
   if (!hydrated) return null; // avoid flicker until we know plan
   if (planId !== "free") return null; // no ads for paid plans
   if (isPaidContext) return null; // suppress ads on paid-context pages

@@ -1,5 +1,5 @@
 // app/blog/[slug]/page.tsx
-import { AdInContent } from "@/components/ads";
+import { AdInContentSafe as AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 // dynamic marked import at render time
@@ -90,12 +90,16 @@ export default async function BlogPostPage({
     html = "<p>Sorry, this article could not be rendered.</p>";
   }
 
-  // light KaTeX hook then sanitize
-  const processedHtml = sanitizeHtml(
-    (html || "")
-      .replace(/\$\$([^$]+)\$\$/g, '<div data-katex-display>$1</div>')
-      .replace(/(?<!\\)\$([^$]+)\$/g, '<span data-katex-inline>$1</span>')
-  );
+  // light KaTeX hook then sanitize (avoid lookbehind for compatibility)
+  let processedHtml = "";
+  try {
+    const withBlocks = (html || "").replace(/\$\$([^$]+)\$\$/g, '<div data-katex-display>$1</div>');
+    const withInline = withBlocks.replace(/(^|[^\\])\$([^$]+)\$/g, (_m, p1, p2) => `${p1}<span data-katex-inline>${p2}</span>`);
+    processedHtml = sanitizeHtml(withInline);
+  } catch (e) {
+    console.error("[blog] postprocess failed for slug:", slug, e);
+    processedHtml = sanitizeHtml(html || "");
+  }
 
   return (
     <>
