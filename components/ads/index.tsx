@@ -9,7 +9,8 @@ import * as React from "react";
 
 const AD_CLIENT = process.env.NEXT_PUBLIC_AD_CLIENT;
 const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
-const AD_BASE = "//pl27994832.effectivegatecpm.com";
+// Use explicit HTTPS so CSP in dev/prod allows the script load
+const AD_BASE = "https://pl27994832.effectivegatecpm.com";
 
 function queryParam(name: string): string | null {
   if (typeof window === "undefined") return null;

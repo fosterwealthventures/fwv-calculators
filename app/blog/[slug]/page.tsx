@@ -27,12 +27,23 @@ export async function generateMetadata({
     const title = meta.title;
     const metaDescription =
       meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
+    const ogImage = meta.og_image || meta.image;
 
     return {
       title,
       description: metaDescription,
-      openGraph: { title, description: metaDescription, type: "article" },
-      twitter: { card: "summary_large_image", title, description: metaDescription },
+      openGraph: {
+        title,
+        description: metaDescription,
+        type: "article",
+        images: ogImage ? [{ url: ogImage }] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description: metaDescription,
+        images: ogImage ? [ogImage] : undefined,
+      },
     };
   } catch (e) {
     console.error("[blog] generateMetadata error:", e);
@@ -53,6 +64,7 @@ export default async function BlogPostPage({
   const title = meta.title;
   const date = meta.date;
   const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
+  const ogImage = meta.og_image || meta.image || "/fwv-logo-gold.svg";
 
   // strip leading H1 if present to avoid duplicate titles
   const cleanBody = (body || "").replace(/^\s*#\s+.+?\n+/, "");
@@ -128,7 +140,7 @@ export default async function BlogPostPage({
           author: { "@type": "Organization", name: "Foster Wealth Ventures" },
           datePublished: date,
           dateModified: date,
-          image: "/fwv-logo-gold.svg",
+          image: { "@type": "ImageObject", url: ogImage, caption: meta.image_alt || title },
         })}
       </Script>
 
@@ -149,6 +161,16 @@ export default async function BlogPostPage({
           >
             {title}
           </h1>
+          {meta.image && (
+            <div className="mt-6">
+              <img
+                src={meta.image}
+                alt={meta.image_alt || title}
+                className="w-full max-w-4xl rounded-lg border border-white/10 shadow-md"
+                style={{ aspectRatio: "16/9", objectFit: "cover" }}
+              />
+            </div>
+          )}
         </div>
       </section>
 

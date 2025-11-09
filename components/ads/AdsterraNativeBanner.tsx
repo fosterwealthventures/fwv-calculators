@@ -12,7 +12,8 @@ export default function AdsterraNativeBanner({ className = '' }: AdsterraNativeB
         const script = document.createElement('script')
         script.async = true
         script.setAttribute('data-cfasync', 'false')
-        script.src = '//pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js'
+        // Use explicit HTTPS to satisfy CSP locally and in production
+        script.src = 'https://pl27994832.effectivegatecpm.com/1ae6deb893d2fba7115c6c32ef705246/invoke.js'
 
         // Find the container and append the script
         const container = document.getElementById('container-1ae6deb893d2fba7115c6c32ef705246')

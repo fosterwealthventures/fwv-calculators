@@ -19,6 +19,9 @@ export type PostMeta = {
   tags?: string[];
   category?: string;
   meta_description?: string;
+  image?: string;
+  og_image?: string;
+  image_alt?: string;
 };
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
@@ -50,6 +53,9 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
           : undefined,
         category: data.category,
         meta_description: data.meta_description,
+        image: data.image,
+        og_image: data.og_image,
+        image_alt: data.image_alt,
       };
       return { meta, body };
     } catch {
@@ -62,17 +68,30 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
   const body = raw.replace(/^---[\s\S]*?---\s*/m, "");
 
   const pick = (re: RegExp) => fm.match(re)?.[1]?.trim();
+  const pickLoose = (key: string) => {
+    const m = fm.match(new RegExp(`^\\s*${key}\\s*:\\s*(.+)$`, 'm'));
+    if (!m) return undefined;
+    let v = m[1].trim();
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+      v = v.slice(1, -1);
+    }
+    v = v.replace(/\uFFFD|�/g, '');
+    return v.trim();
+  };
 
-  const title = pick(/title:\s*"(.+?)"/m) || pick(/title:\s*'(.+?)'/m) || pick(/title:\s*(.+)/m);
-  const date = pick(/date:\s*"(.+?)"/m) || pick(/date:\s*'(.+?)'/m) || pick(/date:\s*(.+)/m);
-  const excerpt = pick(/excerpt:\s*"(.+?)"/m) || pick(/excerpt:\s*'(.+?)'/m) || pick(/excerpt:\s*(.+)/m);
-  const meta_description = pick(/meta_description:\s*"(.+?)"/m) || pick(/meta_description:\s*'(.+?)'/m) || pick(/meta_description:\s*(.+)/m);
-  const category = pick(/category:\s*"(.+?)"/m) || pick(/category:\s*'(.+?)'/m) || pick(/category:\s*(.+)/m);
+  const title = pick(/title:\s*"([\s\S]+?)"/m) || pick(/title:\s*'([\s\S]+?)'/m) || pickLoose('title');
+  const date = pick(/date:\s*"([\s\S]+?)"/m) || pick(/date:\s*'([\s\S]+?)'/m) || pickLoose('date');
+  const excerpt = pick(/excerpt:\s*"([\s\S]+?)"/m) || pick(/excerpt:\s*'([\s\S]+?)'/m) || pickLoose('excerpt');
+  const meta_description = pick(/meta_description:\s*"([\s\S]+?)"/m) || pick(/meta_description:\s*'([\s\S]+?)'/m) || pickLoose('meta_description');
+  const category = pick(/category:\s*"([\s\S]+?)"/m) || pick(/category:\s*'([\s\S]+?)'/m) || pickLoose('category');
+  const image = pick(/image:\s*"([\s\S]+?)"/m) || pick(/image:\s*'([\s\S]+?)'/m) || pickLoose('image');
+  const og_image = pick(/og_image:\s*"([\s\S]+?)"/m) || pick(/og_image:\s*'([\s\S]+?)'/m) || pickLoose('og_image');
+  const image_alt = pick(/image_alt:\s*"([\s\S]+?)"/m) || pick(/image_alt:\s*'([\s\S]+?)'/m) || pickLoose('image_alt');
   const draftStr = pick(/draft:\s*(true|false)\s*/im);
   const draft = draftStr ? /^true$/i.test(draftStr) : false;
 
   // tags: ["a", "b"] on a single line
-  const tagsRaw = pick(/(^|\n)\s*tags:\s*\[(.*?)\]\s*$/m);
+  const tagsRaw = pick(/(^|\n)\s*tags:\s*\[(.*?)\]\s*$/m) || pickLoose('tags');
   const tags = tagsRaw
     ? tagsRaw
       .split(',')
@@ -81,7 +100,7 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
     : undefined;
 
   return {
-    meta: { title, date, excerpt, draft, tags, category, meta_description },
+    meta: { title, date, excerpt, draft, tags, category, meta_description, image, og_image, image_alt },
     body,
   };
 }
@@ -123,6 +142,9 @@ export function getAllPosts(): PostMeta[] {
         tags: meta.tags,
         category: meta.category,
         meta_description: meta.meta_description,
+        image: meta.image,
+        og_image: meta.og_image,
+        image_alt: meta.image_alt,
       };
       return pm;
     })
@@ -159,6 +181,9 @@ export function getPostBySlug(slug: string): { meta: PostMeta; body: string } | 
     tags: meta.tags,
     category: meta.category,
     meta_description: meta.meta_description,
+    image: meta.image,
+    og_image: meta.og_image,
+    image_alt: meta.image_alt,
   };
   return { meta: fullMeta, body };
 }

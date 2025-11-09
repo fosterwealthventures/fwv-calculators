@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   description:
     "Free and premium financial calculators by Foster Wealth Ventures. Upgrade to unlock advanced calculators.",
   icons: { icon: "/favicon.ico" },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.fosterwealthventures.store"),
 };
 
 type Plan = "free" | "plus" | "pro" | "premium";
@@ -166,4 +167,3 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   );
 }
-

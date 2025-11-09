@@ -8,12 +8,24 @@ interface BlogCardProps {
     excerpt?: string;
     tags?: string[];
     category?: string;
+    image?: string;
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, category }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, category, image }: BlogCardProps) {
     return (
-        <div className="card-regal p-5 hover:shadow-regalGlow transition">
+        <div className="card-regal p-0 hover:shadow-regalGlow transition overflow-hidden">
             <Link href={`/blog/${slug}`} className="block">
+                {image && (
+                    <div className="w-full bg-plum-50 dark:bg-plum-900/40">
+                        <img
+                            src={image}
+                            alt={title}
+                            className="w-full h-[160px] object-cover border-b border-plum-200/50 dark:border-plum-800/50"
+                            loading="lazy"
+                        />
+                    </div>
+                )}
+                <div className="p-5">
                 {category && (
                     <span className="inline-block text-[11px] px-2 py-0.5 rounded-full border border-plum-300/50 text-plum-800/80 dark:text-plum-100/80">
                         {category}
@@ -46,6 +58,7 @@ export default function BlogCard({ slug, title, date, excerpt, tags, category }:
                         )}
                     </p>
                 )}
+                </div>
             </Link>
         </div>
     );

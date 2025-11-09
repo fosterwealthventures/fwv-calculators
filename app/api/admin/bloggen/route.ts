@@ -28,6 +28,10 @@ type Body = {
     keywords?: string[];
     meta_description?: string;
     meta_title?: string;
+    // New: allow specifying cover/OG images directly
+    coverImage?: string;
+    ogImage?: string;
+    imageAlt?: string;
   };
 };
 
@@ -393,6 +397,10 @@ export async function POST(req: Request) {
       ? `\n\n---\n**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](${utm('/calculators')}), [Break-even Calculator](${utm('/calculators')}), or [Mortgage Calculator](${utm('/calculators')}).\n`
       : '';
 
+    // Images: allow caller to supply cover/og; fall back to site logo
+    const cover = (options as any).coverImage?.trim?.() || '/fwv-logo-gold.svg';
+    const og = (options as any).ogImage?.trim?.() || cover;
+
     // Use meta_description if available, otherwise fall back to excerpt
     const descriptionForSchema = truncate(options?.meta_description || excerpt, 160);
 
@@ -404,7 +412,7 @@ ${JSON.stringify({
       description: descriptionForSchema,
       author: { '@type': 'Organization', name: 'Foster Wealth Ventures' },
       datePublished: new Date().toISOString(),
-      image: '/fwv-logo-gold.svg',
+      image: cover,
     }, null, 2)}
 </script>\n` : '';
 
@@ -559,7 +567,8 @@ Make it immediately useful for someone searching for "${topic}". Include specifi
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/fwv-logo-gold.svg"
+image: "${cover}"
+image_alt: "${(options as any).imageAlt?.replace?.(/\"/g, '“') || title}"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${mainCalculator}"
@@ -568,7 +577,7 @@ keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${metaDescription}"
 meta_title: "${metaTitle}"
 canonical: "${canonical}"
-og_image: "/blog/${slug}/opengraph-image"
+og_image: "${og}"
 reading_time: ${readingTime}
 noindex: false
 ---
@@ -582,7 +591,8 @@ ${internalLinksBlock}${guideLinksBlock}${ctaBlock}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/fwv-logo-gold.svg"
+image: "${cover}"
+image_alt: "${(options as any).imageAlt?.replace?.(/\"/g, '“') || title}"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${mainCalculator}"
@@ -591,7 +601,7 @@ keywords: [${keywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${metaDescription}"
 meta_title: "${metaTitle}"
 canonical: "${canonical}"
-og_image: "/blog/${slug}/opengraph-image"
+og_image: "${og}"
 reading_time: ${readingTime}
 noindex: false
 ---
@@ -700,7 +710,8 @@ ${internalLinksBlock}${ctaBlock}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/fwv-logo-gold.svg"
+image: "${cover}"
+image_alt: "${(options as any).imageAlt?.replace?.(/\"/g, '“') || title}"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${fallbackMainCalculator}"
@@ -709,7 +720,7 @@ keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${truncate(fallbackMetaDescription, 160)}"
 meta_title: "${fallbackMetaTitle}"
 canonical: "${canonical}"
-og_image: "/blog/${slug}/opengraph-image"
+og_image: "${og}"
 reading_time: ${readingTime}
 noindex: false
 ---
@@ -720,7 +731,8 @@ ${fallbackContent}`;
 title: "${title}"
 date: "${new Date().toISOString()}"
 excerpt: "${excerpt}"
-image: "/fwv-logo-gold.svg"
+image: "${cover}"
+image_alt: "${(options as any).imageAlt?.replace?.(/\"/g, '“') || title}"
 category: "${categories[0]}"
 tags: [${tags.map(t => `"${t}"`).join(', ')}]
 main_calculator: "${fallbackMainCalculator}"
@@ -729,7 +741,7 @@ keywords: [${fallbackKeywords.map(k => `"${k}"`).join(', ')}]
 meta_description: "${truncate(fallbackMetaDescription, 160)}"
 meta_title: "${fallbackMetaTitle}"
 canonical: "${canonical}"
-og_image: "/blog/${slug}/opengraph-image"
+og_image: "${og}"
 reading_time: ${readingTime}
 noindex: false
 ---
