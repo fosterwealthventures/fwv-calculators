@@ -16,13 +16,13 @@ const nextConfig = {
 
     const csp = [
       "default-src 'self'",
-      // Allow Adsterra ads and PWA functionality
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://pl27994832.effectivegatecpm.com",
+      // Relaxed to avoid blocking Adsterra native banner assets
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https:",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https: https://pl27994832.effectivegatecpm.com",
+      "img-src 'self' data: blob: https:",
       "font-src 'self' data: https:",
-      "connect-src 'self' https://pl27994832.effectivegatecpm.com",
-      "frame-src 'self' https://pl27994832.effectivegatecpm.com",
+      "connect-src 'self' https:",
+      "frame-src 'self' https:",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
       "base-uri 'self'",

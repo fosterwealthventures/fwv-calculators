@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AdInContent } from "@/components/ads";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 import React from "react";
@@ -84,10 +83,7 @@ export default function GuidePage() {
         </ul>
       </section>
 
-      {/* In-content ad (auto-gated to free contexts) */}
-      <div className="not-prose my-6">
-        <AdInContent />
-      </div>
+      {/* In-content ad removed; footer banner handles ads */}
 
       {/* How to use it */}
       <section>

@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
-import { AdInContent } from "@/components/ads";
 
 import { RelatedLink, RelatedSection } from "@/components/GuideLinks";
 import GuideNav from "@/components/GuideNav";
@@ -155,11 +154,7 @@ export default function ShoppingBudgetGuide() {
                 </div>
             </Section>
 
-            {/* CTA */}
-            {/* In-content ad moved lower to avoid large gap under the title */}
-            <div className="not-prose my-6">
-                <AdInContent />
-            </div>
+            {/* In-content ad removed; footer banner handles ads */}
 
             <CTAWrap>
                 <OpenCalculatorButton slug="shopping-budget" className="mt-2" />

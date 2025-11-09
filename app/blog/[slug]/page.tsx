@@ -1,5 +1,4 @@
 // app/blog/[slug]/page.tsx
-import { AdInContentSafe as AdInContent } from "@/components/ads";
 import PostContainer from "@/components/PostContainer";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 // dynamic marked import at render time
@@ -175,9 +174,7 @@ export default async function BlogPostPage({
       </section>
 
       {/* ARTICLE + TOC are fully handled inside PostContainer */}
-      <div className="mx-auto max-w-3xl px-4 py-4">
-        <AdInContent />
-      </div>
+      {/* In-content ad removed; footer banner handles ads */}
       <PostContainer>
         <div
           className="article prose lg:prose-lg dark:prose-invert max-w-none"

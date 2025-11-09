@@ -1,5 +1,5 @@
 // app/layout.tsx
-import { AdInContentSafe } from "@/components/ads";
+import AdsterraNativeBanner from "@/components/ads/AdsterraNativeBanner";
 import CmpBanner from "@/components/consent/CmpBanner";
 import Header from "@/components/Header";
 import PWAInstaller from "@/components/PWAInstaller";
@@ -7,7 +7,7 @@ import { SessionProvider } from "@/components/SessionProvider";
 import { EntitlementsProvider } from "@/lib/entitlements-client";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import Script from "next/script";
+// Script import removed: no Google/AdSense scripts needed
 import React from "react";
 import "./globals.css";
 
@@ -50,42 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-plan={plan}>
       <head>
-        {/* Google Consent Mode v2 DEFAULTS (must run before any ads/analytics) */}
-        <Script id="consent-defaults" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){window.dataLayer.push(arguments);} 
-            gtag('consent','default',{
-              'ad_storage':'denied',
-              'ad_user_data':'denied',
-              'ad_personalization':'denied',
-              'analytics_storage':'denied',
-              'functionality_storage':'granted',
-              'security_storage':'granted'
-            });
-            window.__consentDefaultsFired = true;
-          `}
-        </Script>
-        {/* CMP → Consent Mode bridge */}
-        <Script id="cmp-bridge" strategy="afterInteractive">
-          {`
-  window.onCmpConsentUpdate = function (consent) {
-    try {
-      var ads = !!(consent && consent.ads);
-      var analytics = !!(consent && consent.analytics);
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);} 
-      gtag('consent','update',{
-        ad_storage: ads ? 'granted' : 'denied',
-        ad_user_data: ads ? 'granted' : 'denied',
-        ad_personalization: ads ? 'granted' : 'denied',
-        analytics_storage: analytics ? 'granted' : 'denied'
-      });
-    } catch(e){}
-  };
-          `}
-        </Script>
-        {/* Ad meta placeholders only. Runtime ad loading is handled in components/ads. */}
+        {/* Ad meta placeholders only. Runtime ad loading is handled by Adsterra component. */}
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
 
         {/* PWA Meta Tags */}
@@ -152,13 +117,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {/* Single column content (no ad sidebar) */}
             <main id="main" className="mx-auto max-w-6xl px-4 py-6">
               {children}
-
-              {/* Adsterra Banner - guarded and feature-flagged in component */}
-              {plan === "free" && <AdInContentSafe />}
             </main>
 
             {/* Simple in-house CMP banner (non-TCF) */}
             <CmpBanner />
+
+            {/* Footer Ad: Adsterra native banner (always shown) */}
+            <div className="mx-auto max-w-6xl px-4">
+              <AdsterraNativeBanner />
+            </div>
 
             <Footer />
           </EntitlementsProvider>

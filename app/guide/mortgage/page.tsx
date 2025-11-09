@@ -1,4 +1,3 @@
-import { AdInContent } from "@/components/ads";
 import Breadcrumb from "@/components/Breadcrumb";
 import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
@@ -46,10 +45,7 @@ export default function GuidePage() {
         </p>
       </section>
 
-      {/* Native banner ad */}
-      <div className="not-prose my-6">
-        <AdInContent />
-      </div>
+      {/* In-content ad removed; footer banner handles ads */}
 
       <section>
         <h2>Inputs</h2>
