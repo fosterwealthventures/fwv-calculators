@@ -2,7 +2,6 @@
 title: "The Event Budget Blueprint: Plan Parties, Weddings &  Holidays Without Debt — Complete Guide"
 date: "2025-10-21T18:06:30.677Z"
 excerpt: "A practical, step-by-step walkthrough of “The Event Budget Blueprint: Plan Parties, Weddings &  Holidays Without Debt”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["the", "event", "budget", "blueprint", "plan", "parties", "weddings", "holidays"]
 main_calculator: "Shopping Budget Calculator"

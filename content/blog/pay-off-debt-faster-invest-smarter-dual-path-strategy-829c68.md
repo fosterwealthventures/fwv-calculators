@@ -2,7 +2,6 @@
 title: "How to Pay Off Debt Faster and Invest Smarter: The Dual-Path Strategy — Complete Guide"
 date: "2025-10-18T22:39:58.436Z"
 excerpt: "A practical, step-by-step walkthrough of “How to Pay Off Debt Faster and Invest Smarter: The Dual-Path Strategy”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["how", "pay", "off", "debt", "faster", "and", "invest", "smarter"]
 ---

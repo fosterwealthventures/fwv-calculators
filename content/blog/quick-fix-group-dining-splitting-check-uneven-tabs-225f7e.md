@@ -2,7 +2,6 @@
 title: "The Quick Fix for Group Dining: Splitting the Check with Uneven Tabs — Complete Guide"
 date: "2025-10-18T23:31:17.690Z"
 excerpt: "A practical, step-by-step walkthrough of “The Quick Fix for Group Dining: Splitting the Check with Uneven Tabs”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["the", "quick", "fix", "for", "group", "dining", "splitting"]
 ---

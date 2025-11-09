@@ -2,9 +2,7 @@
 title: "Compare debt payoff strategies: snowball vs avalanche method — Complete Guide"
 date: "2025-10-15T03:36:26.037Z"
 excerpt: "A practical, step-by-step walkthrough of “Compare debt payoff strategies: snowball vs avalanche method”."
-image: "/fwv-logo-gold.svg"
 image_alt: "Compare debt payoff strategies: snowball vs avalanche method — Complete Guide"
-og_image: "/blog/compare-debt-payoff-strategies-snowball-avalanche-method-e07ced/opengraph-image"
 category: "Finance"
 tags: ["compare", "debt", "payoff", "strategies", "snowball", "avalanche", "method"]
 ---

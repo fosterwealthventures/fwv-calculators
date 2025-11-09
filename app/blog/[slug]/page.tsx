@@ -26,7 +26,8 @@ export async function generateMetadata({
     const title = meta.title;
     const metaDescription =
       meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
-    const ogImage = meta.og_image || meta.image;
+    const rawOg = meta.og_image || meta.image;
+    const ogImage = rawOg && !/fwv-logo/i.test(String(rawOg)) ? rawOg : undefined;
 
     return {
       title,
@@ -63,7 +64,8 @@ export default async function BlogPostPage({
   const title = meta.title;
   const date = meta.date;
   const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
-  const ogImage = meta.og_image || meta.image || "/fwv-logo-gold.svg";
+  const rawOg = meta.og_image || meta.image;
+  const ogImage = rawOg && !/fwv-logo/i.test(String(rawOg)) ? rawOg : undefined;
 
   // strip leading H1 if present to avoid duplicate titles
   const cleanBody = (body || "").replace(/^\s*#\s+.+?\n+/, "");
@@ -131,16 +133,19 @@ export default async function BlogPostPage({
 
       {/* JSON-LD Structured Data */}
       <Script id="article-json-ld" strategy="beforeInteractive" type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: title,
-          description: metaDescription,
-          author: { "@type": "Organization", name: "Foster Wealth Ventures" },
-          datePublished: date,
-          dateModified: date,
-          image: { "@type": "ImageObject", url: ogImage, caption: meta.image_alt || title },
-        })}
+        {JSON.stringify((() => {
+          const base: any = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: title,
+            description: metaDescription,
+            author: { "@type": "Organization", name: "Foster Wealth Ventures" },
+            datePublished: date,
+            dateModified: date,
+          };
+          if (ogImage) base.image = { "@type": "ImageObject", url: ogImage, caption: meta.image_alt || title };
+          return base;
+        })())}
       </Script>
 
       {/* HERO */}
@@ -160,16 +165,22 @@ export default async function BlogPostPage({
           >
             {title}
           </h1>
-          {meta.image && (
-            <div className="mt-6">
-              <img
-                src={meta.image}
-                alt={meta.image_alt || title}
-                className="w-full max-w-4xl rounded-lg border border-white/10 shadow-md"
-                style={{ aspectRatio: "16/9", objectFit: "cover" }}
-              />
-            </div>
-          )}
+          {(() => {
+            const img = (meta.image || "").toString();
+            const isLogo = /fwv-logo/i.test(img);
+            const displayImage = img && !isLogo ? img : "";
+            if (!displayImage) return null;
+            return (
+              <div className="mt-6">
+                <img
+                  src={displayImage}
+                  alt={meta.image_alt || title}
+                  className="w-full max-w-4xl rounded-lg border border-white/10 shadow-md"
+                  style={{ aspectRatio: "16/9", objectFit: "cover", maxHeight: 280 }}
+                />
+              </div>
+            );
+          })()}
         </div>
       </section>
 

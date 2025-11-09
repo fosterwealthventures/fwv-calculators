@@ -11,6 +11,18 @@ const nextConfig = {
   poweredByHeader: false,
   eslint: { ignoreDuringBuilds: true },
 
+  async redirects() {
+    return [
+      // Calculator legacy slugs → canonical
+      { source: "/calculators/tip-split", destination: "/calculators/tip-and-tab-split", permanent: true },
+      { source: "/guide/tip-split", destination: "/guide/tip-and-tab-split", permanent: true },
+      { source: "/calculators/tip-split-by-order", destination: "/calculators/split-by-order", permanent: true },
+      { source: "/guide/tip-split-by-order", destination: "/guide/split-by-order", permanent: true },
+      { source: "/calculators/savings", destination: "/calculators/savings-growth", permanent: true },
+      { source: "/guide/savings", destination: "/guide/savings-growth", permanent: true },
+    ];
+  },
+
   async headers() {
     if (skipCsp) return [];
 

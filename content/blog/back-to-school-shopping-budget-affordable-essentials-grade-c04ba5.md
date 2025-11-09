@@ -2,7 +2,6 @@
 title: "Back-to-School Shopping Budget: Affordable Essentials by Grade — Complete Guide"
 date: "2025-10-21T17:54:58.695Z"
 excerpt: "A practical, step-by-step walkthrough of “Back-to-School Shopping Budget: Affordable Essentials by Grade”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["back-to-school", "shopping", "budget", "affordable", "essentials", "grade"]
 main_calculator: "Shopping Budget Calculator"

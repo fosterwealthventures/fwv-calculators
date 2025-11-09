@@ -2,7 +2,6 @@
 title: "“Rent vs buy 2025 with high HOA” — Complete Guide"
 date: "2025-10-30T17:11:59.212Z"
 excerpt: "A practical, step-by-step walkthrough of ““Rent vs buy 2025 with high HOA””."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["rent", "buy", "2025", "with", "high", "hoa"]
 main_calculator: "Mortgage Calculator"
@@ -11,7 +10,6 @@ keywords: ["rent vs buy calculator 2025"]
 meta_description: "Rent vs buy in 2025? Use our Mortgage Calculator to compare monthly cost, equity built and break‑even year using rate, down payment, taxes and rent growth."
 meta_title: "“Rent vs buy 2025 with high HOA” | Mortgage Calculator"
 canonical: "https://www.fosterwealthventures.store/blog/rent-buy-2025-high-hoa-4f265b"
-og_image: "/blog/rent-buy-2025-high-hoa-4f265b/opengraph-image"
 reading_time: 4
 noindex: false
 ---

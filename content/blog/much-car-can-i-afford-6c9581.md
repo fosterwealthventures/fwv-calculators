@@ -2,7 +2,6 @@
 title: "How Much Car Can I Afford? — Complete Guide"
 date: "2025-10-30T18:47:46.824Z"
 excerpt: "A practical, step-by-step walkthrough of “How Much Car Can I Afford?”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["how", "much", "car", "can", "afford"]
 main_calculator: "Simple vs Compound Interest Calculator"
@@ -11,7 +10,6 @@ keywords: ["car affordability calculator"]
 meta_description: "Use our Simple vs Compound Interest Calculator to estimate car payments by price, APR and term, and see a safe budget and total 5‑year cost."
 meta_title: "How Much Car Can I Afford? | Simple vs Compound Interest Cal"
 canonical: "https://www.fosterwealthventures.store/blog/much-car-can-i-afford-6c9581"
-og_image: "/blog/much-car-can-i-afford-6c9581/opengraph-image"
 reading_time: 5
 noindex: false
 ---

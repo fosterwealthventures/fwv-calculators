@@ -2,7 +2,6 @@
 title: "The Fair Split Rulebook: How to Divide Restaurant Bills  When Everyone Ordered Differently — Complete Guide"
 date: "2025-10-21T18:48:08.534Z"
 excerpt: "A practical, step-by-step walkthrough of “The Fair Split Rulebook: How to Divide Restaurant Bills  When Everyone Ordered Differently”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["the", "fair", "split", "rulebook", "how", "divide", "restaurant", "bills"]
 main_calculator: "Split-Order Calculator"

@@ -2,7 +2,6 @@
 title: "Beyond 50/50: How to Split Rent and Utilities Fairly When Bedrooms are Unequal — Complete Guide"
 date: "2025-10-18T23:34:03.847Z"
 excerpt: "A practical, step-by-step walkthrough of “Beyond 50/50: How to Split Rent and Utilities Fairly When Bedrooms are Unequal”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["beyond", "5050", "how", "split", "rent", "and", "utilities", "fairly"]
 ---

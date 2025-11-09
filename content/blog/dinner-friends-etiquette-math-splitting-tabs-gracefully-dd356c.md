@@ -2,7 +2,6 @@
 title: "Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully — Complete Guide"
 date: "2025-10-21T19:38:21.365Z"
 excerpt: "A practical, step-by-step walkthrough of “Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["dinner", "with", "friends", "the", "etiquette", "and", "math", "splitting"]
 main_calculator: "Split-Order Calculator"

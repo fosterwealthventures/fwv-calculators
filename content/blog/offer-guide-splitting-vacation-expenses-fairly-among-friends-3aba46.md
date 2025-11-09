@@ -2,7 +2,6 @@
 title: "Offer a guide to splitting vacation expenses fairly among friends or family — Complete Guide"
 date: "2025-10-15T03:28:42.021Z"
 excerpt: "A practical, step-by-step walkthrough of “Offer a guide to splitting vacation expenses fairly among friends or family”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["offer", "guide", "splitting", "vacation", "expenses", "fairly", "among", "friends"]
 ---

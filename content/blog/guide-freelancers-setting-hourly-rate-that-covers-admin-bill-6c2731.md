@@ -2,7 +2,6 @@
 title: "Guide freelancers on setting an hourly rate that covers admin and billable time — Complete Guide"
 date: "2025-10-15T03:39:53.055Z"
 excerpt: "A practical, step-by-step walkthrough of “Guide freelancers on setting an hourly rate that covers admin and billable time”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["guide", "freelancers", "setting", "hourly", "rate", "that", "covers", "admin"]
 ---

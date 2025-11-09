@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 
 import PremiumResultCard from "@/components/ui/PremiumResultCard";
@@ -333,20 +333,38 @@ export default function FosterWealthCalculators({
 
   // Deep-link support (?calc=), with safety if freeOnly hides paid calcs
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   useEffect(() => {
-    const q = (searchParams.get("calc") || "").toLowerCase() as CalcKey;
-    if (q && q in calcMeta.calculators) {
-      const tier = (calcMeta.calculators as any)[q]?.tier as
+    const alias = (s: string | null | undefined): CalcKey | null => {
+      const key = (s || "").toLowerCase();
+      if (!key) return null;
+      if ((calcMeta.calculators as any)[key]) return key as CalcKey;
+      // map URL slugs to internal keys
+      const map: Record<string, CalcKey> = {
+        "tip-and-tab-split": "tip-split",
+        "split-by-order": "tip-split-by-order",
+        "savings-growth": "savings",
+      };
+      return map[key] || null;
+    };
+
+    const qpChoice = alias(searchParams.get("calc"));
+    let chosen: CalcKey | null = qpChoice;
+    if (!chosen && pathname) {
+      const parts = pathname.split("/").filter(Boolean);
+      const last = parts[parts.length - 1];
+      chosen = alias(last);
+    }
+
+    if (chosen) {
+      const tier = (calcMeta.calculators as any)[chosen]?.tier as
         | "free"
         | "plus"
         | "pro";
-      if (freeOnly && tier !== "free") {
-        setActiveCalc("roi");
-      } else {
-        setActiveCalc(q);
-      }
+      if (freeOnly && tier !== "free") setActiveCalc("roi");
+      else setActiveCalc(chosen);
     }
-  }, [searchParams, freeOnly]);
+  }, [searchParams, pathname, freeOnly]);
 
   const visibleCalcs = Object.entries(calcMeta.calculators).filter(
     ([, meta]) => !(freeOnly && meta.tier !== "free"),

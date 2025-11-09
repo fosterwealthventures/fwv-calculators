@@ -2,7 +2,6 @@
 title: "The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared — Complete Guide"
 date: "2025-10-21T19:48:47.182Z"
 excerpt: "A practical, step-by-step walkthrough of “The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["the", "ultimate", "bill-splitting", "app", "showdown", "2025s", "top", "tools"]
 main_calculator: "Restaurant Tips Calculator"

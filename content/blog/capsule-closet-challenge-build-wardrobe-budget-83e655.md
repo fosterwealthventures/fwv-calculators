@@ -2,7 +2,6 @@
 title: "The Capsule Closet Challenge: How to Build a Wardrobe on a Budget — Complete Guide"
 date: "2025-10-21T18:01:05.118Z"
 excerpt: "A practical, step-by-step walkthrough of “The Capsule Closet Challenge: How to Build a Wardrobe on a Budget”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["the", "capsule", "closet", "challenge", "how", "build", "wardrobe", "budget"]
 main_calculator: "Shopping Budget Calculator"

@@ -2,7 +2,6 @@
 title: "Travel Together, Split Smarter: The Group Trip Expense Guide — Complete Guide"
 date: "2025-10-21T19:06:09.854Z"
 excerpt: "A practical, step-by-step walkthrough of “Travel Together, Split Smarter: The Group Trip Expense Guide”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["travel", "together", "split", "smarter", "the", "group", "trip", "expense"]
 main_calculator: "Expense Split Calculator"

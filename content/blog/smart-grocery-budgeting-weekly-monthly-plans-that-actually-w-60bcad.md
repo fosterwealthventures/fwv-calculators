@@ -2,7 +2,6 @@
 title: "Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work — Complete Guide"
 date: "2025-10-21T17:49:48.182Z"
 excerpt: "A practical, step-by-step walkthrough of “Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["smart", "grocery", "budgeting", "weekly", "monthly", "plans", "that", "actually"]
 main_calculator: "Shopping Budget Calculator"

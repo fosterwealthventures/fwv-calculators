@@ -2,7 +2,6 @@
 title: "Compare simple vs compound interest with examples of savings growth — Complete Guide"
 date: "2025-10-15T03:39:57.872Z"
 excerpt: "A practical, step-by-step walkthrough of “Compare simple vs compound interest with examples of savings growth”."
-image: "/fwv-logo-gold.svg"
 category: "Personal Finance"
 tags: ["compare", "simple", "compound", "interest", "with", "examples", "savings", "growth"]
 ---

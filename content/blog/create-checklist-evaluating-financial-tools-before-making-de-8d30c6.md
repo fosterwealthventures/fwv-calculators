@@ -2,7 +2,6 @@
 title: "Create a checklist for evaluating financial tools before making a decision — Complete Guide"
 date: "2025-10-15T03:21:00.932Z"
 excerpt: "A practical, step-by-step walkthrough of “Create a checklist for evaluating financial tools before making a decision”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["create", "checklist", "for", "evaluating", "financial", "tools", "before", "making"]
 ---

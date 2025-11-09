@@ -2,7 +2,6 @@
 title: "Explain how calculators support values-based financial decisions — Complete Guide"
 date: "2025-10-15T03:21:04.491Z"
 excerpt: "A practical, step-by-step walkthrough of “Explain how calculators support values-based financial decisions”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["explain", "how", "calculators", "support", "values-based", "financial", "decisions"]
 ---

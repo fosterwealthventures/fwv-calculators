@@ -2,7 +2,6 @@
 title: "Compare mental math vs digital tools for financial accuracy — Complete Guide"
 date: "2025-10-15T03:26:28.904Z"
 excerpt: "A practical, step-by-step walkthrough of “Compare mental math vs digital tools for financial accuracy”."
-image: "/fwv-logo-gold.svg"
 category: "Finance"
 tags: ["compare", "mental", "math", "digital", "tools", "for", "financial", "accuracy"]
 ---
