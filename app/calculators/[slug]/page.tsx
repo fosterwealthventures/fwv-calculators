@@ -6,11 +6,6 @@ import FosterWealthCalculators from "@/components/foster_wealth_calculators_suit
 import type { Metadata } from "next";
 import { CALCULATORS, bySlug } from "@/lib/calculators";
 
-export const metadata: Metadata = {
-  title: "Calculator",
-  description: "Open a calculator from Foster Wealth Calculators.",
-};
-
 export function generateStaticParams() {
   return CALCULATORS.map((c) => ({ slug: c.slug }));
 }
@@ -20,7 +15,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!entry) return {};
   return {
     title: entry.title,
-    description: entry.summary || metadata.description,
+    description: entry.summary || 'Open a calculator from Foster Wealth Calculators.',
     alternates: { canonical: entry.path },
   };
 }

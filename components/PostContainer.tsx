@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import TOC from "./TOC";
 
 /**
@@ -12,9 +12,138 @@ import TOC from "./TOC";
  */
 export default function PostContainer({ children }: { children: ReactNode }) {
     const [tocOpen, setTocOpen] = useState(false);
+    const rootRef = useRef<HTMLDivElement | null>(null);
+
+    // Client-side KaTeX rendering for inline ($...$) and block ($$...$$) math.
+    useEffect(() => {
+        let cancelled = false;
+
+        function renderKatexIn(el: HTMLElement) {
+            try {
+                // @ts-ignore
+                const k = (window as any).katex;
+                if (!k) return false;
+                // First pass: if raw math is still present (e.g., $$...$$ or \frac without $),
+                // wrap it so it can be rendered below.
+                try {
+                    autoWrapMath(el);
+                } catch {}
+                el.querySelectorAll('[data-katex-display]').forEach((n) => {
+                    try {
+                        const t = (n as HTMLElement).textContent || "";
+                        (n as HTMLElement).innerHTML = k.renderToString(t, {
+                            displayMode: true,
+                            throwOnError: false,
+                        });
+                    } catch {}
+                });
+                el.querySelectorAll('[data-katex-inline]').forEach((n) => {
+                    try {
+                        const t = (n as HTMLElement).textContent || "";
+                        (n as HTMLElement).innerHTML = k.renderToString(t, {
+                            displayMode: false,
+                            throwOnError: false,
+                        });
+                    } catch {}
+                });
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // Convert raw "$$...$$" or "$...$" or bare LaTeX tokens (\frac, \sqrt, \times, etc.) into
+        // elements with data-katex-* markers so they can be rendered by KaTeX.
+        function autoWrapMath(root: HTMLElement) {
+            const skip = new Set(["CODE", "PRE", "SCRIPT", "STYLE", "KBD", "SAMP"]);
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    const p = node.parentElement;
+                    if (!p || skip.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+                    const s = node.nodeValue || "";
+                    return /\$|\\(frac|sqrt|times|div|cdot|pm|le|ge|neq|approx|alpha|beta|gamma|delta|theta|lambda|mu|sigma|omega)/.test(s)
+                        ? NodeFilter.FILTER_ACCEPT
+                        : NodeFilter.FILTER_REJECT;
+                }
+            } as any);
+
+            const toProcess: Text[] = [];
+            let n: any;
+            while ((n = walker.nextNode())) toProcess.push(n as Text);
+
+            for (const textNode of toProcess) {
+                const s = textNode.nodeValue || "";
+                let replaced = false;
+
+                // Display blocks $$...$$
+                if (/\$\$[^$]+\$\$/.test(s)) {
+                    const html = s.replace(/\$\$([^$]+)\$\$/g, (_m, p1) => `<div data-katex-display>${p1}</div>`);
+                    replaceTextNodeWithHTML(textNode, html);
+                    replaced = true;
+                }
+
+                // Inline $...$
+                if (!replaced && /\$[^$]+\$/.test(s)) {
+                    const html = s.replace(/\$([^$]+)\$/g, (_m, p1) => `<span data-katex-inline>${p1}</span>`);
+                    replaceTextNodeWithHTML(textNode, html);
+                    replaced = true;
+                }
+
+                // Bare LaTeX tokens (no $ wrappers)
+                if (!replaced && /\\(frac|sqrt|times|div|cdot|pm|le|ge|neq|approx)/.test(s)) {
+                    const html = `<span data-katex-inline>${s}</span>`;
+                    replaceTextNodeWithHTML(textNode, html);
+                }
+            }
+
+            function replaceTextNodeWithHTML(node: Text, html: string) {
+                const frag = document.createElement('span');
+                frag.innerHTML = html;
+                const parent = node.parentNode as Node;
+                parent.replaceChild(frag, node);
+                // unwrap helper span (keep its children)
+                while (frag.firstChild) parent.insertBefore(frag.firstChild, frag);
+                parent.removeChild(frag);
+            }
+        }
+
+        const container = rootRef.current || document.body;
+
+        // Try immediately, then poll briefly until KaTeX is available
+        let done = renderKatexIn(container);
+        let tries = 0;
+        const timer = done
+            ? undefined
+            : setInterval(() => {
+                  if (cancelled) return;
+                  tries++;
+                  if (renderKatexIn(container) || tries > 40) {
+                      if (timer) clearInterval(timer);
+                  }
+              }, 100);
+
+        // Observe new content (client navigations or dynamic updates)
+        const mo = new MutationObserver((muts) => {
+            for (const m of muts) {
+                if (m.addedNodes && m.addedNodes.length) {
+                    renderKatexIn(container);
+                    break;
+                }
+            }
+        });
+        try {
+            mo.observe(container, { childList: true, subtree: true });
+        } catch {}
+
+        return () => {
+            cancelled = true;
+            if (timer) clearInterval(timer);
+            try { mo.disconnect(); } catch {}
+        };
+    }, []);
 
     return (
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div ref={rootRef} className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             {/* Grid: [left spacer] [article] [right TOC] */}
             <main className="
         mx-auto grid max-w-6xl grid-cols-1 gap-6 md:gap-8

@@ -92,12 +92,35 @@ export default async function BlogPostPage({
   }
 
   // Markdown to HTML with guards
+  // Auto-wrap common LaTeX notations with $...$ so KaTeX can render
+  function autoWrapLatex(md: string): string {
+    try {
+      const lines = (md || "").split("\n");
+      const hasLatexToken = /\\(frac|sqrt|div|times|cdot|pm|le|ge|neq|sum|prod|pi|alpha|beta|gamma|delta|theta|lambda|mu|sigma|omega)/;
+      const wrapChunk = (s: string) => `$${s}$`;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!hasLatexToken.test(line)) continue;
+        if (line.indexOf("$") >= 0) continue; // already math-wrapped
+        let out = line;
+        out = out.replace(/\\frac\{[^}]+\}\{[^}]+\}/g, (m) => wrapChunk(m));
+        out = out.replace(/\\sqrt\{[^}]+\}/g, (m) => wrapChunk(m));
+        // Wrap short tokens like \div, \times with surrounding numbers/operators until end of token group
+        out = out.replace(/(\\(?:div|times|cdot|pm|le|ge|neq|approx|infty|pi)(?:[^$\n]*?))(?:\s*(?=$|[.,;]|$))/g, (m) => wrapChunk(m.trim()));
+        lines[i] = out;
+      }
+      return lines.join("\n");
+    } catch {
+      return md;
+    }
+  }
   let html = "" as string;
   try {
     const mod: any = await import("marked");
     const m: any = mod.marked || mod.default || mod;
     const parse = typeof m.parse === "function" ? m.parse.bind(m) : m;
-    html = parse(cleanBody, { breaks: true, gfm: true }) as string;
+    const prepared = autoWrapLatex(cleanBody);
+    html = parse(prepared, { breaks: true, gfm: true }) as string;
   } catch (e) {
     console.error("marked.parse failed for slug:", slug, e);
     html = "<p>Sorry, this article could not be rendered.</p>";

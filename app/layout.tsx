@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   description:
     "Free and premium financial calculators by Foster Wealth Ventures. Upgrade to unlock advanced calculators.",
   icons: { icon: "/favicon.ico" },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.fosterwealthventures.store"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 type Plan = "free" | "plus" | "pro" | "premium";
@@ -50,8 +53,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-plan={plan}>
       <head>
+        {/* KaTeX for inline/block math in blog posts (rendered client-side) */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+          defer
+        ></script>
         {/* Ad meta placeholders only. Runtime ad loading is handled by Adsterra component. */}
-        <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || "https://fosterwealthventures.store"} />
 
         {/* PWA Meta Tags */}
         <link rel="manifest" href="/manifest.json" />
