@@ -57,7 +57,7 @@ export default function PostContainer({ children }: { children: ReactNode }) {
         function autoWrapMath(root: HTMLElement) {
             const skip = new Set(["CODE", "PRE", "SCRIPT", "STYLE", "KBD", "SAMP"]);
             const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-                acceptNode(node) {
+                acceptNode(node: Text): number {
                     const p = node.parentElement;
                     if (!p || skip.has(p.tagName)) return NodeFilter.FILTER_REJECT;
                     const s = node.nodeValue || "";
