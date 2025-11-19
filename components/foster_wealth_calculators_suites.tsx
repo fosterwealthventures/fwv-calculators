@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import AdsterraBanner from "@/components/AdsterraBanner";
 
 import PremiumResultCard from "@/components/ui/PremiumResultCard";
 import ProfessionalCard from "@/components/ui/ProfessionalCard";
@@ -385,16 +386,86 @@ export default function FosterWealthCalculators({
     finalValue: "15000",
     timeHorizon: "2",
   });
+  const [roiTimeUnit, setRoiTimeUnit] = useState<"years" | "months">("years");
+  const [targetRoiPercent, setTargetRoiPercent] = useState(25);
+  const [roiAdvanced, setRoiAdvanced] = useState(false);
+  const [roiMidCashFlow, setRoiMidCashFlow] = useState("0");
+
+  const formatRoiTimeValue = (val: number) => {
+    if (!Number.isFinite(val)) return "0";
+    const fixed = Number(val.toFixed(4));
+    const cleaned = fixed.toString().replace(/\.?0+$/, "");
+    return cleaned || "0";
+  };
+
+  const handleRoiTimeUnitChange = (unit: "years" | "months") => {
+    if (unit === roiTimeUnit) return;
+    setRoiInputs((prev) => {
+      const numeric = parseFloat(prev.timeHorizon);
+      if (!Number.isFinite(numeric)) return prev;
+      const converted =
+        unit === "years" ? numeric / 12 : numeric * 12;
+      return {
+        ...prev,
+        timeHorizon: formatRoiTimeValue(converted),
+      };
+    });
+    setRoiTimeUnit(unit);
+  };
+
   const roi = useMemo(() => {
     const P = toNum(roiInputs.initialInvestment);
     const F = toNum(roiInputs.finalValue);
-    const Y = toNum(roiInputs.timeHorizon) || 1;
+    const rawTime = toNum(roiInputs.timeHorizon) || 0;
+    const timeHorizonYears =
+      roiTimeUnit === "years" ? rawTime : rawTime / 12;
+    const midCash = roiAdvanced ? toNum(roiMidCashFlow) : 0;
+    const totalInvested = P + midCash;
+    const averageCapital = P + midCash / 2;
+    const netProfit = F - totalInvested;
+    const invalidExposure =
+      roiAdvanced && (averageCapital <= 0 || totalInvested <= 0);
+    const baseTotal = P === 0 ? 0 : (F - P) / P;
     const total = P === 0 ? 0 : (F - P) / P;
-    const annual = P === 0 || Y <= 0 ? 0 : Math.pow(F / P, 1 / Y) - 1;
-    const netProfit = F - P;
+    const advancedTotal =
+      averageCapital !== 0 ? netProfit / averageCapital : 0;
+    const finalTotal =
+      roiAdvanced && !invalidExposure ? advancedTotal : baseTotal;
+    const annual =
+      timeHorizonYears <= 0
+        ? 0
+        : Math.pow(1 + finalTotal, 1 / timeHorizonYears) - 1;
+    const finalNetProfit =
+      roiAdvanced && !invalidExposure ? netProfit : F - P;
     const finalAmount = F;
-    return { total, annual, netProfit, finalAmount };
-  }, [roiInputs]);
+    return {
+      total: finalTotal,
+      annual,
+      netProfit: finalNetProfit,
+      finalAmount,
+      invalidAverage: invalidExposure,
+      totalInvested,
+      averageCapital,
+    };
+  }, [roiInputs, roiTimeUnit, roiAdvanced, roiMidCashFlow]);
+
+  const roiTarget = useMemo(() => {
+    const initial = toNum(roiInputs.initialInvestment);
+    if (initial <= 0) {
+      return {
+        requiredFinal: 0,
+        requiredNet: 0,
+        isDisabled: true,
+      };
+    }
+    const targetDecimal = targetRoiPercent / 100;
+    const requiredFinal = initial * (1 + targetDecimal);
+    return {
+      requiredFinal,
+      requiredNet: requiredFinal - initial,
+      isDisabled: false,
+    };
+  }, [roiInputs.initialInvestment, targetRoiPercent]);
 
   /* ------------- Break-Even ------------- */
   const [beInputs, setBeInputs] = useState({
@@ -795,28 +866,174 @@ export default function FosterWealthCalculators({
                       setRoiInputs((s) => ({ ...s, timeHorizon: v }))
                     }
                   />
+                  <div className="mt-2 space-y-1 text-xs text-neutral-600">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="inline-flex overflow-hidden rounded-lg border border-plum-200">
+                        <button
+                          type="button"
+                          onClick={() => handleRoiTimeUnitChange("years")}
+                          className={`px-3 py-1 text-[11px] font-semibold transition ${
+                            roiTimeUnit === "years"
+                              ? "bg-plum-600 text-white"
+                              : "bg-white text-plum-700 hover:bg-plum-50"
+                          }`}
+                          aria-pressed={roiTimeUnit === "years"}
+                        >
+                          Years
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRoiTimeUnitChange("months")}
+                          className={`px-3 py-1 text-[11px] font-semibold transition ${
+                            roiTimeUnit === "months"
+                              ? "bg-plum-600 text-white"
+                              : "bg-white text-plum-700 hover:bg-plum-50"
+                          }`}
+                          aria-pressed={roiTimeUnit === "months"}
+                        >
+                          Months
+                        </button>
+                      </div>
+                      <span className="text-[11px] text-neutral-500">
+                        You can use decimal years (e.g., 1.5) or switch to months for short projects.
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-xl border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-700">
+                    <label className="flex items-center gap-2 text-neutral-800 dark:text-neutral-200">
+                      <input
+                        type="checkbox"
+                        checked={roiAdvanced}
+                        onChange={() => setRoiAdvanced((v) => !v)}
+                        className="h-4 w-4 rounded border-neutral-300 text-plum-600 focus:ring-plum-500"
+                      />
+                      <span className="font-medium">Show advanced cash-flow option</span>
+                    </label>
+                    {roiAdvanced && (
+                      <div className="mt-3 space-y-2">
+                        <Input
+                          id="roi_mid_cash"
+                          label="Mid-period cash-flow (halfway point)"
+                          value={roiMidCashFlow}
+                          onChange={(val) => setRoiMidCashFlow(val)}
+                          placeholder="e.g., 2000 or -1500"
+                        />
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          Positive = added more capital halfway through; negative = withdrew funds. We adjust ROI using your average invested capital.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </InputsPanel>
                 <ResultsPanel title="Results">
                   <KV label="Final Amount" value={fmtUSD(roi.finalAmount)} />
                   <KV label="Net Profit" value={fmtUSD(roi.netProfit)} />
                   <KV label="Total ROI" value={fmtPct(roi.total)} />
                   <KV label="Annualized ROI" value={fmtPct(roi.annual)} />
+                  {roi.invalidAverage && (
+                    <p className="mt-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
+                      The midpoint cash-flow makes total invested or average capital zero/negative. ROI can&rsquo;t be computed with that setup; try lowering the withdrawal or turning off the advanced option.
+                    </p>
+                  )}
                 </ResultsPanel>
               </div>
+              <details className="px-6 pb-5">
+                <summary className="cursor-pointer text-sm font-semibold text-plum-800 hover:text-plum-900 dark:text-plum-100">
+                  Want to hit a specific ROI?
+                </summary>
+                <div className="mt-4 space-y-4 text-sm">
+                  <div className="grid gap-4 md:grid-cols-[2fr_minmax(150px,1fr)]">
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                        Target ROI (%)
+                      </label>
+                      <input
+                        type="range"
+                        min={-50}
+                        max={200}
+                        step={1}
+                        value={targetRoiPercent}
+                        onChange={(e) =>
+                          setTargetRoiPercent(
+                            Math.min(200, Math.max(-50, Number(e.target.value))),
+                          )
+                        }
+                        className="w-full accent-plum-600"
+                      />
+                      <div className="mt-1 flex justify-between text-[11px] text-neutral-500">
+                        <span>-50%</span>
+                        <span>200%</span>
+                      </div>
+                    </div>
+                    <Input
+                      id="roi_target_precision"
+                      label="Exact target (%)"
+                      type="number"
+                      value={String(targetRoiPercent)}
+                      onChange={(val) => {
+                        const next = Number(val);
+                        if (!Number.isFinite(next)) return;
+                        setTargetRoiPercent(Math.min(200, Math.max(-50, next)));
+                      }}
+                    />
+                  </div>
+                  <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-900">
+                    {roiTarget.isDisabled ? (
+                      <p className="text-neutral-600 dark:text-neutral-300">
+                        Enter an initial investment above $0 to see the required final amount.
+                      </p>
+                    ) : (
+                      <div className="flex flex-col gap-1">
+                        <div className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                          Required Final Amount
+                        </div>
+                        <div className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                          {fmtUSD(roiTarget.requiredFinal)}
+                        </div>
+                        <div className="text-xs text-neutral-500">
+                          You need {fmtUSD(roiTarget.requiredNet)} in net profit to reach {targetRoiPercent.toFixed(0)}% ROI.
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </details>
               <div className="px-6 pb-5">
                 <ExplanationPanel title="How this works">
-                  <ul className="ml-5 list-disc">
+                  <ol className="ml-5 list-decimal space-y-3 text-sm">
                     <li>
-                      <b>ROI:</b> (Final − Initial) ÷ Initial
+                      <p className="font-semibold">Basic ROI</p>
+                      <p className="text-neutral-600">
+                        ROI measures how much you earned relative to the capital that was working on average.
+                      </p>
+                      <ul className="ml-5 list-disc text-neutral-600">
+                        <li>Net profit = final value − initial investment − mid-period contribution</li>
+                        <li>Average invested capital = initial investment + (mid-period contribution ÷ 2)</li>
+                        <li>ROI = net profit ÷ average invested capital</li>
+                      </ul>
                     </li>
                     <li>
-                      <b>Annualized:</b> (Final ÷ Initial)<sup>1/years</sup> − 1
+                      <p className="font-semibold">Annualized ROI</p>
+                      <p className="text-neutral-600">
+                        We convert your time input into years so a 6-month project and a 3-year project line up fairly.
+                      </p>
+                      <ul className="ml-5 list-disc text-neutral-600">
+                        <li>Annualized ROI = (1 + ROI)<sup>1 ÷ years</sup> − 1</li>
+                      </ul>
                     </li>
                     <li>
-                      Annualizing lets you compare across different time horizons
-                      fairly.
+                      <p className="font-semibold">Mid-period cash-flow</p>
+                      <p className="text-neutral-600">
+                        Use a positive number for extra capital added halfway through the period. Withdrawals aren’t supported because they can produce misleading percentages.
+                      </p>
                     </li>
-                  </ul>
+                    <li>
+                      <p className="font-semibold">Target ROI</p>
+                      <p className="text-neutral-600">
+                        “Want to hit a specific ROI?” runs the same ROI formula in reverse—keeping your initial investment and midpoint contribution—to solve for the final value you’d need.
+                      </p>
+                    </li>
+                  </ol>
                   <p className="mt-2">
                     Learn more:{" "}
                     <Link
@@ -828,6 +1045,7 @@ export default function FosterWealthCalculators({
                     </Link>
                   </p>
                 </ExplanationPanel>
+                <AdsterraBanner />
               </div>
             </ProfessionalCard>
           </section>

@@ -90,6 +90,41 @@ export default function ShoppingBudget() {
                         </button>
                     </div>
                 </div>
+                <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm dark:border-neutral-800 dark:bg-neutral-900/70">
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex flex-col">
+                            <span className="text-neutral-500 dark:text-neutral-400">Remaining</span>
+                            <span
+                                className={`text-lg font-semibold ${
+                                    remaining < 0
+                                        ? "text-rose-600 dark:text-rose-400"
+                                        : remaining < parsedBudget * 0.1
+                                            ? "text-amber-600 dark:text-amber-400"
+                                            : "text-emerald-700 dark:text-emerald-400"
+                                }`}
+                            >
+                                {currency.format(remaining)}
+                            </span>
+                        </div>
+                        <div className="min-w-[200px] flex-1">
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
+                                <div
+                                    className={`h-2 rounded-full ${
+                                        percentUsed < 90
+                                            ? "bg-emerald-600"
+                                            : remaining >= 0
+                                                ? "bg-amber-500"
+                                                : "bg-rose-600"
+                                    }`}
+                                    style={{ width: `${percentUsed}%` }}
+                                />
+                            </div>
+                            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                                {percentUsed.toFixed(0)}% of budget used
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section className="mb-6 rounded-2xl border bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">

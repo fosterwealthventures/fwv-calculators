@@ -24,6 +24,7 @@ export function SignInButton() {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSent, setIsSent] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { data: session } = useSession();
 
     if (session) {
@@ -34,12 +35,30 @@ export function SignInButton() {
         e.preventDefault();
         if (!email) return;
 
+        setErrorMessage(null);
         setIsLoading(true);
         try {
-            await signIn("email", { email, redirect: false });
+            const result = await signIn("email", { email, redirect: false });
+
+            if (result?.error) {
+                const normalizedError = result.error.toString().toUpperCase();
+                if (
+                    normalizedError.includes("TOO_MANY_MAGIC_LINK_REQUESTS") ||
+                    normalizedError.includes("MAGICLINKRATELIMITERROR") ||
+                    normalizedError === "CONFIGURATION" ||
+                    normalizedError === "ACCESSDENIED"
+                ) {
+                    setErrorMessage("Too many sign-in requests. Try again in a few minutes.");
+                } else {
+                    setErrorMessage("We couldn't send the sign-in link. Please try again.");
+                }
+                return;
+            }
+
             setIsSent(true);
         } catch (error) {
             console.error("Sign in error:", error);
+            setErrorMessage("We couldn't send the sign-in link. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -69,6 +88,11 @@ export function SignInButton() {
                     placeholder="you@example.com"
                 />
             </div>
+            {errorMessage && (
+                <div className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                    {errorMessage}
+                </div>
+            )}
             <Button
                 type="submit"
                 disabled={isLoading || !email}

@@ -1,3 +1,4 @@
 # Ads.txt file for Adsterra
 # Adsterra
 effectivegatecpm.com, 5392069, DIRECT, f08c47fec0942fa0
+effectivegatecpm.com, 5416535, DIRECT, f08c47fec0942fa0

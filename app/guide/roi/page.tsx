@@ -64,16 +64,26 @@ export default function GuidePage() {
                 <ul>
                     <li>Initial Investment</li>
                     <li>Final Value (today or sale)</li>
-                    <li>Time (years, can be decimal)</li>
+                    <li>Time horizon with a Years/Months toggle; you can enter 1.5 years or flip to months for short projects.</li>
+                    <li>Optional mid-period cash-flow if you put more money in or pulled some out halfway through.</li>
                 </ul>
             </section>
 
             <section>
                 <h2>Output</h2>
                 <ul>
-                    <li>ROI (%)</li>
-                    <li>Annualized ROI (optional)</li>
+                    <li>Final amount and net profit (net profit reflects the midpoint cash-flow if used).</li>
+                    <li>Total ROI calculated on average invested capital whenever the advanced cash-flow is on.</li>
+                    <li>Annualized ROI that uses decimal years so 6- or 18-month holds compare fairly.</li>
+                    <li>A collapsible “Target ROI” card that tells you what final value you need to hit a chosen percentage.</li>
                 </ul>
+            </section>
+
+            <section>
+                <h2>Advanced cash-flow insight</h2>
+                <p>
+                    Turning on the advanced toggle treats midpoint cash as being invested for half the period. The calculator uses that average invested capital to keep ROI fair without forcing you into an IRR worksheet.
+                </p>
             </section>
 
             <section>

@@ -61,6 +61,15 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model MagicLinkRequest {
+  id        String   @id @default(cuid())
+  email     String
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+}
+
 enum Plan {
   FREE
   PLUS
