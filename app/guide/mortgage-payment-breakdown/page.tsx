@@ -33,9 +33,7 @@ export default function MortgageGuide() {
         <div>
           <H2>What it does</H2>
           <p>
-            Breaks your payment into principal &amp; interest and optional
-            taxes/insurance. Compare PI vs PITI and see how term, rate, and down
-            payment shift affordability.
+            Breaks your payment into principal &amp; interest plus taxes, insurance, PMI, and HOA so you see both P&amp;I and an estimated all-in monthly payment.
           </p>
         </div>
 
@@ -43,15 +41,16 @@ export default function MortgageGuide() {
           <H2>Key inputs</H2>
           <List>
             <li>Home price, down payment, loan term, interest rate</li>
-            <li>Property tax %, homeowners insurance, HOA (optional)</li>
+            <li>Property tax (annual or monthly), homeowners insurance (annual or monthly)</li>
+            <li>PMI (annual or monthly), HOA (monthly)</li>
           </List>
         </div>
 
         <div>
           <H2>Tips</H2>
           <p>
-            Longer term lowers payment but increases total interest. Try rate
-            and down-payment scenarios to find your comfort zone.
+            Toggle annual vs monthly for tax/insurance/PMI to match your statements. Longer term lowers payment but increases total
+            interest; try rate, term, and down-payment scenarios to find your comfort zone.
           </p>
         </div>
       </Section>

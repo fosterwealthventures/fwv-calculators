@@ -105,6 +105,7 @@ export default function Header() {
 
           {/* The rest of your top links (kept intact) */}
           <HeaderLink href="/">Home</HeaderLink>
+          <HeaderLink href="/mortgage">Mortgage</HeaderLink>
           <HeaderLink href="/pricing">Pricing</HeaderLink>
           <HeaderLink href="/guide">Guides</HeaderLink>
           <HeaderLink href="/blog">Blog</HeaderLink>
@@ -196,6 +197,9 @@ export default function Header() {
 
             <MobileLink href="/" onClick={() => setMobileOpen(false)}>
               Home
+            </MobileLink>
+            <MobileLink href="/mortgage" onClick={() => setMobileOpen(false)}>
+              Mortgage
             </MobileLink>
             <MobileLink href="/pricing" onClick={() => setMobileOpen(false)}>
               Pricing

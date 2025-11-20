@@ -393,9 +393,15 @@ export async function POST(req: Request) {
       return `\n\n### Learn more\nSee our step-by-step guide: [${options?.mainCalculator}](${utm(link)})\n`;
     })();
 
-    const ctaBlock = options.cta
-      ? `\n\n---\n**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](${utm('/calculators')}), [Break-even Calculator](${utm('/calculators')}), or [Mortgage Calculator](${utm('/calculators')}).\n`
-      : '';
+    const ctaBlock = (() => {
+      if (!options.cta) return '';
+      const ctaByCalc: Record<string, string> = {
+        'Mortgage Calculator': 'https://calculators.fosterwealthventures.com/mortgage',
+      };
+      const mainCalc = options?.mainCalculator || 'our calculators';
+      const ctaTarget = ctaByCalc[options?.mainCalculator || ''] || '/calculators';
+      return `\n\n---\n**Next step:** Open the ${mainCalc} → [${mainCalc}](${utm(ctaTarget)})\n`;
+    })();
 
     // Images: allow caller to supply cover/og; fall back to site logo
     const cover = (options as any).coverImage?.trim?.() || '/fwv-logo-gold.svg';

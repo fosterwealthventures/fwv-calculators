@@ -1,4 +1,4 @@
-import Breadcrumb from "@/components/Breadcrumb";
+﻿import Breadcrumb from "@/components/Breadcrumb";
 import GuideNav from "@/components/GuideNav";
 import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
 import type { Metadata } from "next";
@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 // Use shared Breadcrumb for consistency
 
 export default function GuidePage() {
-  const pageUrl =
-    "https://fosterwealthventures.store/guide/mortgage";
+  const pageUrl = "https://fosterwealthventures.store/guide/mortgage";
   const shareTitle = String(metadata.title ?? "");
 
   const schema = {
@@ -30,7 +29,7 @@ export default function GuidePage() {
       <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/mortgage", label: "Mortgage" }]} />
 
       <GuideHero
-        title="Mortgage — Guide"
+        title="Mortgage - Guide"
         subtitle="Payment, interest, and amortization breakdowns."
         icon={null}
       />
@@ -41,7 +40,7 @@ export default function GuidePage() {
       <section>
         <h2>What it does</h2>
         <p>
-          Calculates monthly mortgage payments and shows how much goes toward principal vs interest over time.
+          Calculates principal & interest, then layers on taxes, insurance, PMI, and HOA to estimate your total monthly payment.
         </p>
       </section>
 
@@ -50,24 +49,27 @@ export default function GuidePage() {
       <section>
         <h2>Inputs</h2>
         <ul>
-          <li>Loan Amount</li>
-          <li>Interest Rate (annual)</li>
-          <li>Loan Term (years)</li>
+          <li>Home price / loan amount, down payment</li>
+          <li>Interest rate (annual), loan term (years)</li>
+          <li>Property tax (annual or monthly)</li>
+          <li>Homeowners insurance (annual or monthly)</li>
+          <li>PMI (annual or monthly)</li>
+          <li>HOA fees (monthly)</li>
         </ul>
       </section>
 
       <section>
         <h2>Output</h2>
         <ul>
-          <li>Monthly Payment</li>
-          <li>Total Interest Paid</li>
-          <li>Amortization table</li>
+          <li>Principal & interest (monthly)</li>
+          <li>Monthly add-ons (tax, insurance, PMI, HOA)</li>
+          <li>Estimated total monthly payment (P&I + add-ons)</li>
         </ul>
       </section>
 
       <section>
         <h2>Example</h2>
-        <p>$300,000 loan at 6.5% for 30 years → Monthly payment: ~$1,896</p>
+        <p>$300,000 loan at 6.5% for 30 years — P&I: ~$1,896; add-ons get added on top.</p>
       </section>
 
       <section>

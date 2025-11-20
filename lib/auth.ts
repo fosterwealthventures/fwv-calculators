@@ -6,12 +6,16 @@ import { enforceMagicLinkRateLimit } from "./email-rate-limit"
 import { prisma } from "./prisma"
 import { stripe } from "./stripe"
 
-const PLAN_REFRESH_INTERVAL_MS = Number(process.env.SESSION_PLAN_REFRESH_MS ?? 15 * 60 * 1000)
+const PLAN_REFRESH_INTERVAL_MS = Number(
+  process.env.SESSION_PLAN_REFRESH_MS ?? 15 * 60 * 1000
+)
 
 const emailProvider = EmailProvider({
   server: {
     host: process.env.EMAIL_SERVER_HOST,
-    port: process.env.EMAIL_SERVER_PORT,
+    port: process.env.EMAIL_SERVER_PORT
+      ? parseInt(process.env.EMAIL_SERVER_PORT, 10)
+      : 587,
     auth: {
       user: process.env.EMAIL_SERVER_USER,
       pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -36,38 +40,33 @@ const emailProvider = EmailProvider({
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  providers: [
-    emailProvider,
-  ],
+  providers: [emailProvider],
   callbacks: {
-    session: async ({ session, token }: { session: any; token: any }) => {
+    // Let NextAuth provide the correct param types
+    async session({ session, token }) {
       if (session?.user && token?.sub) {
-        session.user.id = token.sub
-        session.user.plan = (token.plan as string) || "free"
-        session.user.proChoice = token.proChoice as string | undefined
-        session.user.stripeCustomerId = token.stripeCustomerId as string | undefined
+        // you’ve extended the session.user type in your app, so this is fine
+        ; (session.user as any).id = token.sub
+          ; (session.user as any).plan = (token.plan as string) || "free"
+          ; (session.user as any).proChoice = token.proChoice as string | undefined
+          ; (session.user as any).stripeCustomerId =
+            token.stripeCustomerId as string | undefined
       }
       return session
     },
-    jwt: async ({
-      user,
-      token,
-      trigger,
-    }: {
-      user?: any
-      token: any
-      trigger?: "signIn" | "update"
-    }) => {
+
+    // ❗ Fixed: removed the manual param type that was causing the error
+    async jwt({ user, token, trigger }) {
       if (user) {
-        token.sub = user.id
-        token.plan = (user.plan || "FREE").toLowerCase()
-        token.proChoice = user.proChoice?.toLowerCase() ?? undefined
-        token.stripeCustomerId = user.stripeCustomerId ?? undefined
+        token.sub = (user as any).id
+        token.plan = ((user as any).plan || "FREE").toLowerCase()
+        token.proChoice = (user as any).proChoice?.toLowerCase() ?? undefined
+        token.stripeCustomerId = (user as any).stripeCustomerId ?? undefined
         token.planCheckedAt = Date.now()
       }
 
-      if (trigger === "update" && user?.plan) {
-        token.plan = (user.plan || "FREE").toLowerCase()
+      if (trigger === "update" && (user as any)?.plan) {
+        token.plan = ((user as any).plan || "FREE").toLowerCase()
         token.planCheckedAt = Date.now()
       }
 
@@ -78,7 +77,7 @@ export const authOptions: NextAuthOptions = {
 
         if (!token.plan || shouldRefreshPlan) {
           const dbUser = await prisma.user.findUnique({
-            where: { id: token.sub },
+            where: { id: token.sub as string },
             select: { plan: true, proChoice: true, stripeCustomerId: true },
           })
 
@@ -90,6 +89,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
+
       return token
     },
   },
@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
         // Update the user with the Stripe customer ID
         await prisma.user.update({
           where: { id: user.id },
-          data: { stripeCustomerId: customer.id }
+          data: { stripeCustomerId: customer.id },
         })
       }
     },

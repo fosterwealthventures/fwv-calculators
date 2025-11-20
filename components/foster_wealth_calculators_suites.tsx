@@ -326,13 +326,33 @@ const YearBreakdownTable: React.FC<{ rows: YearRow[] }> = ({ rows }) => {
  * ---------------------------------------------------------------------------------------------- */
 export default function FosterWealthCalculators({
   freeOnly = false,
+  allowedCalcs,
 }: {
   freeOnly?: boolean;
+  allowedCalcs?: CalcKey[];
 }) {
   const { planId } = useEntitlements(); // single source of truth for plan (Free shows ads) - now includes dev override
-  const [activeCalc, setActiveCalc] = useState<CalcKey>("roi");
+  const [activeCalc, setActiveCalc] = useState<CalcKey>(
+    (allowedCalcs && allowedCalcs[0]) || "roi",
+  );
 
-  // Deep-link support (?calc=), with safety if freeOnly hides paid calcs
+  const allowedSet = useMemo(
+    () => (allowedCalcs && allowedCalcs.length ? new Set(allowedCalcs) : null),
+    [allowedCalcs],
+  );
+
+  // Clamp visible calculators to allowed list (if provided) and free tier when freeOnly is true.
+  const visibleCalcs = Object.entries(calcMeta.calculators).filter(
+    ([key, meta]) => {
+      if (freeOnly && meta.tier !== "free") return false;
+      if (allowedSet && !allowedSet.has(key as CalcKey)) return false;
+      return true;
+    },
+  );
+
+  const defaultCalc = visibleCalcs[0]?.[0] as CalcKey | undefined;
+
+  // Deep-link support (?calc=), with safety for freeOnly and optional allowedCalcs
   const searchParams = useSearchParams();
   const pathname = usePathname();
   useEffect(() => {
@@ -358,18 +378,17 @@ export default function FosterWealthCalculators({
     }
 
     if (chosen) {
+      if (allowedSet && !allowedSet.has(chosen)) chosen = defaultCalc || chosen;
       const tier = (calcMeta.calculators as any)[chosen]?.tier as
         | "free"
         | "plus"
         | "pro";
-      if (freeOnly && tier !== "free") setActiveCalc("roi");
+      if (freeOnly && tier !== "free") setActiveCalc(defaultCalc || "roi");
       else setActiveCalc(chosen);
+    } else if (defaultCalc) {
+      setActiveCalc(defaultCalc);
     }
-  }, [searchParams, pathname, freeOnly]);
-
-  const visibleCalcs = Object.entries(calcMeta.calculators).filter(
-    ([, meta]) => !(freeOnly && meta.tier !== "free"),
-  );
+  }, [searchParams, pathname, freeOnly, allowedSet, defaultCalc]);
 
   // Upgrade handler for paid calculators
   const handleUpgrade = () => {
@@ -487,8 +506,20 @@ export default function FosterWealthCalculators({
     interestRate: "6.5",
     loanTerm: "30",
     downPayment: "80000",
+    propertyTax: "3600",
+    propertyTaxMode: "annual" as "annual" | "monthly",
+    insurance: "1200",
+    insuranceMode: "annual" as "annual" | "monthly",
+    pmi: "0",
+    pmiMode: "monthly" as "annual" | "monthly",
+    hoa: "0",
   });
   const mtg = useMemo(() => {
+    const monthlyFromMode = (val: string, mode: "annual" | "monthly") => {
+      const num = Math.max(toNum(val), 0);
+      return mode === "annual" ? num / 12 : num;
+    };
+
     const loan = Math.max(
       (parseFloat(mtgInputs.loanAmount) || 0) -
       (parseFloat(mtgInputs.downPayment) || 0),
@@ -498,9 +529,21 @@ export default function FosterWealthCalculators({
     const nYears = parseFloat(mtgInputs.loanTerm) || 30;
     const r = annualRate / 12;
     const n = nYears * 12;
-    if (r <= 0) return { monthly: loan / Math.max(n, 1), total: loan };
-    const monthly = (loan * r) / (1 - Math.pow(1 + r, -n));
-    return { monthly, total: monthly * n };
+    const monthlyPI =
+      r <= 0 ? loan / Math.max(n, 1) : (loan * r) / (1 - Math.pow(1 + r, -n));
+
+    const taxMonthly = monthlyFromMode(mtgInputs.propertyTax, mtgInputs.propertyTaxMode);
+    const insuranceMonthly = monthlyFromMode(mtgInputs.insurance, mtgInputs.insuranceMode);
+    const pmiMonthly = monthlyFromMode(mtgInputs.pmi, mtgInputs.pmiMode);
+    const hoaMonthly = Math.max(toNum(mtgInputs.hoa), 0);
+    const monthlyAddOns = taxMonthly + insuranceMonthly + pmiMonthly + hoaMonthly;
+
+    return {
+      monthlyPI,
+      monthlyAddOns,
+      totalMonthly: monthlyPI + monthlyAddOns,
+      total: monthlyPI * n,
+    };
   }, [mtgInputs]);
 
 
@@ -1151,23 +1194,118 @@ export default function FosterWealthCalculators({
                     value={mtgInputs.loanTerm}
                     onChange={(v) => setMtgInputs((s) => ({ ...s, loanTerm: v }))}
                   />
+                  <div className="space-y-3">
+                    <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                      <Input
+                        id="mtg_tax"
+                        label="Property Tax"
+                        value={mtgInputs.propertyTax}
+                        onChange={(v) =>
+                          setMtgInputs((s) => ({ ...s, propertyTax: v }))
+                        }
+                      />
+                      <div className="flex flex-col gap-1 text-sm">
+                        <label className="text-xs font-semibold text-plum-900 dark:text-plum-100">
+                          Frequency
+                        </label>
+                        <select
+                          value={mtgInputs.propertyTaxMode}
+                          onChange={(e) =>
+                            setMtgInputs((s) => ({
+                              ...s,
+                              propertyTaxMode: e.target.value as "annual" | "monthly",
+                            }))
+                          }
+                          className="h-[46px] rounded-lg border border-plum-300 bg-white px-3 text-sm text-plum-900 shadow-sm focus:border-plum-500 focus:outline-none focus:ring-2 focus:ring-plum-400"
+                        >
+                          <option value="annual">Annual</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                      <Input
+                        id="mtg_insurance"
+                        label="Homeowners Insurance"
+                        value={mtgInputs.insurance}
+                        onChange={(v) =>
+                          setMtgInputs((s) => ({ ...s, insurance: v }))
+                        }
+                      />
+                      <div className="flex flex-col gap-1 text-sm">
+                        <label className="text-xs font-semibold text-plum-900 dark:text-plum-100">
+                          Frequency
+                        </label>
+                        <select
+                          value={mtgInputs.insuranceMode}
+                          onChange={(e) =>
+                            setMtgInputs((s) => ({
+                              ...s,
+                              insuranceMode: e.target.value as "annual" | "monthly",
+                            }))
+                          }
+                          className="h-[46px] rounded-lg border border-plum-300 bg-white px-3 text-sm text-plum-900 shadow-sm focus:border-plum-500 focus:outline-none focus:ring-2 focus:ring-plum-400"
+                        >
+                          <option value="annual">Annual</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                      <Input
+                        id="mtg_pmi"
+                        label="PMI"
+                        value={mtgInputs.pmi}
+                        onChange={(v) =>
+                          setMtgInputs((s) => ({ ...s, pmi: v }))
+                        }
+                      />
+                      <div className="flex flex-col gap-1 text-sm">
+                        <label className="text-xs font-semibold text-plum-900 dark:text-plum-100">
+                          Frequency
+                        </label>
+                        <select
+                          value={mtgInputs.pmiMode}
+                          onChange={(e) =>
+                            setMtgInputs((s) => ({
+                              ...s,
+                              pmiMode: e.target.value as "annual" | "monthly",
+                            }))
+                          }
+                          className="h-[46px] rounded-lg border border-plum-300 bg-white px-3 text-sm text-plum-900 shadow-sm focus:border-plum-500 focus:outline-none focus:ring-2 focus:ring-plum-400"
+                        >
+                          <option value="annual">Annual</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <Input
+                      id="mtg_hoa"
+                      label="HOA Fees (monthly)"
+                      value={mtgInputs.hoa}
+                      onChange={(v) => setMtgInputs((s) => ({ ...s, hoa: v }))}
+                    />
+                  </div>
                 </InputsPanel>
                 <ResultsPanel title="Results">
-                  <KV label="Monthly Payment" value={fmtUSD(mtg.monthly)} />
-                  <KV label="Total Paid" value={fmtUSD(mtg.total)} />
+                  <KV label="Principal & Interest (Monthly)" value={fmtUSD(mtg.monthlyPI)} />
+                  <KV label="Monthly Add-ons" value={fmtUSD(mtg.monthlyAddOns)} />
+                  <KV label="Est. Total Monthly Payment" value={fmtUSD(mtg.totalMonthly)} />
+                  <KV label="Total Paid (loan only, P&I)" value={fmtUSD(mtg.total)} />
                 </ResultsPanel>
               </div>
               <div className="px-6 pb-6">
                 <ExplanationPanel title="How this works">
                   <ul className="ml-5 list-disc">
                     <li>
-                      Monthly payment uses p = rL / (1 − (1+r)<sup>−n</sup>),
-                      where r=rate/12, n=months.
+                      Principal & interest: p = rL / (1 − (1+r)<sup>−n</sup>), where r = annual rate / 12 and n = total months.
                     </li>
-                    <li>
-                      Higher rates/longer terms increase total interest paid.
-                    </li>
-                    <li>Extra principal payments reduce total interest.</li>
+                    <li>Property tax, insurance, and PMI can be entered as annual or monthly; annual values are divided by 12.</li>
+                    <li>HOA is monthly; total monthly = P&I + tax + insurance + PMI + HOA.</li>
+                    <li>Longer terms lower the payment but increase total interest; extra principal reduces total interest.</li>
                   </ul>
                   <p className="mt-2">
                     Learn more:{" "}
