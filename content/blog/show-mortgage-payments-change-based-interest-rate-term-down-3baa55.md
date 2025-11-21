@@ -45,7 +45,7 @@ If the interest rate increases to 5%, let's see how it affects your monthly paym
 
 
 ---
-**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](/calculators), [Break-even Calculator](/calculators), or [Mortgage Calculator](/calculators).
+**Next step:** Explore our calculators for hands-on planning — try [ROI Calculator](/calculators), [Break-even Calculator](/calculators), or [Mortgage Calculator](/mortgage?utm_source=blog&utm_medium=link&utm_campaign=show-mortgage-payments-change-based-interest-rate-term-down-3baa55).
 
 
 <script type="application/ld+json">
