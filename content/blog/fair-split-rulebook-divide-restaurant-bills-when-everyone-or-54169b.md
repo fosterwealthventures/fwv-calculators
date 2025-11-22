@@ -29,7 +29,7 @@ To divide the bill fairly, follow these simple steps:
 1. **Calculate the Total Bill**: Sum up all the items ordered along with any applicable tax and tips.
 2. **Determine Individual Costs**: If everyone ordered different items, identify the cost of each person’s order.
 3. **Split the Bill**: Decide on a method to split the bill, whether it's equally, itemized, or based on a percentage.
-4. **Use the Split-Order Calculator**: For a precise and easy calculation, use our [Split-Order Calculator](/calculators).
+4. **Use the Split-Order Calculator**: For a precise and easy calculation, use our [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=fair-split-rulebook-divide-restaurant-bills-when-everyone-or-54169b).
 
 ### Step-by-Step Calculation
 
@@ -139,7 +139,7 @@ It’s crucial to include tax and tip in your calculations to avoid splitting th
 
 ### Can I use the calculator on my phone?
 
-Yes! Our [Split-Order Calculator](/calculators) is mobile-friendly, so you can easily access it on your smartphone while at the restaurant.
+Yes! Our [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=fair-split-rulebook-divide-restaurant-bills-when-everyone-or-54169b) is mobile-friendly, so you can easily access it on your smartphone while at the restaurant.
 
 ## Conclusion
 
@@ -148,7 +148,7 @@ Dividing a restaurant bill fairly can be simple when you understand the steps in
 
 
 ### Try our calculators
-- [Restaurant Tips Tabs & Splits Calculator](/calculators)
+- [Restaurant Tips Tabs & Splits Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=fair-split-rulebook-divide-restaurant-bills-when-everyone-or-54169b)
 - [ROI Calculator](/calculators)
 - [Mortgage Calculator](/calculators)
 - [Savings Growth Calculator](/calculators)

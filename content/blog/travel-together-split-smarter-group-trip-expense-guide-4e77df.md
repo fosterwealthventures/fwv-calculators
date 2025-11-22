@@ -23,7 +23,7 @@ Before you even book your first flight, gather input from all group members abou
 Throughout the trip, keep a detailed record of all expenses. This includes accommodations, transportation, food, activities, and other incidentals.
 
 ### Step 3: Use the Expense Split Calculator
-To simplify the process of splitting costs, utilize the [Expense Split Calculator](/calculators). This handy tool helps you determine how much each person owes based on shared expenses.
+To simplify the process of splitting costs, utilize the [Expense Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=travel-together-split-smarter-group-trip-expense-guide-4e77df). This handy tool helps you determine how much each person owes based on shared expenses.
 
 #### Example Calculation Using the Expense Split Calculator:
 
@@ -83,7 +83,7 @@ $$
 Cost \ per \ person = \frac{1150}{5} = 230
 $$
 
-Each person should pay $230. To calculate this seamlessly, plug these numbers into the [Expense Split Calculator](/calculators), and you'll get the same result effortlessly!
+Each person should pay $230. To calculate this seamlessly, plug these numbers into the [Expense Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=travel-together-split-smarter-group-trip-expense-guide-4e77df), and you'll get the same result effortlessly!
 
 ### Settling Up
 If one friend paid for gas and another for food, make sure to input these into the calculator to determine who owes what. For example, if John paid $120 for gas and Sarah paid $250 for food, you would enter these amounts into the calculator. 
@@ -112,12 +112,12 @@ While cash is simple, digital payments can be easier for tracking and settling b
 Keep the calculator handy and update it regularly with any new expenses to ensure everyone is aware of their contributions.
 
 ## Conclusion
-Traveling with a group can be a fantastic way to create lasting memories, but managing expenses shouldn't be a source of stress. By setting a clear budget, tracking expenses diligently, and using the [Expense Split Calculator](/calculators), you can ensure that everyone knows what they owe and that settling up is a breeze. Remember, the key to a successful group trip is communication and transparency regarding finances. Happy travels!
+Traveling with a group can be a fantastic way to create lasting memories, but managing expenses shouldn't be a source of stress. By setting a clear budget, tracking expenses diligently, and using the [Expense Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=travel-together-split-smarter-group-trip-expense-guide-4e77df), you can ensure that everyone knows what they owe and that settling up is a breeze. Remember, the key to a successful group trip is communication and transparency regarding finances. Happy travels!
 
 
 
 ### Try our calculators
-- [Order Split Calculator](/calculators)
+- [Order Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=travel-together-split-smarter-group-trip-expense-guide-4e77df)
 - [ROI Calculator](/calculators)
 - [Break-even Calculator](/calculators)
 - [Savings Growth Calculator](/calculators)

@@ -12,7 +12,7 @@ meta_description: "Split restaurant bills without awkwardness — learn the rule
 
 # Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully
 
-Going out to dinner with friends can be a delightful experience, but it can also lead to confusion when it comes time to settle the bill. Whether you're splitting the tab evenly or calculating each person's share based on their orders, knowing how to do this gracefully and correctly is essential. Fortunately, our [Split-Order Calculator](/calculators) is here to help! In this guide, we'll explore the etiquette and math of splitting tabs, along with practical steps using the Split-Order Calculator.
+Going out to dinner with friends can be a delightful experience, but it can also lead to confusion when it comes time to settle the bill. Whether you're splitting the tab evenly or calculating each person's share based on their orders, knowing how to do this gracefully and correctly is essential. Fortunately, our [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c) is here to help! In this guide, we'll explore the etiquette and math of splitting tabs, along with practical steps using the Split-Order Calculator.
 
 ## Steps to Split the Tab
 
@@ -38,9 +38,9 @@ If everyone ordered differently, it's best to note how much each person spent. F
 
 ### 3. Use the Split-Order Calculator
 
-Now, let’s jump into the practical use of the [Split-Order Calculator](/calculators). Here’s how to use it step-by-step:
+Now, let’s jump into the practical use of the [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c). Here’s how to use it step-by-step:
 
-1. **Navigate to the Calculator**: Go to the [Split-Order Calculator](/calculators).
+1. **Navigate to the Calculator**: Go to the [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c).
 2. **Input the Total Bill**: Enter the total amount, say $120.
 3. **Add Individual Contributions**: Input each friend's order:
    - Friend 1: $30
@@ -81,7 +81,7 @@ While splitting the tab can be straightforward, there are a few common pitfalls 
 
 ## Example of Using the Split-Order Calculator
 
-Let’s go through a detailed example of how to use the [Split-Order Calculator](/calculators) in a real-world scenario:
+Let’s go through a detailed example of how to use the [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c) in a real-world scenario:
 
 **Scenario**: You and your friends are at a restaurant. The total bill is $150, including a 15% tip.
 
@@ -113,22 +113,22 @@ Let’s go through a detailed example of how to use the [Split-Order Calculator]
 ## FAQs
 
 ### Q1: What if one person forgot to pay their share?
-If someone forgets to pay, you can simply recalculate the shares using the [Split-Order Calculator](/calculators) and adjust accordingly. It's essential to communicate openly about this.
+If someone forgets to pay, you can simply recalculate the shares using the [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c) and adjust accordingly. It's essential to communicate openly about this.
 
 ### Q2: How do I handle a situation where one person wants to pay for everyone?
-In this case, you can calculate everyone's share and then have that person cover the total. Make sure to use the [Split-Order Calculator](/calculators) to keep track of who owes what and how much.
+In this case, you can calculate everyone's share and then have that person cover the total. Make sure to use the [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c) to keep track of who owes what and how much.
 
 ### Q3: Is it rude to ask to split the bill?
 Not at all! It’s perfectly acceptable to discuss how to split the bill before the meal. Many people prefer to share expenses upfront to avoid confusion later.
 
 ## Conclusion
 
-Splitting the bill after a fun dinner doesn't have to be a hassle. By utilizing our [Split-Order Calculator](/calculators), you can easily and gracefully determine how much each person owes, ensuring everyone leaves happy. Remember to gather all necessary information, communicate clearly with your friends, and double-check your calculations to avoid common mistakes. With these tips and tools, your next dinner out can focus on enjoying great food and company, rather than on financial squabbles!
+Splitting the bill after a fun dinner doesn't have to be a hassle. By utilizing our [Split-Order Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c), you can easily and gracefully determine how much each person owes, ensuring everyone leaves happy. Remember to gather all necessary information, communicate clearly with your friends, and double-check your calculations to avoid common mistakes. With these tips and tools, your next dinner out can focus on enjoying great food and company, rather than on financial squabbles!
 
 
 
 ### Try our calculators
-- [Restaurant Tip Tab Split Calculator](/calculators)
+- [Restaurant Tip Tab Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c)
 - [ROI Calculator](/calculators)
 - [Expense Split Calculator](/calculators)
 - [Savings Growth Calculator](/calculators)

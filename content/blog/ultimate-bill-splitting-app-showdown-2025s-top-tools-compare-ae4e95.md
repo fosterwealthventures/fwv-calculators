@@ -121,9 +121,9 @@ In conclusion, splitting bills and calculating tips doesn’t have to be a stres
 
 
 ### Try our calculators
-- [Order Split Calculator](/calculators)
+- [Order Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=ultimate-bill-splitting-app-showdown-2025s-top-tools-compare-ae4e95)
 - [Shopping Budget](/calculators)
-- [Expense Split Calculator](/calculators)
+- [Expense Split Calculator](/tip-split?utm_source=blog&utm_medium=link&utm_campaign=ultimate-bill-splitting-app-showdown-2025s-top-tools-compare-ae4e95)
 
 
 ---

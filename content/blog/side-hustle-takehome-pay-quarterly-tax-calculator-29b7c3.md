@@ -162,13 +162,13 @@ It’s wise to reassess your rates annually or whenever you experience significa
 
 ### Where can I find the Freelance Rate Calculator?
 
-You can easily access the **Freelance Rate Calculator** at this link: [Freelance Rate Calculator](/calculators).
+You can easily access the **Freelance Rate Calculator** at this link: [Freelance Rate Calculator](/freelancer-rate?utm_source=blog&utm_medium=link&utm_campaign=side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3).
 
 ## Conclusion
 
 Understanding your side hustle's take-home pay and tax obligations is essential for financial success. With the **Freelance Rate Calculator**, you can make informed pricing decisions that consider your desired income, expenses, and tax obligations. 
 
-By learning how to use this tool effectively, you’ll ensure that your side hustle not only provides supplemental income but also contributes meaningfully to your financial goals. Remember to revisit your calculations regularly to adapt to any changes in your work or financial situation. Start using our [Freelance Rate Calculator](/calculators) today to take control
+By learning how to use this tool effectively, you’ll ensure that your side hustle not only provides supplemental income but also contributes meaningfully to your financial goals. Remember to revisit your calculations regularly to adapt to any changes in your work or financial situation. Start using our [Freelance Rate Calculator](/freelancer-rate?utm_source=blog&utm_medium=link&utm_campaign=side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3) today to take control
 
 
 
@@ -179,7 +179,7 @@ By learning how to use this tool effectively, you’ll ensure that your side hus
 
 
 ### Learn more
-See our step-by-step guide: [Freelance Rate Calculator](/guide/freelancer-rate?utm_source=blog&utm_medium=link&utm_campaign=side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3)
+See our step-by-step guide: [Freelance Rate Calculator](/freelancer-rate?utm_source=blog&utm_medium=link&utm_campaign=side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3)
 
 
 ---

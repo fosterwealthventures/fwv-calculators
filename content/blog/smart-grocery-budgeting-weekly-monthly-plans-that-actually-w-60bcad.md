@@ -44,7 +44,7 @@ So, you have $90 to spend each week.
 
 ### Step 4: Use the Shopping Budget Calculator
 
-To streamline your budgeting process, consider using our [Shopping Budget Calculator](/calculators). This tool allows you to input your income and desired percentage for groceries, making it easy to calculate your budget without manual calculations.
+To streamline your budgeting process, consider using our [Shopping Budget Calculator](/shopping-budget?utm_source=blog&utm_medium=link&utm_campaign=smart-grocery-budgeting-weekly-monthly-plans-that-actually-w-60bcad). This tool allows you to input your income and desired percentage for groceries, making it easy to calculate your budget without manual calculations.
 
 ### Step 5: Track Your Spending
 
@@ -110,7 +110,7 @@ A: Create a shopping list before going to the store and stick to it. Avoid shopp
 
 ## Conclusion
 
-Smart grocery budgeting doesn't have to be complicated. By following these steps and utilizing tools like our [Shopping Budget Calculator](/calculators), you can take control of your grocery spending. Remember to track your expenses, adjust when necessary, and stay committed to your budget for a healthier financial future. Happy shopping, and may your meals be delicious and within budget!
+Smart grocery budgeting doesn't have to be complicated. By following these steps and utilizing tools like our [Shopping Budget Calculator](/shopping-budget?utm_source=blog&utm_medium=link&utm_campaign=smart-grocery-budgeting-weekly-monthly-plans-that-actually-w-60bcad), you can take control of your grocery spending. Remember to track your expenses, adjust when necessary, and stay committed to your budget for a healthier financial future. Happy shopping, and may your meals be delicious and within budget!
 
 
 
