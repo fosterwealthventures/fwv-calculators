@@ -9,9 +9,34 @@ import {
   Download,
   X,
   Calendar,
+  RotateCcw,
 } from "lucide-react";
 // Permissions hook (Pro/Premium gate for this calculator)
 import { useDownloadPermission } from "@/hooks/useDownloadPermission";
+
+const EMPLOYEE_DEFAULT = {
+  payType: "salary" as "salary" | "hourly",
+  salary: 65000,
+  hourlyRate: 25,
+  hoursPerWeek: 40,
+  weeksPerYear: 52,
+  benefitsPercent: 25,
+  payrollTaxRate: 7.65,
+  unemploymentTax: 0.6,
+  workersComp: 0.75,
+  otherBenefits: 0,
+};
+
+const EXPENSES_DEFAULT: Expense[] = [
+  { id: 1, name: "Office Supplies", amount: 500, frequency: "annual" },
+  { id: 2, name: "Equipment/Computer", amount: 1200, frequency: "annual" },
+];
+
+const NEW_EXPENSE_DEFAULT = {
+  name: "",
+  amount: "",
+  frequency: "annual" as Expense["frequency"],
+};
 
 type Expense = {
   id: number;
@@ -32,37 +57,26 @@ const EmployeeCostPro: React.FC<Props> = ({ onUpgrade }) => {
   // === PERMISSIONS: use app-wide gate for the Employee Cost calculator ===
   const { canDownload = false } = useDownloadPermission("employee-cost");
 
-  const [employeeData, setEmployeeData] = useState({
-    payType: "salary" as "salary" | "hourly",
-    salary: 65000,
-    hourlyRate: 25,
-    hoursPerWeek: 40,
-    weeksPerYear: 52,
-    benefitsPercent: 25,
-    payrollTaxRate: 7.65,
-    unemploymentTax: 0.6,
-    workersComp: 0.75,
-    otherBenefits: 0,
-  });
+  const [employeeData, setEmployeeData] = useState({ ...EMPLOYEE_DEFAULT });
 
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, name: "Office Supplies", amount: 500, frequency: "annual" },
-    { id: 2, name: "Equipment/Computer", amount: 1200, frequency: "annual" },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([...EXPENSES_DEFAULT]);
 
   const [newExpense, setNewExpense] = useState<{
     name: string;
     amount: string;
     frequency: Expense["frequency"];
-  }>({
-    name: "",
-    amount: "",
-    frequency: "annual",
-  });
+  }>({ ...NEW_EXPENSE_DEFAULT });
 
   const [timeBreakdown, setTimeBreakdown] = useState<
     "annual" | "quarterly" | "monthly" | "biweekly" | "weekly" | "daily"
   >("annual");
+
+  const resetAll = () => {
+    setEmployeeData({ ...EMPLOYEE_DEFAULT });
+    setExpenses([...EXPENSES_DEFAULT]);
+    setNewExpense({ ...NEW_EXPENSE_DEFAULT });
+    setTimeBreakdown("annual");
+  };
 
   const addExpense = () => {
     if (newExpense.name && newExpense.amount !== "") {
@@ -303,21 +317,30 @@ Hourly Cost: ${formatCurrencyDetailed(employeeResults.hourlyCost)}
             </p>
           </div>
 
-          <button
-            onClick={downloadReport}
-            className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-              canDownload
-                ? "bg-white/20 hover:bg-white/30 text-white"
-                : "bg-gray-400 cursor-not-allowed text-gray-200"
-            }`}
-            disabled={!canDownload}
-            title={
-              canDownload ? "Download Report" : "Upgrade to download reports"
-            }
-          >
-            <Download className="h-4 w-4" />
-            {canDownload ? "Download Report" : "Upgrade to Download"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={resetAll}
+              className="px-4 py-2 rounded-lg flex items-center gap-2 bg-white/15 text-white hover:bg-white/25 transition-colors"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear
+            </button>
+            <button
+              onClick={downloadReport}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+                canDownload
+                  ? "bg-white/20 hover:bg-white/30 text-white"
+                  : "bg-gray-400 cursor-not-allowed text-gray-200"
+              }`}
+              disabled={!canDownload}
+              title={
+                canDownload ? "Download Report" : "Upgrade to download reports"
+              }
+            >
+              <Download className="h-4 w-4" />
+              {canDownload ? "Download Report" : "Upgrade to Download"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -865,4 +888,3 @@ Hourly Cost: ${formatCurrencyDetailed(employeeResults.hourlyCost)}
 };
 
 export default EmployeeCostPro;
-

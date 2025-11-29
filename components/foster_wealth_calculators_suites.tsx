@@ -6,6 +6,7 @@ import {
   Home,
   PiggyBank,
   ShoppingCart,
+  RotateCcw,
   TrendingUp,
   Users
 } from "lucide-react";
@@ -110,6 +111,73 @@ const calcMeta = {
     },
   },
 } as const;
+
+const ROI_DEFAULTS = {
+  initialInvestment: "10000",
+  finalValue: "15000",
+  timeHorizon: "2",
+};
+const BE_DEFAULTS = {
+  fixedCosts: "5000",
+  variableCostPerUnit: "15",
+  pricePerUnit: "25",
+  profitTarget: "0",
+  currentUnits: "0",
+  monthlyUnits: "0",
+};
+const MTG_DEFAULTS = {
+  loanAmount: "400000",
+  interestRate: "6.5",
+  loanTerm: "30",
+  downPayment: "80000",
+  downPaymentMode: "amount" as "amount" | "percent",
+  propertyTax: "3600",
+  propertyTaxMode: "annual" as "annual" | "monthly",
+  insurance: "1200",
+  insuranceMode: "annual" as "annual" | "monthly",
+  pmi: "0",
+  pmiMode: "monthly" as "annual" | "monthly",
+  hoa: "0",
+};
+const INT_DEFAULTS = {
+  principal: "10000",
+  annualRatePct: "5",
+  years: "10",
+  monthlyContribution: "0",
+  frequency: "monthly" as CompoundValue,
+};
+const FR_DEFAULTS = {
+  annualIncome: "120000",
+  weeksOff: "4",
+  hoursPerWeek: "30",
+  overheadPct: "10",
+};
+const TIP_DEFAULTS = {
+  bill: "120.00",
+  people: "3",
+  discountMode: "percent" as "percent" | "amount",
+  discountValue: "0",
+  taxPct: "8.5",
+  tipPct: "18",
+  tipOn: "afterDiscount" as "afterDiscount" | "beforeDiscount",
+};
+const ORDER_DEFAULTS = {
+  yours: "0",
+  others: [""],
+  shared: "0",
+  sharers: "",
+};
+const SAV_DEFAULTS = {
+  start: "10000",
+  monthly: "250",
+  ratePct: "6",
+  years: "10",
+};
+const DEBT_DEFAULTS = {
+  balance: "12000",
+  aprPct: "19.99",
+  monthlyPay: "350",
+};
 
 /** ----------------------------------------------------------------------------------------------
  *  Small UI helpers
@@ -268,6 +336,20 @@ const Header: React.FC<{ title: string }> = ({ title }) => (
   </div>
 );
 
+const ClearButton: React.FC<{ onClick: () => void; label?: string }> = ({
+  onClick,
+  label = "Clear & start over",
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="inline-flex items-center gap-2 rounded-md border border-plum-300 bg-white px-3 py-2 text-sm font-medium text-plum-700 shadow-sm transition hover:bg-plum-50 focus:outline-none focus:ring-2 focus:ring-aure-400/50"
+  >
+    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+    {label}
+  </button>
+);
+
 /** ----------------------------------------------------------------------------------------------
  *  Interest helpers (frequency map + table)
  * ---------------------------------------------------------------------------------------------- */
@@ -400,11 +482,7 @@ export default function FosterWealthCalculators({
   };
 
   /* ---------------- ROI ---------------- */
-  const [roiInputs, setRoiInputs] = useState({
-    initialInvestment: "10000",
-    finalValue: "15000",
-    timeHorizon: "2",
-  });
+  const [roiInputs, setRoiInputs] = useState({ ...ROI_DEFAULTS });
   const [roiTimeUnit, setRoiTimeUnit] = useState<"years" | "months">("years");
   const [targetRoiPercent, setTargetRoiPercent] = useState(25);
   const [roiAdvanced, setRoiAdvanced] = useState(false);
@@ -487,44 +565,58 @@ export default function FosterWealthCalculators({
   }, [roiInputs.initialInvestment, targetRoiPercent]);
 
   /* ------------- Break-Even ------------- */
-  const [beInputs, setBeInputs] = useState({
-    fixedCosts: "5000",
-    variableCostPerUnit: "15",
-    pricePerUnit: "25",
-  });
-  const breakEvenUnits = useMemo(() => {
-    const FC = parseFloat(beInputs.fixedCosts) || 0;
-    const VC = parseFloat(beInputs.variableCostPerUnit) || 0;
-    const P = parseFloat(beInputs.pricePerUnit) || 0;
+  const [beInputs, setBeInputs] = useState({ ...BE_DEFAULTS });
+  const beDerived = useMemo(() => {
+    const FC = toNum(beInputs.fixedCosts);
+    const VC = toNum(beInputs.variableCostPerUnit);
+    const P = toNum(beInputs.pricePerUnit);
+    const targetProfit = Math.max(0, toNum(beInputs.profitTarget));
+    const currentUnits = Math.max(0, toNum(beInputs.currentUnits));
+    const monthlyUnits = Math.max(0, toNum(beInputs.monthlyUnits));
+
     const cm = P - VC;
-    return cm <= 0 ? Infinity : Math.ceil(FC / cm);
+    const cmPct = P > 0 ? cm / P : 0;
+    const breakEvenUnits = cm <= 0 ? Infinity : Math.ceil(FC / cm);
+    const breakEvenRevenue = isFinite(breakEvenUnits) ? breakEvenUnits * P : Infinity;
+
+    const profitUnits = cm <= 0 ? Infinity : Math.ceil((FC + targetProfit) / cm);
+    const profitRevenue = isFinite(profitUnits) ? profitUnits * P : Infinity;
+
+    const safetyMargin = currentUnits > 0 && isFinite(breakEvenUnits)
+      ? (currentUnits - breakEvenUnits) / currentUnits
+      : null;
+
+    const monthsToBE = monthlyUnits > 0 && isFinite(breakEvenUnits)
+      ? breakEvenUnits / monthlyUnits
+      : null;
+
+    return {
+      cm,
+      cmPct,
+      breakEvenUnits,
+      breakEvenRevenue,
+      profitUnits,
+      profitRevenue,
+      safetyMargin,
+      monthsToBE,
+    };
   }, [beInputs]);
 
   /* --------------- Mortgage -------------- */
-  const [mtgInputs, setMtgInputs] = useState({
-    loanAmount: "400000",
-    interestRate: "6.5",
-    loanTerm: "30",
-    downPayment: "80000",
-    propertyTax: "3600",
-    propertyTaxMode: "annual" as "annual" | "monthly",
-    insurance: "1200",
-    insuranceMode: "annual" as "annual" | "monthly",
-    pmi: "0",
-    pmiMode: "monthly" as "annual" | "monthly",
-    hoa: "0",
-  });
+  const [mtgInputs, setMtgInputs] = useState({ ...MTG_DEFAULTS });
   const mtg = useMemo(() => {
     const monthlyFromMode = (val: string, mode: "annual" | "monthly") => {
       const num = Math.max(toNum(val), 0);
       return mode === "annual" ? num / 12 : num;
     };
 
-    const loan = Math.max(
-      (parseFloat(mtgInputs.loanAmount) || 0) -
-      (parseFloat(mtgInputs.downPayment) || 0),
-      0,
-    );
+    const loanAmount = Math.max(parseFloat(mtgInputs.loanAmount) || 0, 0);
+    const downPayRaw = Math.max(parseFloat(mtgInputs.downPayment) || 0, 0);
+    const downPayment =
+      mtgInputs.downPaymentMode === "percent"
+        ? (loanAmount * downPayRaw) / 100
+        : downPayRaw;
+    const loan = Math.max(loanAmount - downPayment, 0);
     const annualRate = (parseFloat(mtgInputs.interestRate) || 0) / 100;
     const nYears = parseFloat(mtgInputs.loanTerm) || 30;
     const r = annualRate / 12;
@@ -548,16 +640,9 @@ export default function FosterWealthCalculators({
 
 
   /* ---------- Simple vs Compound Interest (enhanced) ---------- */
-  const [interestMode, setInterestMode] = useState<"simple" | "compound">(
-    "compound",
-  );
-  const [intInputs, setIntInputs] = useState({
-    principal: "10000",
-    annualRatePct: "5",
-    years: "10",
-    monthlyContribution: "0",
-    frequency: "monthly" as CompoundValue, // used when mode = compound
-  });
+  const [interestMode, setInterestMode] =
+    useState<"simple" | "compound">("compound");
+  const [intInputs, setIntInputs] = useState({ ...INT_DEFAULTS });
   const interest = useMemo(() => {
     const P = Math.max(parseFloat(intInputs.principal) || 0, 0);
     const r = Math.max((parseFloat(intInputs.annualRatePct) || 0) / 100, 0);
@@ -628,12 +713,7 @@ export default function FosterWealthCalculators({
   }, [intInputs, interestMode]);
 
   /* --------------- Freelancer Rate --------------- */
-  const [frInputs, setFrInputs] = useState({
-    annualIncome: "120000",
-    weeksOff: "4",
-    hoursPerWeek: "30",
-    overheadPct: "10",
-  });
+  const [frInputs, setFrInputs] = useState({ ...FR_DEFAULTS });
   const freelancer = useMemo(() => {
     const income = parseFloat(frInputs.annualIncome) || 0;
     const weeksOff = parseFloat(frInputs.weeksOff) || 0;
@@ -651,21 +731,13 @@ export default function FosterWealthCalculators({
   }, [frInputs]);
 
   /* ---------------- Tip & Tab Split ---------------- */
-  const [tipInputs, setTipInputs] = useState({
-    bill: "120.00",
-    people: "3",
-    discountMode: "percent" as "percent" | "amount",
-    discountValue: "0",
-    taxPct: "8.5",
-    tipPct: "18",
-    tipOn: "afterDiscount" as "afterDiscount" | "beforeDiscount",
-  });
+  const [tipInputs, setTipInputs] = useState({ ...TIP_DEFAULTS });
 
   // --- Split by Order (incl. shared appetizers) ---
-  const [orderYour, setOrderYour] = useState("0");
-  const [orderOthers, setOrderOthers] = useState<string[]>([""]);
-  const [orderShared, setOrderShared] = useState("0");
-  const [orderSharers, setOrderSharers] = useState<string>("");
+  const [orderYour, setOrderYour] = useState(ORDER_DEFAULTS.yours);
+  const [orderOthers, setOrderOthers] = useState<string[]>([...ORDER_DEFAULTS.others]);
+  const [orderShared, setOrderShared] = useState(ORDER_DEFAULTS.shared);
+  const [orderSharers, setOrderSharers] = useState<string>(ORDER_DEFAULTS.sharers);
 
   const parsedYour = toNum(orderYour);
   const parsedOthers = orderOthers.map((v) => toNum(v));
@@ -722,12 +794,7 @@ export default function FosterWealthCalculators({
   const yourOwe = yourRatio * tipSplit.total;
 
   /* ---------------- Savings Growth ---------------- */
-  const [sav, setSav] = useState({
-    start: "10000",
-    monthly: "250",
-    ratePct: "6",
-    years: "10",
-  });
+  const [sav, setSav] = useState({ ...SAV_DEFAULTS });
   const [savingsTarget, setSavingsTarget] = useState<string>("");
 
   const savings = useMemo(() => {
@@ -781,14 +848,41 @@ export default function FosterWealthCalculators({
   }, [sav, savingsTarget]);
 
   /* ---------------- Debt Payoff ---------------- */
-  const [debt, setDebt] = useState({
-    balance: "12000",
-    aprPct: "19.99",
-    monthlyPay: "350",
-  });
+  const [debt, setDebt] = useState({ ...DEBT_DEFAULTS });
 
   const [debtTargetMonths, setDebtTargetMonths] = useState<string>("");
   const [debtExtra, setDebtExtra] = useState<string>("0");
+
+  const resetRoi = () => {
+    setRoiInputs({ ...ROI_DEFAULTS });
+    setRoiTimeUnit("years");
+    setTargetRoiPercent(25);
+    setRoiAdvanced(false);
+    setRoiMidCashFlow("0");
+  };
+  const resetBreakEven = () => setBeInputs({ ...BE_DEFAULTS });
+  const resetMortgage = () => setMtgInputs({ ...MTG_DEFAULTS });
+  const resetInterest = () => {
+    setInterestMode("compound");
+    setIntInputs({ ...INT_DEFAULTS });
+  };
+  const resetFreelancer = () => setFrInputs({ ...FR_DEFAULTS });
+  const resetTipSplit = () => {
+    setTipInputs({ ...TIP_DEFAULTS });
+    setOrderYour(ORDER_DEFAULTS.yours);
+    setOrderOthers([...ORDER_DEFAULTS.others]);
+    setOrderShared(ORDER_DEFAULTS.shared);
+    setOrderSharers(ORDER_DEFAULTS.sharers);
+  };
+  const resetSavings = () => {
+    setSav({ ...SAV_DEFAULTS });
+    setSavingsTarget("");
+  };
+  const resetDebt = () => {
+    setDebt({ ...DEBT_DEFAULTS });
+    setDebtTargetMonths("");
+    setDebtExtra("0");
+  };
   const payoff = useMemo(() => {
     const B = toNum(debt.balance);
     const i = toNum(debt.aprPct) / 100 / 12;
@@ -883,6 +977,9 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="ROI Calculator" />
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetRoi} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
@@ -1099,6 +1196,9 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Break-Even Calculator" />
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetBreakEven} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
@@ -1125,12 +1225,59 @@ export default function FosterWealthCalculators({
                       setBeInputs((s) => ({ ...s, pricePerUnit: v }))
                     }
                   />
+                  <Input
+                    id="be_profit"
+                    label="Target Profit ($, optional)"
+                    value={beInputs.profitTarget}
+                    onChange={(v) => setBeInputs((s) => ({ ...s, profitTarget: v }))}
+                    placeholder="e.g., 10000"
+                  />
+                  <Input
+                    id="be_current_units"
+                    label="Current Sales (units, optional)"
+                    value={beInputs.currentUnits}
+                    onChange={(v) => setBeInputs((s) => ({ ...s, currentUnits: v }))}
+                    placeholder="e.g., 1200"
+                  />
+                  <Input
+                    id="be_monthly_units"
+                    label="Expected Monthly Units (optional)"
+                    value={beInputs.monthlyUnits}
+                    onChange={(v) => setBeInputs((s) => ({ ...s, monthlyUnits: v }))}
+                    placeholder="e.g., 150"
+                  />
                 </InputsPanel>
                 <ResultsPanel title="Results">
                   <KV
                     label="Break-Even (units)"
-                    value={isFinite(breakEvenUnits) ? `${Math.round(breakEvenUnits).toLocaleString()} units` : "N/A"}
+                    value={isFinite(beDerived.breakEvenUnits) ? `${Math.round(beDerived.breakEvenUnits).toLocaleString()} units` : "N/A"}
                   />
+                  <KV
+                    label="Break-Even (revenue)"
+                    value={isFinite(beDerived.breakEvenRevenue) ? fmtUSD(beDerived.breakEvenRevenue) : "N/A"}
+                  />
+                  <KV
+                    label="Contribution Margin"
+                    value={`${fmtUSD(beDerived.cm)} (${fmtPct(beDerived.cmPct)})`}
+                  />
+                  {beDerived.profitUnits !== Infinity && (
+                    <KV
+                      label="Units for Target Profit"
+                      value={`${Math.round(beDerived.profitUnits).toLocaleString()} (${fmtUSD(beDerived.profitRevenue)})`}
+                    />
+                  )}
+                  {beDerived.safetyMargin !== null && isFinite(beDerived.breakEvenUnits) && (
+                    <KV
+                      label="Safety Margin"
+                      value={`${fmtPct(beDerived.safetyMargin)} ${beDerived.safetyMargin < 0 ? "(below break-even)" : ""}`}
+                    />
+                  )}
+                  {beDerived.monthsToBE !== null && (
+                    <KV
+                      label="Time to Break-Even"
+                      value={isFinite(beDerived.monthsToBE) ? `${Math.ceil(beDerived.monthsToBE)} months` : "N/A"}
+                    />
+                  )}
                 </ResultsPanel>
               </div>
               <div className="px-6 pb-6">
@@ -1162,6 +1309,9 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Mortgage Calculator" />
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetMortgage} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
@@ -1172,14 +1322,41 @@ export default function FosterWealthCalculators({
                       setMtgInputs((s) => ({ ...s, loanAmount: v }))
                     }
                   />
-                  <Input
-                    id="mtg_down"
-                    label="Down Payment"
-                    value={mtgInputs.downPayment}
-                    onChange={(v) =>
-                      setMtgInputs((s) => ({ ...s, downPayment: v }))
-                    }
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      id="mtg_down"
+                      label={`Down Payment (${mtgInputs.downPaymentMode === "percent" ? "%" : "$"})`}
+                      value={mtgInputs.downPayment}
+                      onChange={(v) =>
+                        setMtgInputs((s) => ({ ...s, downPayment: v }))
+                      }
+                      placeholder={mtgInputs.downPaymentMode === "percent" ? "e.g., 20" : "e.g., 80000"}
+                    />
+                    <div className="flex gap-3 text-xs text-neutral-700">
+                      <label className="inline-flex items-center gap-1">
+                        <input
+                          type="radio"
+                          name="down_mode"
+                          checked={mtgInputs.downPaymentMode === "amount"}
+                          onChange={() =>
+                            setMtgInputs((s) => ({ ...s, downPaymentMode: "amount" }))
+                          }
+                        />
+                        Amount ($)
+                      </label>
+                      <label className="inline-flex items-center gap-1">
+                        <input
+                          type="radio"
+                          name="down_mode"
+                          checked={mtgInputs.downPaymentMode === "percent"}
+                          onChange={() =>
+                            setMtgInputs((s) => ({ ...s, downPaymentMode: "percent" }))
+                          }
+                        />
+                        Percent (%)
+                      </label>
+                    </div>
+                  </div>
                   <Input
                     id="mtg_rate"
                     label="Interest Rate (%)"
@@ -1327,6 +1504,9 @@ export default function FosterWealthCalculators({
         {activeCalc === "tip-split" && (
           <section className="card-regal mt-4">
             <Header title="Restaurant Tip & Tab Split Calculator" />
+            <div className="flex justify-end px-4 pt-3">
+              <ClearButton onClick={resetTipSplit} />
+            </div>
             <div className="grid gap-4 p-4 md:grid-cols-2">
               <InputsPanel title="Inputs">
                 <div className="grid gap-4">
@@ -1660,6 +1840,9 @@ export default function FosterWealthCalculators({
         {activeCalc === "interest" && (
           <section className="card-regal mt-4">
             <Header title="Interest Calculator (Simple / Compound)" />
+            <div className="flex justify-end px-6 pt-3">
+              <ClearButton onClick={resetInterest} />
+            </div>
             <div className="p-6">
               {/* Mode toggle */}
               <div className="mb-6 flex gap-3">
@@ -1852,6 +2035,9 @@ export default function FosterWealthCalculators({
           <section className="mt-4">
             <ProfessionalCard>
               <Header title="Freelancer Rate Calculator" />
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetFreelancer} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
@@ -1938,6 +2124,9 @@ export default function FosterWealthCalculators({
             <Header title="Savings Growth Calculator" />
             {/* Gate will allow for plus/pro/premium; show upgrade card otherwise */}
             <Gate calc="savings">
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetSavings} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input
@@ -2034,6 +2223,9 @@ export default function FosterWealthCalculators({
           <section className="card-regal relative mt-4">
             <Header title="Debt Payoff Calculator" />
             <Gate calc="debt-payoff">
+              <div className="flex justify-end px-4 pt-3">
+                <ClearButton onClick={resetDebt} />
+              </div>
               <div className="grid gap-4 p-4 md:grid-cols-2">
                 <InputsPanel title="Inputs">
                   <Input

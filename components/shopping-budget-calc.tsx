@@ -1,15 +1,17 @@
 /** Shopping Budget Calculator component (client) */
 "use client";
-import { Check, Edit3, PlusCircle, ShoppingCart, Trash2, X } from "lucide-react";
+import { Check, Edit3, PlusCircle, ShoppingCart, Trash2, X, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 type LineItem = { id: number; name: string; price: number; quantity: number };
 const currency = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" });
+const DEFAULT_BUDGET = "150.00";
+const DEFAULT_TAX = "8.5";
 
 export default function ShoppingBudget() {
-    const [budget, setBudget] = useLocalStorage<string>("shop.budget", "150.00");
-    const [taxRate, setTaxRate] = useLocalStorage<string>("shop.tax", "8.5");
+    const [budget, setBudget] = useLocalStorage<string>("shop.budget", DEFAULT_BUDGET);
+    const [taxRate, setTaxRate] = useLocalStorage<string>("shop.tax", DEFAULT_TAX);
     const [items, setItems] = useLocalStorage<LineItem[]>("shop.items", []);
     const [name, setName] = useState<string>("");
     const [price, setPrice] = useState<string>("");
@@ -67,11 +69,35 @@ export default function ShoppingBudget() {
         setItems((prev: LineItem[]) => prev.filter((it: LineItem) => it.id !== id));
     }
 
+    function resetAll() {
+        setBudget(DEFAULT_BUDGET);
+        setTaxRate(DEFAULT_TAX);
+        setItems([]);
+        setName("");
+        setPrice("");
+        setQty("1");
+        setWeightName("");
+        setWeight("");
+        setPricePerPound("");
+        setEditingId(null);
+        setEditPrice("");
+        setEditQty("");
+    }
+
     return (
         <div className="mx-auto max-w-3xl px-4 py-6">
-            <header className="mb-6 flex items-center gap-3">
-                <ShoppingCart className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                <h1 className="text-2xl font-semibold">Shopping Budget Calculator</h1>
+            <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                    <ShoppingCart className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                    <h1 className="text-2xl font-semibold">Shopping Budget Calculator</h1>
+                </div>
+                <button
+                    onClick={resetAll}
+                    className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-sm font-medium text-emerald-700 shadow-sm transition hover:bg-emerald-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                >
+                    <RotateCcw className="h-4 w-4" />
+                    Clear &amp; start over
+                </button>
             </header>
 
             <section className="mb-6 rounded-2xl border bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">

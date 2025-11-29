@@ -1,6 +1,7 @@
 // Service Worker for Foster Wealth Calculators PWA
-const CACHE_NAME = 'fwv-calculators-v1';
-const STATIC_CACHE = 'fwv-static-v1';
+// Bump cache names to force clients to pick up the latest assets and avoid stale HTML
+const CACHE_NAME = 'fwv-calculators-v2';
+const STATIC_CACHE = 'fwv-static-v2';
 
 // Cache essential resources for offline use
 const STATIC_ASSETS = [
@@ -38,34 +39,21 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - serve from cache when offline (but never cache HTML shell to avoid hydration mismatches)
 self.addEventListener('fetch', (event) => {
-    // Skip cross-origin requests and Chrome extension requests
-    if (!event.request.url.startsWith(self.location.origin)) {
-        return;
-    }
+  // Skip cross-origin requests and Chrome extension requests
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
 
     // For navigation requests, try network first, then cache
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    // Cache successful responses
-                    if (response.status === 200) {
-                        const responseClone = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then((cache) => cache.put(event.request, responseClone));
-                    }
-                    return response;
-                })
-                .catch(() => {
-                    // If offline, try to serve from cache
-                    return caches.match(event.request)
-                        .then((cached) => cached || caches.match('/'));
-                })
-        );
-        return;
-    }
+  if (event.request.mode === 'navigate') {
+    // Always go to network for HTML; if offline, fall back to cached root (if any)
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/') || Response.error())
+    );
+    return;
+  }
 
     // For other requests, try cache first
     event.respondWith(

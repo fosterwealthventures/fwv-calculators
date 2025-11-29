@@ -106,8 +106,11 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
 }
 
 function deriveExcerpt(markdownBody: string, maxLen = 180): string {
+  // Strip any stray front-matter block if it wasn't parsed out
+  const body = markdownBody.replace(/^---[\s\S]*?---\s*/m, "");
+
   // Take first non-empty paragraph; strip headings/links/basic markdown, collapse spaces
-  const text = markdownBody
+  const text = body
     .replace(/^#.+$/gm, "")
     .replace(/`{1,3}[\s\S]*?`{1,3}/g, "")
     .replace(/\*\*([^*]+)\*\*|\*([^*]+)\*|_([^_]+)_|__([^_]+)__|~~([^~]+)~~/g, "$1$2$3$4$5")

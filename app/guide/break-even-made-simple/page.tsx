@@ -5,10 +5,8 @@ import GuideNav from "@/components/GuideNav";
 import React from "react";
 
 export const metadata: Metadata = {
-  title:
-    "Break-Even Made Simpleâ€”Use Our Calculator to Master Costs & Profit Margins",
-  description:
-    "Understand break-even analysis and how to calculate the units needed to cover costs and reach profitability.",
+  title: "Break-Even Made Simple — Use Our Calculator to Master Costs & Profit Margins",
+  description: "Understand break-even analysis and how to calculate the units needed to cover costs and reach profitability.",
 };
 
 function Breadcrumb() {
@@ -27,8 +25,7 @@ function Breadcrumb() {
 }
 
 export default function GuidePage() {
-  const pageUrl =
-    "https://fosterwealthventures.store/guide/break-even-made-simple";
+  const pageUrl = "https://fosterwealthventures.store/guide/break-even-made-simple";
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
@@ -40,52 +37,70 @@ export default function GuidePage() {
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">
-        Estimated reading time: 3â€“4 minutes
-      </p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
 
       <section>
         <h2>What it does</h2>
         <p>
-          The break-even calculator tells how many units you must sell before
-          revenue covers fixed and variable costs. After that point each sale adds
-          margin. It uses fixed costs divided by contribution per unit (price
-          minus variable cost) to find the threshold.
+          The break-even calculator tells how many units you must sell before revenue covers fixed and variable costs. It now also shows break-even revenue, contribution margin ($ and %), units/revenue to hit a profit target, safety margin vs your current sales, and rough time-to-break-even when you enter expected monthly units.
         </p>
       </section>
 
       <section>
         <h2>How to use it</h2>
-        <p>Enter three numbers; result appears instantly.</p>
+        <p>Enter the core three numbers, then add optional fields for more insight.</p>
         <ul>
           <li>Fixed Costs (rent, salaries, etc.)</li>
           <li>Variable Cost per Unit (materials, fees)</li>
           <li>Price per Unit</li>
-          <li>
-            Example: 5000 fixed, 20 variable, 50 price â†’ about 167 units.
-          </li>
+          <li>Target Profit (optional) — see how many units/revenue you need to hit that goal.</li>
+          <li>Current Sales (units, optional) — shows safety margin vs break-even.</li>
+          <li>Expected Monthly Units (optional) — shows approximate months to break-even.</li>
         </ul>
       </section>
 
       <section>
         <h2>When to use it</h2>
         <p>
-          Use it to test pricing, cost cuts, or new product ideas before
-          committing. Helpful when deciding if planned volume can cover startup
-          spend.
+          Use it to test pricing, cost cuts, or new product ideas before committing. Helpful when deciding if planned volume can cover startup spend or when setting minimum viable sales for a launch.
         </p>
       </section>
 
       <section>
         <h2>Interpreting results</h2>
-        <p>
-          Lower break-even means less risk; reach it sooner or adjust assumptions.
-          If price is at or below variable cost you cannot break evenâ€”raise price
-          or reduce cost.
-        </p>
+        <ul>
+          <li>If price is near or below variable cost, raise price or reduce variable cost—break-even is impossible otherwise.</li>
+          <li>Contribution margin ($ and %) tells you how much each unit contributes to covering fixed costs and profit.</li>
+          <li>Target profit output gives you a clear “sell at least X units” goal.</li>
+          <li>Safety margin shows how far above/below break-even you are at current sales.</li>
+          <li>Months-to-break-even helps sanity-check your monthly volume assumptions.</li>
+        </ul>
       </section>
+
       <section>
-        <CTAButton href="/?calc=break-even" data-testid="try-matching-calc">
+        <h2>Example</h2>
+        <ul>
+          <li>Fixed costs: $10,000/month</li>
+          <li>Variable cost: $20/unit</li>
+          <li>Price: $50/unit ? Contribution margin: $30 (60%)</li>
+          <li>Break-even: 334 units (about $16,700 revenue)</li>
+          <li>Profit target $5,000: 500 units (about $25,000 revenue)</li>
+          <li>Current sales 400 units ? Safety margin ~17% above break-even</li>
+          <li>Expected monthly units 150 ? ~3 months to break-even</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Pitfalls</h2>
+        <ul>
+          <li>Using overly optimistic monthly units—time-to-break-even will be wrong.</li>
+          <li>Ignoring variable costs (discounts, payment fees, shipping) when pricing.</li>
+          <li>Counting sunk costs—stick to relevant fixed costs for the time period.</li>
+        </ul>
+      </section>
+
+      <section>
+        <CTAButton href="/calculators/break-even" data-testid="try-matching-calc">
           Open the Break-Even Calculator
         </CTAButton>
       </section>
@@ -96,10 +111,7 @@ export default function GuidePage() {
           Continue learning with{" "}
           <Link href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</Link>{" "}
           and dive into loan affordability in{" "}
-          <Link href="/guide/mortgage-payment-breakdown">
-            Mortgage Payment Breakdown
-          </Link>
-          . You can also explore every tool on the{" "}
+          <Link href="/guide/mortgage-payment-breakdown">Mortgage Payment Breakdown</Link>. You can also explore every tool on the{" "}
           <Link href="/dashboard">calculator dashboard</Link>.
         </p>
       </section>
@@ -118,52 +130,6 @@ export default function GuidePage() {
           title: "Mortgage Payment Breakdown",
         }}
       />
-
-      {/* JSON-LD scripts (if previously present) remain unchanged */}
     </main>
   );
-}
-
-export function NavText({ children }: { children: React.ReactNode }) {
-  return <p className="mb-4 text-sm">{children}</p>;
-}
-
-export function H1({ children }: { children: React.ReactNode }) {
-  return (
-    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-      {children}
-    </h1>
-  );
-}
-
-export function Quote({ children }: { children: React.ReactNode }) {
-  return (
-    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-      {children}
-    </blockquote>
-  );
-}
-
-export function QuoteRef({ children }: { children: React.ReactNode }) {
-  return <span className="font-semibold">{children}</span>;
-}
-
-export function Section({ children }: { children: React.ReactNode }) {
-  return <section className="mt-8 space-y-8">{children}</section>;
-}
-
-export function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-2xl font-semibold">{children}</h2>;
-}
-
-export function List({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-6">{children}</ul>;
-}
-
-export function CTAWrap({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6">{children}</div>;
-}
-
-export function HelperText({ children }: { children: React.ReactNode }) {
-  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }

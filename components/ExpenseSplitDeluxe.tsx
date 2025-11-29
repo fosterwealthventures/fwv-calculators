@@ -12,6 +12,7 @@ import {
   Calculator,
   Scale,
   Info,
+  RotateCcw,
 } from "lucide-react";
 import { useDownloadPermission } from "@/hooks/useDownloadPermission";
 import { useCallback } from "react";
@@ -51,23 +52,27 @@ type Props = {
   onUpgrade?: () => void;
 };
 
+const PEOPLE_DEFAULT: Person[] = [
+  { id: "p1", name: "You", weight: 1, tripDays: 5, isParent: true },
+  { id: "p2", name: "Co-Parent / Roommate", weight: 1, tripDays: 5, isParent: true },
+];
+
+const CHILDREN_DEFAULT: Child[] = [{ id: "c1", name: "Child", custodyDays: 15 }];
+
+const EXPENSES_DEFAULT: Expense[] = [
+  { id: "e1", name: "Groceries", amount: 300, category: "general" },
+  { id: "e2", name: "Child Care", amount: 200, category: "child" },
+  { id: "e3", name: "Trip Hotel", amount: 480, category: "trip" },
+];
+
+const NEW_PERSON_DEFAULT = { name: "", weight: "1", tripDays: "0", isParent: false };
+const NEW_CHILD_DEFAULT = { name: "", custodyDays: "0" };
+const NEW_EXPENSE_DEFAULT = { name: "", amount: "", category: "general" as ExpenseCategory };
+
 export default function ExpenseSplitDeluxe({
-  initialPeople = [
-    { id: "p1", name: "You", weight: 1, tripDays: 5, isParent: true },
-    {
-      id: "p2",
-      name: "Co-Parent / Roommate",
-      weight: 1,
-      tripDays: 5,
-      isParent: true,
-    },
-  ],
-  initialChildren = [{ id: "c1", name: "Child", custodyDays: 15 }],
-  initialExpenses = [
-    { id: "e1", name: "Groceries", amount: 300, category: "general" as const },
-    { id: "e2", name: "Child Care", amount: 200, category: "child" as const },
-    { id: "e3", name: "Trip Hotel", amount: 480, category: "trip" as const },
-  ],
+  initialPeople = PEOPLE_DEFAULT,
+  initialChildren = CHILDREN_DEFAULT,
+  initialExpenses = EXPENSES_DEFAULT,
   onUpgrade,
 }: Props) {
   // === PERMISSIONS: app-wide gate for Expense Split Deluxe ===
@@ -92,18 +97,21 @@ export default function ExpenseSplitDeluxe({
   );
 
   // New rows
-  const [newPerson, setNewPerson] = useState({
-    name: "",
-    weight: "1",
-    tripDays: "0",
-    isParent: false,
-  });
-  const [newChild, setNewChild] = useState({ name: "", custodyDays: "0" });
-  const [newExpense, setNewExpense] = useState({
-    name: "",
-    amount: "",
-    category: "general" as ExpenseCategory,
-  });
+  const [newPerson, setNewPerson] = useState({ ...NEW_PERSON_DEFAULT });
+  const [newChild, setNewChild] = useState({ ...NEW_CHILD_DEFAULT });
+  const [newExpense, setNewExpense] = useState({ ...NEW_EXPENSE_DEFAULT });
+
+  const resetAll = () => {
+    setPeople([...initialPeople]);
+    setChildren([...initialChildren]);
+    setExpenses([...initialExpenses]);
+    setGeneralMode("weighted");
+    setChildMode("equalParents");
+    setTripMode("byDaysWeighted");
+    setNewPerson({ ...NEW_PERSON_DEFAULT });
+    setNewChild({ ...NEW_CHILD_DEFAULT });
+    setNewExpense({ ...NEW_EXPENSE_DEFAULT });
+  };
 
   // === HELPERS ===
   const currency = (n: number, min = 2) =>
@@ -325,25 +333,34 @@ export default function ExpenseSplitDeluxe({
             </p>
           </div>
 
-          <button
-            onClick={handleDownload}
-            className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-              hasDownloadPermission
-                ? "bg-white/20 hover:bg-white/30 text-white"
-                : "bg-gray-400 cursor-not-allowed text-gray-200"
-            }`}
-            disabled={!hasDownloadPermission}
-            title={
-              hasDownloadPermission
-                ? "Download Report"
-                : "Upgrade to download reports"
-            }
-          >
-            <Download className="h-4 w-4" />
-            {hasDownloadPermission
-              ? "Download Report (CSV)"
-              : "Upgrade to Download"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={resetAll}
+              className="px-4 py-2 rounded-lg flex items-center gap-2 bg-white/15 text-white hover:bg-white/25 transition-colors"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear
+            </button>
+            <button
+              onClick={handleDownload}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+                hasDownloadPermission
+                  ? "bg-white/20 hover:bg-white/30 text-white"
+                  : "bg-gray-400 cursor-not-allowed text-gray-200"
+              }`}
+              disabled={!hasDownloadPermission}
+              title={
+                hasDownloadPermission
+                  ? "Download Report"
+                  : "Upgrade to download reports"
+              }
+            >
+              <Download className="h-4 w-4" />
+              {hasDownloadPermission
+                ? "Download Report (CSV)"
+                : "Upgrade to Download"}
+            </button>
+          </div>
         </div>
       </div>
 

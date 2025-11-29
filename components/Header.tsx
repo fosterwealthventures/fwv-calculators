@@ -20,6 +20,17 @@ import { useEffect, useRef, useState } from "react";
  * IMPORTANT: expects /public/logo.svg to exist (adjust path/size if different).
  * Uses .header-regal, .nav-link-regal, and .text-gradient-gold utilities from globals.css.
  */
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/guide", label: "Guides" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
+];
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [calcOpen, setCalcOpen] = useState(false); // desktop dropdown
@@ -58,6 +69,7 @@ export default function Header() {
             alt="Foster Wealth Ventures"
             width={140}
             height={60}
+            style={{ height: "auto" }}
             priority
           />
           <span className="hidden sm:inline-block text-gradient-gold text-lg font-semibold tracking-wide">
@@ -104,15 +116,11 @@ export default function Header() {
           </div>
 
           {/* The rest of your top links (kept intact) */}
-          <HeaderLink href="/">Home</HeaderLink>
-          <HeaderLink href="/mortgage">Mortgage</HeaderLink>
-          <HeaderLink href="/pricing">Pricing</HeaderLink>
-          <HeaderLink href="/guide">Guides</HeaderLink>
-          <HeaderLink href="/blog">Blog</HeaderLink>
-          <HeaderLink href="/about">About</HeaderLink>
-          <HeaderLink href="/contact">Contact</HeaderLink>
-          <HeaderLink href="/privacy">Privacy</HeaderLink>
-          <HeaderLink href="/terms">Terms</HeaderLink>
+          {NAV_LINKS.map((link) => (
+            <HeaderLink key={link.href} href={link.href}>
+              {link.label}
+            </HeaderLink>
+          ))}
 
           {/* Authentication dropdown */}
           <div className="relative inline-flex items-center" ref={authDropdownRef}>
@@ -195,33 +203,15 @@ export default function Header() {
               </div>
             </details>
 
-            <MobileLink href="/" onClick={() => setMobileOpen(false)}>
-              Home
-            </MobileLink>
-            <MobileLink href="/mortgage" onClick={() => setMobileOpen(false)}>
-              Mortgage
-            </MobileLink>
-            <MobileLink href="/pricing" onClick={() => setMobileOpen(false)}>
-              Pricing
-            </MobileLink>
-            <MobileLink href="/guide" onClick={() => setMobileOpen(false)}>
-              Guides
-            </MobileLink>
-            <MobileLink href="/blog" onClick={() => setMobileOpen(false)}>
-              Blog
-            </MobileLink>
-            <MobileLink href="/about" onClick={() => setMobileOpen(false)}>
-              About
-            </MobileLink>
-            <MobileLink href="/contact" onClick={() => setMobileOpen(false)}>
-              Contact
-            </MobileLink>
-            <MobileLink href="/privacy" onClick={() => setMobileOpen(false)}>
-              Privacy
-            </MobileLink>
-            <MobileLink href="/terms" onClick={() => setMobileOpen(false)}>
-              Terms
-            </MobileLink>
+            {NAV_LINKS.map((link) => (
+              <MobileLink
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </MobileLink>
+            ))}
 
             {/* Authentication section */}
             <div className="border-t border-plum-800 mt-2 pt-2">
