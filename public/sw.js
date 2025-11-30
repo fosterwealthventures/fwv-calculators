@@ -1,7 +1,7 @@
 // Service Worker for Foster Wealth Calculators PWA
 // Bump cache names to force clients to pick up the latest assets and avoid stale HTML
-const CACHE_NAME = 'fwv-calculators-v2';
-const STATIC_CACHE = 'fwv-static-v2';
+const CACHE_NAME = 'fwv-calculators-v3';
+const STATIC_CACHE = 'fwv-static-v3';
 
 // Cache essential resources for offline use
 const STATIC_ASSETS = [
