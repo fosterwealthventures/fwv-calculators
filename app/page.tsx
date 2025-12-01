@@ -1,17 +1,11 @@
 "use client";
 
 import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
+import AdSlot from "@/components/ads/AdSlot";
 import Link from "next/link";
 import Script from "next/script";
-import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <main className="fwv-container py-6 space-y-10">
       {/* Heading + intro */}
@@ -59,6 +53,9 @@ export default function Home() {
           your next move before you spend a dollar.
         </p>
         <FosterWealthCalculators freeOnly />
+        <div className="pt-4">
+          <AdSlot containerId="adsterra-home-free" />
+        </div>
       </section>
 
       {/* Explainer / positioning */}
