@@ -1,21 +1,20 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import {
-  Users,
-  Baby,
-  Receipt,
-  Plus,
-  Trash2,
-  Settings2,
-  Download,
-  Calculator,
-  Scale,
-  Info,
-  RotateCcw,
-} from "lucide-react";
 import { useDownloadPermission } from "@/hooks/useDownloadPermission";
-import { useCallback } from "react";
+import {
+  Baby,
+  Calculator,
+  Download,
+  Info,
+  Plus,
+  Receipt,
+  Scale,
+  Settings2,
+  Trash2,
+  Users,
+  X,
+} from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 
 type Person = {
   id: string;
@@ -338,16 +337,15 @@ export default function ExpenseSplitDeluxe({
               onClick={resetAll}
               className="px-4 py-2 rounded-lg flex items-center gap-2 bg-white/15 text-white hover:bg-white/25 transition-colors"
             >
-              <RotateCcw className="h-4 w-4" />
+              <X className="h-4 w-4" />
               Clear
             </button>
             <button
               onClick={handleDownload}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-                hasDownloadPermission
-                  ? "bg-white/20 hover:bg-white/30 text-white"
-                  : "bg-gray-400 cursor-not-allowed text-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${hasDownloadPermission
+                ? "bg-white/20 hover:bg-white/30 text-white"
+                : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
               disabled={!hasDownloadPermission}
               title={
                 hasDownloadPermission

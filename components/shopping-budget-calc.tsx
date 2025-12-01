@@ -1,6 +1,6 @@
 /** Shopping Budget Calculator component (client) */
 "use client";
-import { Check, Edit3, PlusCircle, ShoppingCart, Trash2, X, RotateCcw } from "lucide-react";
+import { Check, Edit3, PlusCircle, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
@@ -95,7 +95,7 @@ export default function ShoppingBudget() {
                     onClick={resetAll}
                     className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-sm font-medium text-emerald-700 shadow-sm transition hover:bg-emerald-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
                 >
-                    <RotateCcw className="h-4 w-4" />
+                    <X className="h-4 w-4" />
                     Clear &amp; start over
                 </button>
             </header>
@@ -121,13 +121,12 @@ export default function ShoppingBudget() {
                         <div className="flex flex-col">
                             <span className="text-neutral-500 dark:text-neutral-400">Remaining</span>
                             <span
-                                className={`text-lg font-semibold ${
-                                    remaining < 0
+                                className={`text-lg font-semibold ${remaining < 0
                                         ? "text-rose-600 dark:text-rose-400"
                                         : remaining < parsedBudget * 0.1
                                             ? "text-amber-600 dark:text-amber-400"
                                             : "text-emerald-700 dark:text-emerald-400"
-                                }`}
+                                    }`}
                             >
                                 {currency.format(remaining)}
                             </span>
@@ -135,13 +134,12 @@ export default function ShoppingBudget() {
                         <div className="min-w-[200px] flex-1">
                             <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
                                 <div
-                                    className={`h-2 rounded-full ${
-                                        percentUsed < 90
+                                    className={`h-2 rounded-full ${percentUsed < 90
                                             ? "bg-emerald-600"
                                             : remaining >= 0
                                                 ? "bg-amber-500"
                                                 : "bg-rose-600"
-                                    }`}
+                                        }`}
                                     style={{ width: `${percentUsed}%` }}
                                 />
                             </div>

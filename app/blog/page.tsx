@@ -70,7 +70,7 @@ export default async function BlogIndex({
                 excerpt={p.excerpt}
                 tags={p.tags}
                 category={p.category}
-                image={(p as any).image}
+                image={p.image}
               />
             </li>
           ))}

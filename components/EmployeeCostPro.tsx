@@ -1,16 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
 import {
-  DollarSign,
   Calculator,
-  Users,
-  Plus,
-  Download,
-  X,
   Calendar,
-  RotateCcw,
+  DollarSign,
+  Download,
+  Plus,
+  Users,
+  X,
 } from "lucide-react";
+import React, { useState } from "react";
 // Permissions hook (Pro/Premium gate for this calculator)
 import { useDownloadPermission } from "@/hooks/useDownloadPermission";
 
@@ -117,8 +116,8 @@ const EmployeeCostPro: React.FC<Props> = ({ onUpgrade }) => {
       employeeData.payType === "salary"
         ? employeeData.salary
         : employeeData.hourlyRate *
-          employeeData.hoursPerWeek *
-          employeeData.weeksPerYear;
+        employeeData.hoursPerWeek *
+        employeeData.weeksPerYear;
 
     const benefits = basePay * (employeeData.benefitsPercent / 100);
     const payrollTax = basePay * (employeeData.payrollTaxRate / 100);
@@ -322,16 +321,15 @@ Hourly Cost: ${formatCurrencyDetailed(employeeResults.hourlyCost)}
               onClick={resetAll}
               className="px-4 py-2 rounded-lg flex items-center gap-2 bg-white/15 text-white hover:bg-white/25 transition-colors"
             >
-              <RotateCcw className="h-4 w-4" />
+              <X className="h-4 w-4" />
               Clear
             </button>
             <button
               onClick={downloadReport}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-                canDownload
-                  ? "bg-white/20 hover:bg-white/30 text-white"
-                  : "bg-gray-400 cursor-not-allowed text-gray-200"
-              }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${canDownload
+                ? "bg-white/20 hover:bg-white/30 text-white"
+                : "bg-gray-400 cursor-not-allowed text-gray-200"
+                }`}
               disabled={!canDownload}
               title={
                 canDownload ? "Download Report" : "Upgrade to download reports"
@@ -825,8 +823,8 @@ Hourly Cost: ${formatCurrencyDetailed(employeeResults.hourlyCost)}
                     <strong>
                       {formatCurrency(
                         employeeResults.totalCost -
-                          employeeResults.basePay -
-                          employeeResults.totalExpenses,
+                        employeeResults.basePay -
+                        employeeResults.totalExpenses,
                       )}
                     </strong>
                   </li>

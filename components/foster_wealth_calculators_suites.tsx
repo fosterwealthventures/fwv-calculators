@@ -1,20 +1,20 @@
 "use client";
 
+import AdsterraBanner from "@/components/AdsterraBanner";
 import {
   BarChart3,
   DollarSign,
   Home,
   PiggyBank,
   ShoppingCart,
-  RotateCcw,
   TrendingUp,
-  Users
+  Users,
+  X
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-import AdsterraBanner from "@/components/AdsterraBanner";
 
 import PremiumResultCard from "@/components/ui/PremiumResultCard";
 import ProfessionalCard from "@/components/ui/ProfessionalCard";
@@ -238,8 +238,8 @@ const ChipButton: React.FC<{
     className={[
       "inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm shadow-sm",
       active
-        ? "border-aure-400 bg-aure-50 text-plum-800 ring-2 ring-aure-400/30"
-        : "border-plum-300 hover:border-aure-400 text-plum-700 hover:text-plum-800",
+        ? "border-amber-400 bg-amber-50 text-plum-800 ring-2 ring-amber-400/30"
+        : "border-plum-300 hover:border-amber-400 text-plum-700 hover:text-plum-800",
     ].join(" ")}
   >
     {children}
@@ -343,9 +343,9 @@ const ClearButton: React.FC<{ onClick: () => void; label?: string }> = ({
   <button
     type="button"
     onClick={onClick}
-    className="inline-flex items-center gap-2 rounded-md border border-plum-300 bg-white px-3 py-2 text-sm font-medium text-plum-700 shadow-sm transition hover:bg-plum-50 focus:outline-none focus:ring-2 focus:ring-aure-400/50"
+    className="inline-flex items-center gap-2 rounded-md border border-plum-300 bg-white px-3 py-2 text-sm font-medium text-plum-700 shadow-sm transition hover:bg-plum-50 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
   >
-    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+    <X className="h-4 w-4" aria-hidden="true" />
     {label}
   </button>
 );
@@ -1012,11 +1012,10 @@ export default function FosterWealthCalculators({
                         <button
                           type="button"
                           onClick={() => handleRoiTimeUnitChange("years")}
-                          className={`px-3 py-1 text-[11px] font-semibold transition ${
-                            roiTimeUnit === "years"
-                              ? "bg-plum-600 text-white"
-                              : "bg-white text-plum-700 hover:bg-plum-50"
-                          }`}
+                          className={`px-3 py-1 text-[11px] font-semibold transition ${roiTimeUnit === "years"
+                            ? "bg-plum-600 text-white"
+                            : "bg-white text-plum-700 hover:bg-plum-50"
+                            }`}
                           aria-pressed={roiTimeUnit === "years"}
                         >
                           Years
@@ -1024,11 +1023,10 @@ export default function FosterWealthCalculators({
                         <button
                           type="button"
                           onClick={() => handleRoiTimeUnitChange("months")}
-                          className={`px-3 py-1 text-[11px] font-semibold transition ${
-                            roiTimeUnit === "months"
-                              ? "bg-plum-600 text-white"
-                              : "bg-white text-plum-700 hover:bg-plum-50"
-                          }`}
+                          className={`px-3 py-1 text-[11px] font-semibold transition ${roiTimeUnit === "months"
+                            ? "bg-plum-600 text-white"
+                            : "bg-white text-plum-700 hover:bg-plum-50"
+                            }`}
                           aria-pressed={roiTimeUnit === "months"}
                         >
                           Months
@@ -1913,7 +1911,7 @@ export default function FosterWealthCalculators({
                           setIntInputs((s) => ({ ...s, frequency: e.target.value as CompoundValue }))
                         }
                         className="h-11 w-full rounded-lg border border-plum-300 bg-white/80 px-3 text-plum-900 shadow-sm
-                                   focus:border-aure-400 focus:outline-none focus:ring-2 focus:ring-aure-400/40"
+                                   focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
                       >
                         {COMPOUND_OPTIONS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -1927,7 +1925,7 @@ export default function FosterWealthCalculators({
 
                 <ResultsPanel title="Results">
                   <div className="space-y-4">
-                    <div className="rounded-xl bg-gradient-to-br from-aure-100/50 to-plum-100/30 p-4 ring-1 ring-aure-300/30">
+                    <div className="rounded-xl bg-gradient-to-br from-amber-100/50 to-plum-100/30 p-4 ring-1 ring-amber-300/30">
                       <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-plum-900 dark:text-plum-100">
                         Final Amount
                       </p>
@@ -1954,7 +1952,7 @@ export default function FosterWealthCalculators({
                       )}
                       <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-600">
                         <span className="font-semibold text-plum-900 dark:text-plum-100">Interest:</span>
-                        <span className="font-semibold text-aure-600 dark:text-aure-400">{fmtUSD(interest.interest)}</span>
+                        <span className="font-semibold text-amber-600 dark:text-amber-400">{fmtUSD(interest.interest)}</span>
                       </div>
                     </div>
                   </div>

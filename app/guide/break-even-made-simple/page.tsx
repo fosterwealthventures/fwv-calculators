@@ -1,11 +1,10 @@
+import GuideNav from "@/components/GuideNav";
+import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
-import GuideNav from "@/components/GuideNav";
-import React from "react";
 
 export const metadata: Metadata = {
-  title: "Break-Even Made Simple — Use Our Calculator to Master Costs & Profit Margins",
+  title: "Break-Even Made Simple - Use Our Calculator to Master Costs & Profit Margins",
   description: "Understand break-even analysis and how to calculate the units needed to cover costs and reach profitability.",
 };
 
@@ -37,7 +36,7 @@ export default function GuidePage() {
         icon={null}
       />
 
-      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3-4 minutes</p>
 
       <section>
         <h2>What it does</h2>
@@ -53,9 +52,9 @@ export default function GuidePage() {
           <li>Fixed Costs (rent, salaries, etc.)</li>
           <li>Variable Cost per Unit (materials, fees)</li>
           <li>Price per Unit</li>
-          <li>Target Profit (optional) — see how many units/revenue you need to hit that goal.</li>
-          <li>Current Sales (units, optional) — shows safety margin vs break-even.</li>
-          <li>Expected Monthly Units (optional) — shows approximate months to break-even.</li>
+          <li>Target Profit (optional) - see how many units/revenue you need to hit that goal.</li>
+          <li>Current Sales (units, optional) - shows safety margin vs break-even.</li>
+          <li>Expected Monthly Units (optional) - shows approximate months to break-even.</li>
         </ul>
       </section>
 
@@ -69,9 +68,9 @@ export default function GuidePage() {
       <section>
         <h2>Interpreting results</h2>
         <ul>
-          <li>If price is near or below variable cost, raise price or reduce variable cost—break-even is impossible otherwise.</li>
+          <li>If price is near or below variable cost, raise price or reduce variable cost - break-even is impossible otherwise.</li>
           <li>Contribution margin ($ and %) tells you how much each unit contributes to covering fixed costs and profit.</li>
-          <li>Target profit output gives you a clear “sell at least X units” goal.</li>
+          <li>Target profit output gives you a clear "sell at least X units" goal.</li>
           <li>Safety margin shows how far above/below break-even you are at current sales.</li>
           <li>Months-to-break-even helps sanity-check your monthly volume assumptions.</li>
         </ul>
@@ -82,20 +81,20 @@ export default function GuidePage() {
         <ul>
           <li>Fixed costs: $10,000/month</li>
           <li>Variable cost: $20/unit</li>
-          <li>Price: $50/unit ? Contribution margin: $30 (60%)</li>
+          <li>Price: $50/unit - Contribution margin: $30 (60%)</li>
           <li>Break-even: 334 units (about $16,700 revenue)</li>
           <li>Profit target $5,000: 500 units (about $25,000 revenue)</li>
-          <li>Current sales 400 units ? Safety margin ~17% above break-even</li>
-          <li>Expected monthly units 150 ? ~3 months to break-even</li>
+          <li>Current sales 400 units - Safety margin ~17% above break-even</li>
+          <li>Expected monthly units 150 - ~3 months to break-even</li>
         </ul>
       </section>
 
       <section>
         <h2>Pitfalls</h2>
         <ul>
-          <li>Using overly optimistic monthly units—time-to-break-even will be wrong.</li>
+          <li>Using overly optimistic monthly units - time-to-break-even will be wrong.</li>
           <li>Ignoring variable costs (discounts, payment fees, shipping) when pricing.</li>
-          <li>Counting sunk costs—stick to relevant fixed costs for the time period.</li>
+          <li>Counting sunk costsï¿½stick to relevant fixed costs for the time period.</li>
         </ul>
       </section>
 
