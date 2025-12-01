@@ -1,12 +1,24 @@
+import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 
 export const metadata: Metadata = {
-  title: "Free Interest Calculator (Simple & Compound) - FWV Calculators",
+  title:
+    "Interest Calculator – Simple & Compound Interest Growth (Free Tool)",
   description:
-    "Project savings or loan growth with simple and compound interest. Enter principal, rate, and time horizon to see totals and interest earned.",
+    "Use this free interest calculator to see how your money grows with simple or compound interest. Compare rates, timelines, and contribution amounts instantly.",
+  alternates: {
+    canonical: "https://calculators.fosterwealthventures.com/interest",
+  },
+  openGraph: {
+    title: "Interest Calculator – Simple & Compound Interest",
+    description:
+      "Calculate simple and compound interest in seconds. Estimate future value, total interest earned, and compare different savings or investment scenarios.",
+    url: "https://calculators.fosterwealthventures.com/interest",
+    siteName: "FWV Calculators",
+    type: "website",
+  },
 };
 
 export default function InterestLandingPage() {
@@ -107,27 +119,55 @@ export default function InterestLandingPage() {
         <h2 className="text-2xl font-semibold">Interest Calculator FAQ</h2>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">When should I use simple interest?</h3>
+          <h3 className="font-semibold">
+            What is the difference between simple and compound interest?
+          </h3>
           <p className="text-gray-700">
-            Use simple interest for short-term loans or scenarios that do not
-            compound (many auto loans or some personal loans).
+            Simple interest is calculated only on your original principal, while
+            compound interest is calculated on your principal plus any interest that
+            has already been added. Over time, compound interest usually grows your
+            money faster than simple interest.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Why is compound interest larger?</h3>
+          <h3 className="font-semibold">
+            What inputs do I need for this interest calculator?
+          </h3>
           <p className="text-gray-700">
-            Compound interest grows on both your principal and previously earned
-            interest, so balances snowball faster as time and rate increase.
+            You'll need your starting balance, interest rate, time period, and
+            whether interest is simple or compounded (and how often it compounds, such
+            as yearly, monthly, or daily). You can also include regular contributions
+            to see how consistent saving affects your results.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Do I need an account to use it?</h3>
+          <h3 className="font-semibold">
+            Can I use this interest calculator for savings and investments?
+          </h3>
           <p className="text-gray-700">
-            No. The interest calculator is free and runs instantly in your browser.
+            Yes. You can use it for savings accounts, CDs, basic investment growth
+            estimates, and more. It's designed to give you a clear picture of
+            how your balance changes over time at different rates and contribution
+            levels.
           </p>
         </div>
+      </section>
+
+      {/* INTERNAL LINKS */}
+      <section className="space-y-4">
+        <p className="text-gray-700">
+          Once you understand how interest works, you can also use our{" "}
+          <Link href="/roi" className="underline text-emerald-700">
+            ROI Calculator
+          </Link>{" "}
+          to see return on investment or our{" "}
+          <Link href="/savings-growth" className="underline text-emerald-700">
+            Savings Growth Calculator
+          </Link>{" "}
+          (Plus) if you're planning a long-term savings habit.
+        </p>
       </section>
 
       {/* BOTTOM CTA */}
@@ -152,6 +192,47 @@ export default function InterestLandingPage() {
         />
         <div id="container-449baf3ee6c092918f8d0ea54be7aa6e" />
       </section>
+
+      {/* FAQ SCHEMA */}
+      <Script
+        id="interest-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "What is the difference between simple and compound interest?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Simple interest is calculated only on the original principal, while compound interest is calculated on the principal plus previously earned interest. Over time, compound interest usually leads to faster growth.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What inputs do I need for this interest calculator?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "To use the interest calculator you need your starting balance, interest rate, time period, and whether you want simple or compound interest. You can also specify how often interest compounds and add regular contributions to see how your balance changes over time.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Can I use this interest calculator for savings and investments?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. The interest calculator can be used for savings accounts, CDs, and basic investment growth estimates. It helps you visualize how your money may grow with different interest rates and contribution schedules.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }

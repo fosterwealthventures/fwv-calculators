@@ -1,12 +1,23 @@
+import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 
 export const metadata: Metadata = {
-  title: "Free Mortgage Payment Calculator - FWV Calculators",
+  title: "Mortgage Calculator – Estimate Monthly House Payments (Free P&I Tool)",
   description:
-    "Use this free mortgage calculator to see your monthly payment, total interest, and how your loan term affects your cost. Perfect for homebuyers, refinancers, and investors.",
+    "Use this free mortgage calculator to estimate your monthly house payment, total interest, and payoff cost. Compare loan terms and rates before you buy or refinance.",
+  alternates: {
+    canonical: "https://calculators.fosterwealthventures.com/mortgage",
+  },
+  openGraph: {
+    title: "Mortgage Calculator – Estimate Monthly House Payments",
+    description:
+      "Instantly estimate your monthly mortgage payment, total interest, and payoff cost. Free calculator for homebuyers, refinancers, and investors.",
+    url: "https://calculators.fosterwealthventures.com/mortgage",
+    siteName: "Foster Wealth Calculators",
+    type: "website",
+  },
 };
 
 export default function MortgageLandingPage() {
@@ -165,7 +176,6 @@ export default function MortgageLandingPage() {
           Explore More FWV Calculators
         </Link>
       </section>
-
       {/* BOTTOM ADSTERRA BLOCK */}
       <section className="flex justify-center py-6">
         <Script
@@ -173,8 +183,50 @@ export default function MortgageLandingPage() {
           async
           data-cfasync="false"
         />
+
         <div id="container-449baf3ee6c092918f8d0ea54be7aa6e" />
       </section>
+
+      {/* FAQ SCHEMA FOR RICH RESULTS */}
+      <Script
+        id="mortgage-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "How accurate is this mortgage calculator?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "The calculator uses a standard mortgage formula to estimate principal and interest. It does not include property taxes, homeowner's insurance, or HOA fees, which vary by location and lender.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Does this calculator include taxes and insurance?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "By default, it focuses on principal and interest. You can manually add estimated taxes and insurance to the monthly payment to see your total housing cost.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is this mortgage calculator really free to use?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. The FWV Calculators tools are designed to help you make confident money decisions, and this mortgage calculator is free with no sign-up required.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }

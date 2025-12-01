@@ -1,12 +1,23 @@
+import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 
 export const metadata: Metadata = {
-  title: "Free ROI Calculator - FWV Calculators",
+  title: "ROI Calculator – Free Return on Investment Calculator (Instant ROI%)",
   description:
-    "Calculate return on investment fast. Enter cost, ending value, and time horizon to see ROI and annualized ROI for projects, campaigns, or assets.",
+    "Use this free ROI calculator to find your return on investment. Enter cost and returns to see profit, ROI percentage, and total gain. Perfect for small businesses, side hustles, and investors.",
+  alternates: {
+    canonical: "https://calculators.fosterwealthventures.com/roi",
+  },
+  openGraph: {
+    title: "ROI Calculator – Free Return on Investment Calculator",
+    description:
+      "Instantly calculate your return on investment with our free ROI calculator. Compare scenarios and see profit, ROI %, and total gain before you commit.",
+    url: "https://calculators.fosterwealthventures.com/roi",
+    siteName: "FWV Calculators",
+    type: "website",
+  },
 };
 
 export default function ROILandingPage() {
@@ -86,6 +97,17 @@ export default function ROILandingPage() {
           a 6-month pilot and a 2-year investment can be compared apples to
           apples.
         </p>
+        <p className="text-gray-700">
+          Once you know your ROI, you can also explore our{" "}
+          <Link href="/break-even" className="underline text-emerald-700">
+            Break-Even Calculator
+          </Link>{" "}
+          and{" "}
+          <Link href="/freelancer-rate" className="underline text-emerald-700">
+            Freelancer Rate Calculator
+          </Link>{" "}
+          to price services and understand your path to profit.
+        </p>
       </section>
 
       <section className="space-y-4">
@@ -103,26 +125,35 @@ export default function ROILandingPage() {
         <h2 className="text-2xl font-semibold">ROI Calculator FAQ</h2>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Is ROI the same as profit margin?</h3>
+          <h3 className="font-semibold">What is ROI and how is it calculated?</h3>
           <p className="text-gray-700">
-            No. ROI compares your gain to what you invested, while margin
-            compares profit to revenue. Use ROI to judge if the investment
-            outperformed your hurdle rate.
+            ROI (Return on Investment) measures how much profit you earn compared to
+            what you invested. The basic formula is: (Gain from Investment − Cost of
+            Investment) ÷ Cost of Investment. Our calculator uses this formula to show
+            your ROI as a percentage and in dollars.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Why show annualized ROI?</h3>
+          <h3 className="font-semibold">
+            What is a good ROI for a business or project?
+          </h3>
           <p className="text-gray-700">
-            Annualizing normalizes projects of different lengths so you can
-            quickly tell which use of capital worked hardest each year.
+            A "good" ROI depends on your industry, risk level, and time frame. Many
+            small business owners look for ROIs that outperform basic savings or index
+            funds over the same period. Use this calculator to compare different ideas
+            and choose where your money works hardest.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Do I need an account to use it?</h3>
+          <h3 className="font-semibold">
+            Can I use this ROI calculator for side hustles or online businesses?
+          </h3>
           <p className="text-gray-700">
-            No. The ROI calculator is free and runs instantly in your browser.
+            Yes. This tool works for almost any type of investment: ads, side
+            hustles, digital products, real estate, and more. Just enter your total
+            costs and total returns to see whether the idea is worth scaling.
           </p>
         </div>
       </section>
@@ -139,7 +170,6 @@ export default function ROILandingPage() {
           Explore More FWV Calculators
         </Link>
       </section>
-
       {/* BOTTOM ADSTERRA BLOCK */}
       <section className="flex justify-center py-6">
         <Script
@@ -147,8 +177,50 @@ export default function ROILandingPage() {
           async
           data-cfasync="false"
         />
+
         <div id="container-449baf3ee6c092918f8d0ea54be7aa6e" />
       </section>
+
+      {/* FAQ SCHEMA FOR RICH RESULTS */}
+      <Script
+        id="roi-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "What is ROI and how is it calculated?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "ROI (Return on Investment) measures how much profit you earn compared to what you invested. The formula is (Gain from Investment − Cost of Investment) ÷ Cost of Investment. This calculator uses that formula to show ROI in both percentage and dollars.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What is a good ROI for a business or project?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "A good ROI depends on your industry, risk level, and time frame. Many businesses aim for returns that beat basic savings or index funds. Use this ROI calculator to compare projects and choose where your money performs best.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Can I use this ROI calculator for side hustles or online businesses?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. This ROI calculator works for side hustles, digital products, online ads, real estate, and more. Enter your total costs and total returns to see whether your idea is worth continuing or scaling.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }

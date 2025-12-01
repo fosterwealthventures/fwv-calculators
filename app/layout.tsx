@@ -1,5 +1,5 @@
 // app/layout.tsx
-import AdsterraNativeBanner from "@/components/ads/AdsterraNativeBanner";
+import AdSlot from "@/components/ads/AdSlot";
 import CmpBanner from "@/components/consent/CmpBanner";
 import Header from "@/components/Header";
 import PWAInstaller from "@/components/PWAInstaller";
@@ -127,16 +127,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
             {/* Single column content (no ad sidebar) */}
             <main id="main" className="mx-auto max-w-6xl px-4 py-6">
+              <AdSlot className="mb-6" containerId="adsterra-slot-top" />
               {children}
+              <AdSlot className="mt-6" containerId="adsterra-slot-bottom" />
             </main>
 
             {/* Simple in-house CMP banner (non-TCF) */}
             <CmpBanner />
-
-            {/* Footer Ad: Adsterra native banner (always shown) */}
-            <div className="mx-auto max-w-6xl px-4">
-              <AdsterraNativeBanner />
-            </div>
 
             <Footer />
           </EntitlementsProvider>

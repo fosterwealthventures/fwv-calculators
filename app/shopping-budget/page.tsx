@@ -1,12 +1,23 @@
+import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 
 export const metadata: Metadata = {
-  title: "Free Shopping Budget Calculator - FWV Calculators",
+  title: "Shopping Budget Calculator – Plan Your Spending & Avoid Overspending",
   description:
-    "Plan a shopping trip with clarity. Set your budget, categories, and must-haves to see what you can spend without overshooting.",
+    "Use this free shopping budget calculator to plan your spending before you buy. Add items, compare totals, and stay on target for trips, events, or everyday shopping.",
+  alternates: {
+    canonical: "https://calculators.fosterwealthventures.com/shopping-budget",
+  },
+  openGraph: {
+    title: "Shopping Budget Calculator – Free Spending Planner",
+    description:
+      "Plan your shopping trip with a clear budget. Add items, adjust quantities, and track your total so you don't overspend.",
+    url: "https://calculators.fosterwealthventures.com/shopping-budget",
+    siteName: "FWV Calculators",
+    type: "website",
+  },
 };
 
 export default function ShoppingBudgetLandingPage() {
@@ -88,26 +99,56 @@ export default function ShoppingBudgetLandingPage() {
 
       {/* FAQ */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Shopping Budget FAQ</h2>
+        <h2 className="text-2xl font-semibold">Shopping Budget Calculator FAQ</h2>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">What if prices change?</h3>
+          <h3 className="font-semibold">What does this shopping budget calculator do?</h3>
           <p className="text-gray-700">
-            Update item amounts on the fly to keep totals accurate as you shop.
+            This calculator helps you plan your spending before you check out. You can
+            set a total budget, add items with estimated prices, and see how close you
+            are to your limit so you can adjust your cart with confidence.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Can I reuse a budget?</h3>
+          <h3 className="font-semibold">
+            What kinds of shopping can I use this for?
+          </h3>
           <p className="text-gray-700">
-            Yes. Save your category list and refresh amounts before your next trip.
+            You can use it for grocery runs, back-to-school shopping, holiday gifts,
+            travel prep, or any shopping trip where you want to stay within a
+            specific budget. It works whether you're shopping in-store or
+            online.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Do I need an account?</h3>
-          <p className="text-gray-700">No. It is free and runs instantly in your browser.</p>
+          <h3 className="font-semibold">
+            How does this help me avoid overspending?
+          </h3>
+          <p className="text-gray-700">
+            Instead of guessing while you shop, you can see your running total as you
+            add items. If you're getting close to your budget, you can remove or
+            swap items before you spend the money, which makes it easier to stick to
+            your plan.
+          </p>
         </div>
+      </section>
+
+      {/* INTERNAL LINKS */}
+      <section className="space-y-4">
+        <p className="text-gray-700">
+          If you're planning a bigger purchase or trip, you can pair this tool
+          with our{" "}
+          <Link href="/roi" className="underline text-emerald-700">
+            ROI Calculator
+          </Link>{" "}
+          to see if the spend is worth it, or our{" "}
+          <Link href="/interest" className="underline text-emerald-700">
+            Interest Calculator
+          </Link>{" "}
+          if you're saving up over time.
+        </p>
       </section>
 
       {/* BOTTOM CTA */}
@@ -130,6 +171,47 @@ export default function ShoppingBudgetLandingPage() {
         />
         <div id="container-449baf3ee6c092918f8d0ea54be7aa6e" />
       </section>
+
+      {/* FAQ SCHEMA */}
+      <Script
+        id="shopping-budget-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "What does this shopping budget calculator do?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "The shopping budget calculator helps you plan your spending by letting you set a budget, add items with estimated prices, and see how close you are to your limit before you check out.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What kinds of shopping can I use this for?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "You can use the calculator for groceries, holiday shopping, school supplies, travel, or any trip where you want to stay within a specific budget. It works for both in-store and online shopping.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "How does this shopping budget calculator help me avoid overspending?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "By tracking your running total as you add items, the calculator shows when you're approaching your budget so you can remove or swap items before you overspend.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }

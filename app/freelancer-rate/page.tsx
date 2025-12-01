@@ -1,12 +1,24 @@
+import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import FosterWealthCalculators from "@/components/foster_wealth_calculators_suites";
 
 export const metadata: Metadata = {
-  title: "Free Freelancer Rate Calculator - FWV Calculators",
+  title:
+    "Freelancer Rate Calculator – Set Your Hourly Rate with Confidence (Free)",
   description:
-    "Set a freelance hourly rate that covers taxes, overhead, and profit. Enter target income, billable hours, and expenses to get a sustainable rate.",
+    "Use this free freelancer rate calculator to set your hourly or project rate. Factor in expenses, taxes, billable hours, and income goals so you stop undercharging.",
+  alternates: {
+    canonical: "https://calculators.fosterwealthventures.com/freelancer-rate",
+  },
+  openGraph: {
+    title: "Freelancer Rate Calculator – Free Pricing Tool",
+    description:
+      "Set your freelance rates with confidence. This free calculator helps you price your services based on real expenses, taxes, and income goals.",
+    url: "https://calculators.fosterwealthventures.com/freelancer-rate",
+    siteName: "FWV Calculators",
+    type: "website",
+  },
 };
 
 export default function FreelancerRateLandingPage() {
@@ -91,26 +103,56 @@ export default function FreelancerRateLandingPage() {
 
       {/* FAQ */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Freelancer Rate FAQ</h2>
+        <h2 className="text-2xl font-semibold">Freelancer Rate Calculator FAQ</h2>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">How many hours should I mark billable?</h3>
+          <h3 className="font-semibold">What does this freelancer rate calculator do?</h3>
           <p className="text-gray-700">
-            Most solo operators invoice 50–70% of their working hours. Start conservative, then revisit after a month or two.
+            This calculator helps you set a realistic hourly or project rate by
+            factoring in your business expenses, taxes, billable hours, and income
+            goals. Instead of guessing, you'll see what you actually need to
+            charge to hit your target annual income.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Does this include profit?</h3>
+          <h3 className="font-semibold">
+            What information do I need to use this rate calculator?
+          </h3>
           <p className="text-gray-700">
-            Yes. The calculator bakes profit into your target income so you are not just covering costs.
+            You'll want a rough idea of your monthly or annual expenses, your
+            desired income, your estimated tax rate, and how many hours you can
+            realistically bill each week. The calculator uses this to estimate a
+            baseline hourly rate and optional project rate.
           </p>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold">Do I need an account?</h3>
-          <p className="text-gray-700">No. It is free and runs instantly in your browser.</p>
+          <h3 className="font-semibold">
+            Can I use this for both hourly and project pricing?
+          </h3>
+          <p className="text-gray-700">
+            Yes. Start by finding a sustainable hourly rate. From there, you can
+            estimate project pricing by multiplying your hourly rate by the number of
+            hours a project will take, plus a buffer for admin, revisions, and scope
+            creep.
+          </p>
         </div>
+      </section>
+
+      {/* INTERNAL LINKS */}
+      <section className="space-y-4">
+        <p className="text-gray-700">
+          Once you've set your rate, you can use our{" "}
+          <Link href="/roi" className="underline text-emerald-700">
+            ROI Calculator
+          </Link>{" "}
+          to see whether your projects are worth the effort, or our{" "}
+          <Link href="/break-even" className="underline text-emerald-700">
+            Break-Even Calculator
+          </Link>{" "}
+          if you're launching new services or offers.
+        </p>
       </section>
 
       {/* BOTTOM CTA */}
@@ -133,6 +175,47 @@ export default function FreelancerRateLandingPage() {
         />
         <div id="container-449baf3ee6c092918f8d0ea54be7aa6e" />
       </section>
+
+      {/* FAQ SCHEMA */}
+      <Script
+        id="freelancer-rate-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "What does this freelancer rate calculator do?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "The freelancer rate calculator helps you set a realistic hourly or project rate by factoring in your expenses, billable hours, taxes, and income goals so you stop undercharging for your work.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What information do I need to use this rate calculator?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "To use the freelancer rate calculator you should know your estimated business expenses, desired annual income, typical billable hours per week, and an approximate tax rate. The calculator uses this to estimate a sustainable hourly rate.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Can I use this freelancer rate calculator for both hourly and project pricing?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. You can start with a solid hourly rate and then build project pricing by estimating the number of hours a project will take, plus time for admin and revisions, and multiplying by your hourly rate.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }

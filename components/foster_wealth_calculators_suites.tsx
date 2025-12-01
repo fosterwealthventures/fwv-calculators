@@ -437,6 +437,9 @@ export default function FosterWealthCalculators({
   // Deep-link support (?calc=), with safety for freeOnly and optional allowedCalcs
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  // Capture the actual calc param string so we don't re-run the effect on every render
+  // when the searchParams object identity changes.
+  const calcParam = searchParams?.get("calc") || null;
   useEffect(() => {
     const alias = (s: string | null | undefined): CalcKey | null => {
       const key = (s || "").toLowerCase();
@@ -451,7 +454,7 @@ export default function FosterWealthCalculators({
       return map[key] || null;
     };
 
-    const qpChoice = alias(searchParams.get("calc"));
+    const qpChoice = alias(calcParam);
     let chosen: CalcKey | null = qpChoice;
     if (!chosen && pathname) {
       const parts = pathname.split("/").filter(Boolean);
@@ -470,7 +473,7 @@ export default function FosterWealthCalculators({
     } else if (defaultCalc) {
       setActiveCalc(defaultCalc);
     }
-  }, [searchParams, pathname, freeOnly, allowedSet, defaultCalc]);
+  }, [calcParam, pathname, freeOnly, allowedSet, defaultCalc]);
 
   // Upgrade handler for paid calculators
   const handleUpgrade = () => {
