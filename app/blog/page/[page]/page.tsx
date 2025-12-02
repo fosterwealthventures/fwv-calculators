@@ -13,6 +13,7 @@ type Post = {
   excerpt?: string;
   tags?: string[];
   category?: string;
+  thumbnail?: string;
 };
 
 export async function generateMetadata({ params }: { params: { page: string } }) {
@@ -50,6 +51,7 @@ export default function BlogIndexPage({ params }: { params: { page: string } }) 
                 excerpt={p.excerpt}
                 tags={p.tags}
                 category={p.category}
+                thumbnail={p.thumbnail}
               />
             </li>
           ))}

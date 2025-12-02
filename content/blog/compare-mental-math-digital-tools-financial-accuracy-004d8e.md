@@ -1,9 +1,20 @@
 ---
-title: "Compare mental math vs digital tools for financial accuracy — Complete Guide"
-date: "2025-10-15T03:26:28.904Z"
-excerpt: "A practical, step-by-step walkthrough of “Compare mental math vs digital tools for financial accuracy”."
-category: "Finance"
-tags: ["compare", "mental", "math", "digital", "tools", "for", "financial", "accuracy"]
+title: Compare mental math vs digital tools for financial accuracy — Complete Guide
+date: '2025-10-15T03:26:28.904Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Compare mental math vs digital tools
+  for financial accuracy”.
+category: Finance
+tags:
+  - compare
+  - mental
+  - math
+  - digital
+  - tools
+  - for
+  - financial
+  - accuracy
+thumbnail: /blog/compare-mental-math-digital-tools-financial-accuracy-004d8e.jpg
 ---
 
 # Mental Math vs. Digital Tools for Financial Accuracy: Which is Best?

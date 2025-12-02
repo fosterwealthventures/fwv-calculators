@@ -1,13 +1,34 @@
 ---
-title: "The Fair Split Rulebook: How to Divide Restaurant Bills  When Everyone Ordered Differently — Complete Guide"
-date: "2025-10-21T18:48:08.534Z"
-excerpt: "A practical, step-by-step walkthrough of “The Fair Split Rulebook: How to Divide Restaurant Bills  When Everyone Ordered Differently”."
-category: "Finance"
-tags: ["the", "fair", "split", "rulebook", "how", "divide", "restaurant", "bills"]
-main_calculator: "Split-Order Calculator"
-intent: "Teach users how to split restaurant bills fairly by item, including tax and tip distribution."
-keywords: ["split bill calculator", "itemized check split", "fair  restaurant bill", "tip and tax split"]
-meta_description: "Avoid awkward moments—learn how to split restaurant bills fairly with tax and tip using our Split-by-Order Calculator."
+title: >-
+  The Fair Split Rulebook: How to Divide Restaurant Bills  When Everyone Ordered
+  Differently — Complete Guide
+date: '2025-10-21T18:48:08.534Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “The Fair Split Rulebook: How to
+  Divide Restaurant Bills  When Everyone Ordered Differently”.
+category: Finance
+tags:
+  - the
+  - fair
+  - split
+  - rulebook
+  - how
+  - divide
+  - restaurant
+  - bills
+main_calculator: Split-Order Calculator
+intent: >-
+  Teach users how to split restaurant bills fairly by item, including tax and
+  tip distribution.
+keywords:
+  - split bill calculator
+  - itemized check split
+  - fair  restaurant bill
+  - tip and tax split
+meta_description: >-
+  Avoid awkward moments—learn how to split restaurant bills fairly with tax and
+  tip using our Split-by-Order Calculator.
+thumbnail: /blog/fair-split-rulebook-divide-restaurant-bills-when-everyone-or-54169b.jpg
 ---
 
 # The Fair Split Rulebook: How to Divide Restaurant Bills When Everyone Ordered Differently

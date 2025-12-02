@@ -1,9 +1,22 @@
 ---
-title: "List common calculator mistakes and how to avoid them in budgeting — Complete Guide"
-date: "2025-10-15T03:26:23.907Z"
-excerpt: "A practical, step-by-step walkthrough of “List common calculator mistakes and how to avoid them in budgeting”."
-category: "Personal Finance"
-tags: ["list", "common", "calculator", "mistakes", "and", "how", "avoid", "them"]
+title: >-
+  List common calculator mistakes and how to avoid them in budgeting — Complete
+  Guide
+date: '2025-10-15T03:26:23.907Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “List common calculator mistakes and
+  how to avoid them in budgeting”.
+category: Personal Finance
+tags:
+  - list
+  - common
+  - calculator
+  - mistakes
+  - and
+  - how
+  - avoid
+  - them
+thumbnail: /blog/list-common-calculator-mistakes-avoid-them-budgeting-ce5c9c.jpg
 ---
 
 # Avoiding Common Calculator Mistakes in Budgeting: A Comprehensive Guide

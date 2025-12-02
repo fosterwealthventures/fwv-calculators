@@ -1,13 +1,34 @@
 ---
-title: "The Capsule Closet Challenge: How to Build a Wardrobe on a Budget — Complete Guide"
-date: "2025-10-21T18:01:05.118Z"
-excerpt: "A practical, step-by-step walkthrough of “The Capsule Closet Challenge: How to Build a Wardrobe on a Budget”."
-category: "Personal Finance"
-tags: ["the", "capsule", "closet", "challenge", "how", "build", "wardrobe", "budget"]
-main_calculator: "Shopping Budget Calculator"
-intent: "Guide readers to create a minimalist capsule wardrobe that saves money while maintaining style."
-keywords: ["capsule wardrobe budget", "fashion on a budget", "cost per wear", "minimalist style savings"]
-meta_description: "Save money and simplify your closet with our capsule wardrobe budget guide and free shopping budget calculator."
+title: >-
+  The Capsule Closet Challenge: How to Build a Wardrobe on a Budget — Complete
+  Guide
+date: '2025-10-21T18:01:05.118Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “The Capsule Closet Challenge: How to
+  Build a Wardrobe on a Budget”.
+category: Personal Finance
+tags:
+  - the
+  - capsule
+  - closet
+  - challenge
+  - how
+  - build
+  - wardrobe
+  - budget
+main_calculator: Shopping Budget Calculator
+intent: >-
+  Guide readers to create a minimalist capsule wardrobe that saves money while
+  maintaining style.
+keywords:
+  - capsule wardrobe budget
+  - fashion on a budget
+  - cost per wear
+  - minimalist style savings
+meta_description: >-
+  Save money and simplify your closet with our capsule wardrobe budget guide and
+  free shopping budget calculator.
+thumbnail: /blog/capsule-closet-challenge-build-wardrobe-budget-83e655.jpg
 ---
 
 # The Capsule Closet Challenge: How to Build a Wardrobe on a Budget

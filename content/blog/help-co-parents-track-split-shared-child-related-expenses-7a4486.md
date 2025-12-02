@@ -1,9 +1,20 @@
 ---
-title: "Help co-parents track and split shared child-related expenses — Complete Guide"
-date: "2025-10-15T03:28:42.622Z"
-excerpt: "A practical, step-by-step walkthrough of “Help co-parents track and split shared child-related expenses”."
-category: "Personal Finance"
-tags: ["help", "co-parents", "track", "and", "split", "shared", "child-related", "expenses"]
+title: Help co-parents track and split shared child-related expenses — Complete Guide
+date: '2025-10-15T03:28:42.622Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Help co-parents track and split
+  shared child-related expenses”.
+category: Personal Finance
+tags:
+  - help
+  - co-parents
+  - track
+  - and
+  - split
+  - shared
+  - child-related
+  - expenses
+thumbnail: /blog/help-co-parents-track-split-shared-child-related-expenses-7a4486.jpg
 ---
 
 # Help Co-Parents Track and Split Shared Child-Related Expenses

@@ -4,7 +4,7 @@ import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/componen
 import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
-  title: "Debt Planner (Snowball/Avalanche) — Guide | Foster Wealth Ventures",
+  title: "Debt Payoff Calculator Guide: Snowball vs. Avalanche",
   description:
     "Learn how to prioritize debts, pick snowball vs avalanche, and read your payoff timeline.",
 };
@@ -18,7 +18,7 @@ export default function DebtPlannerGuide() {
         </Link>
       </NavText>
 
-      <H1>Debt Planner — Guide</H1>
+      <H1>Debt Payoff Calculator Guide: Snowball vs. Avalanche</H1>
 
       <Quote variant="paid">
         "Let no debt remain outstanding, except the continuing debt to love one another." <span className="font-semibold">Romans 13:8</span>

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Break-Even Made Simple - Use Our Calculator to Master Costs & Profit Margins",
+  title: "Break-Even Calculator Guide: How to Find Your Break-Even Point",
   description: "Understand break-even analysis and how to calculate the units needed to cover costs and reach profitability.",
 };
 
@@ -18,7 +18,7 @@ function Breadcrumb() {
       <Link href="/guide" className="text-brand-green hover:underline">
         Guides
       </Link>{" "}
-      &rsaquo; <span>Break-Even Made Simple</span>
+      &rsaquo; <span>Break-Even Calculator Guide: How to Find Your Break-Even Point</span>
     </nav>
   );
 }
@@ -31,7 +31,7 @@ export default function GuidePage() {
       <Breadcrumb />
 
       <GuideHero
-        title="Break-Even Made Simple"
+        title="Break-Even Calculator Guide: How to Find Your Break-Even Point"
         subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
         icon={null}
       />
@@ -122,11 +122,11 @@ export default function GuidePage() {
       <GuideNav
         prev={{
           href: "/guide/roi-vs-annualized-roi",
-          title: "ROI vs Annualized ROI",
+          title: "ROI Calculator Guide: How to Calculate Return on Investment",
         }}
         next={{
           href: "/guide/mortgage-payment-breakdown",
-          title: "Mortgage Payment Breakdown",
+          title: "Mortgage Payment Calculator Guide: Understand Your Monthly Payment",
         }}
       />
     </main>

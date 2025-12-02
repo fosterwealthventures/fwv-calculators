@@ -1,9 +1,22 @@
 ---
-title: "Provide tips for splitting restaurant tabs and calculating fair tips in groups — Complete Guide"
-date: "2025-10-15T03:36:38.100Z"
-excerpt: "A practical, step-by-step walkthrough of “Provide tips for splitting restaurant tabs and calculating fair tips in groups”."
-category: "Finance"
-tags: ["provide", "tips", "for", "splitting", "restaurant", "tabs", "and", "calculating"]
+title: >-
+  Provide tips for splitting restaurant tabs and calculating fair tips in groups
+  — Complete Guide
+date: '2025-10-15T03:36:38.100Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Provide tips for splitting
+  restaurant tabs and calculating fair tips in groups”.
+category: Finance
+tags:
+  - provide
+  - tips
+  - for
+  - splitting
+  - restaurant
+  - tabs
+  - and
+  - calculating
+thumbnail: /blog/provide-tips-splitting-restaurant-tabs-calculating-fair-tips-f9d08f.jpg
 ---
 
 # Splitting Restaurant Tabs and Calculating Fair Tips in Groups: A Comprehensive Guide

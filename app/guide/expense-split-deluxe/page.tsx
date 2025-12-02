@@ -4,7 +4,7 @@ import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/componen
 import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
-  title: "Expense Split Deluxe — Guide | Foster Wealth Ventures",
+  title: "Advanced Expense Split Calculator Guide: Weights, Caps & Shares",
   description:
     "Split shared bills fairly using percentages, weights, and custom rules.",
 };
@@ -18,7 +18,7 @@ export default function ExpenseSplitDeluxeGuide() {
         </Link>
       </NavText>
 
-      <H1>Expense Split Deluxe — Guide</H1>
+      <H1>Advanced Expense Split Calculator Guide: Weights, Caps & Shares</H1>
 
       <Quote variant="paid">
         "Each of you should give what you have decided in your heart to give…" <span className="font-semibold">2 Corinthians 9:7</span>

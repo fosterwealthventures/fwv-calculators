@@ -1,9 +1,22 @@
 ---
-title: "Launching a New Product? Find Your Profit Point with a Break-Even Analysis — Complete Guide"
-date: "2025-10-18T23:32:23.471Z"
-excerpt: "A practical, step-by-step walkthrough of “Launching a New Product? Find Your Profit Point with a Break-Even Analysis”."
-category: "Finance"
-tags: ["launching", "new", "product", "find", "your", "profit", "point", "with"]
+title: >-
+  Launching a New Product? Find Your Profit Point with a Break-Even Analysis —
+  Complete Guide
+date: '2025-10-18T23:32:23.471Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Launching a New Product? Find Your
+  Profit Point with a Break-Even Analysis”.
+category: Finance
+tags:
+  - launching
+  - new
+  - product
+  - find
+  - your
+  - profit
+  - point
+  - with
+thumbnail: /blog/launching-new-product-find-your-profit-point-break-even-anal-26b9d6.jpg
 ---
 
 # Launching a New Product? Find Your Profit Point with a Break-Even Analysis

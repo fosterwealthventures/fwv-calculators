@@ -6,7 +6,7 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: "Mortgage Payment Calculator — Guide | Foster Wealth Ventures",
+  title: "Mortgage Payment Calculator Guide: Understand Your Monthly Payment",
   description:
     "Understand principal, interest, taxes, and insurance (PITI) and how rate, term, and down payment change your monthly.",
 };
@@ -21,7 +21,7 @@ export default function MortgageGuide() {
       </nav>
 
       <H1>
-        Mortgage Payment — Guide
+        Mortgage Payment Calculator Guide: Understand Your Monthly Payment
       </H1>
 
       <Quote>

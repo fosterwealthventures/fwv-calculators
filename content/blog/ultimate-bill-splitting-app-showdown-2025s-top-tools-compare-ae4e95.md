@@ -1,14 +1,34 @@
 ---
-title: "The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared — Complete Guide"
-date: "2025-10-21T19:48:47.182Z"
-excerpt: "A practical, step-by-step walkthrough of “The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared”."
-category: "Finance"
-tags: ["the", "ultimate", "bill-splitting", "app", "showdown", "2025s", "top", "tools"]
-main_calculator: "Restaurant Tips Calculator"
-intent: "Compare popular bill-splitting apps and highlight your own calculator as a simple 
-web-based alternative."
-keywords: ["best bill splitting app 2025", "Splitwise alternative", "restaurant split tool", "bill sharing apps"]
-meta_description: "We tested the top bill-splitting apps of 2025 — see why our Split-by-Order Calculator is the fastest and fairest."
+title: >-
+  The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared — Complete
+  Guide
+date: '2025-10-21T19:48:47.182Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “The Ultimate Bill-Splitting App
+  Showdown: 2025’s Top Tools Compared”.
+category: Finance
+tags:
+  - the
+  - ultimate
+  - bill-splitting
+  - app
+  - showdown
+  - 2025s
+  - top
+  - tools
+main_calculator: Restaurant Tips Calculator
+intent: >-
+  Compare popular bill-splitting apps and highlight your own calculator as a
+  simple  web-based alternative.
+keywords:
+  - best bill splitting app 2025
+  - Splitwise alternative
+  - restaurant split tool
+  - bill sharing apps
+meta_description: >-
+  We tested the top bill-splitting apps of 2025 — see why our Split-by-Order
+  Calculator is the fastest and fairest.
+thumbnail: /blog/ultimate-bill-splitting-app-showdown-2025s-top-tools-compare-ae4e95.jpg
 ---
 
 # The Ultimate Bill-Splitting App Showdown: 2025’s Top Tools Compared

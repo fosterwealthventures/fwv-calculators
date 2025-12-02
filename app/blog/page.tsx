@@ -16,6 +16,7 @@ type Post = {
   excerpt?: string;
   tags?: string[];
   category?: string;
+  thumbnail?: string;
   image?: string;
 };
 export const revalidate = 3600;
@@ -70,6 +71,7 @@ export default async function BlogIndex({
                 excerpt={p.excerpt}
                 tags={p.tags}
                 category={p.category}
+                thumbnail={p.thumbnail}
                 image={p.image}
               />
             </li>

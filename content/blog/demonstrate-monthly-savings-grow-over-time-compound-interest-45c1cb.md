@@ -1,9 +1,22 @@
 ---
-title: "Demonstrate how monthly savings grow over time with compound interest — Complete Guide"
-date: "2025-10-15T03:36:40.224Z"
-excerpt: "A practical, step-by-step walkthrough of “Demonstrate how monthly savings grow over time with compound interest”."
-category: "Personal Finance"
-tags: ["demonstrate", "how", "monthly", "savings", "grow", "over", "time", "with"]
+title: >-
+  Demonstrate how monthly savings grow over time with compound interest —
+  Complete Guide
+date: '2025-10-15T03:36:40.224Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Demonstrate how monthly savings grow
+  over time with compound interest”.
+category: Personal Finance
+tags:
+  - demonstrate
+  - how
+  - monthly
+  - savings
+  - grow
+  - over
+  - time
+  - with
+thumbnail: /blog/demonstrate-monthly-savings-grow-over-time-compound-interest-45c1cb.jpg
 ---
 
 # Demonstrating How Monthly Savings Grow Over Time with Compound Interest

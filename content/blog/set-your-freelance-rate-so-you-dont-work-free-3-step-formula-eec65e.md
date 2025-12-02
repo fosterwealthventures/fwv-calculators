@@ -1,9 +1,22 @@
 ---
-title: "How to Set Your Freelance Rate So You Don't Work for Free (The 3-Step Formula) — Complete Guide"
-date: "2025-10-18T23:31:13.894Z"
-excerpt: "A practical, step-by-step walkthrough of “How to Set Your Freelance Rate So You Don't Work for Free (The 3-Step Formula)”."
-category: "Finance"
-tags: ["how", "set", "your", "freelance", "rate", "you", "dont", "work"]
+title: >-
+  How to Set Your Freelance Rate So You Don't Work for Free (The 3-Step Formula)
+  — Complete Guide
+date: '2025-10-18T23:31:13.894Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “How to Set Your Freelance Rate So
+  You Don't Work for Free (The 3-Step Formula)”.
+category: Finance
+tags:
+  - how
+  - set
+  - your
+  - freelance
+  - rate
+  - you
+  - dont
+  - work
+thumbnail: /blog/set-your-freelance-rate-so-you-dont-work-free-3-step-formula-eec65e.jpg
 ---
 
 # How to Set Your Freelance Rate So You Don't Work for Free (The 3-Step Formula)

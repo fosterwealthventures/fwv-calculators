@@ -1,9 +1,20 @@
 ---
-title: "Explain interest rates affect total debt repayment over time — Complete Guide"
-date: "2025-10-18T21:19:44.655Z"
-excerpt: "A practical, step-by-step walkthrough of “Explain interest rates affect total debt repayment over time”."
-category: "Finance"
-tags: ["explain", "interest", "rates", "affect", "total", "debt", "repayment", "over"]
+title: Explain interest rates affect total debt repayment over time — Complete Guide
+date: '2025-10-18T21:19:44.655Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Explain interest rates affect total
+  debt repayment over time”.
+category: Finance
+tags:
+  - explain
+  - interest
+  - rates
+  - affect
+  - total
+  - debt
+  - repayment
+  - over
+thumbnail: /blog/explain-interest-rates-affect-total-debt-repayment-over-time-5eee8d.jpg
 ---
 
 # Understanding How Interest Rates Affect Total Debt Repayment Over Time

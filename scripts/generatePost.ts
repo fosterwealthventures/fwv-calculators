@@ -8,6 +8,7 @@ import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
+import { buildPexelsQuery, downloadImageToFile, fetchPexelsImageUrl, getPexelsApiKey } from "../lib/blog/pexels";
 
 // ---------- Defaults ----------
 const DEFAULT_OUT_DIR = "content/blog";
@@ -67,8 +68,9 @@ function parseFlags(argv: string[]): { title: string; flags: FlagMap } {
   return { title, flags };
 }
 
-function fm(dateISO: string, title: string, slug: string, excerpt: string, tags: string[]) {
-  const fmObj = { title, date: dateISO, slug, excerpt, tags };
+function fm(dateISO: string, title: string, slug: string, excerpt: string, tags: string[], thumbnail?: string) {
+  const fmObj: Record<string, string | string[] | undefined> = { title, date: dateISO, slug, excerpt, tags };
+  if (thumbnail) fmObj.thumbnail = thumbnail;
   const yaml = Object.entries(fmObj)
     .map(([k, v]) => (Array.isArray(v) ? `${k}: [${v.map((x) => JSON.stringify(x)).join(", ")}]` : `${k}: ${JSON.stringify(v)}`))
     .join("\n");
@@ -94,12 +96,15 @@ async function main() {
   const tagList = splitCsv(flags.tags as string);
 
   const apiKey = assertOpenAIKey();
+  const pexelsKey = getPexelsApiKey();
   const openai = new OpenAI({ apiKey });
 
   const today = new Date();
   const dateISO = today.toISOString();
   const fileSlug = `${today.toISOString().slice(0, 10)}-${slugify(title)}`;
   const filePath = path.join(outDir, `${fileSlug}.md`);
+  const imageRelPath = `/blog/${fileSlug}.jpg`;
+  const imageAbsPath = path.join(process.cwd(), "public", "blog", `${fileSlug}.jpg`);
 
   const sysPrompt = [
     "You are a senior SEO/content strategist who writes authoritative, readable, well-structured blog posts in Markdown.",
@@ -155,7 +160,28 @@ Return only Markdown body content (H1 included).
   }
 
   // Compose final with frontmatter
-  const frontmatter = fm(dateISO, title, fileSlug, excerpt, tagList);
+  let thumbnail: string | undefined;
+  if (pexelsKey && !dryRun) {
+    const searchQuery = buildPexelsQuery(title);
+    try {
+      const imageUrl = await fetchPexelsImageUrl(searchQuery, pexelsKey);
+      if (imageUrl) {
+        await downloadImageToFile(imageUrl, imageAbsPath);
+        thumbnail = imageRelPath;
+        log("info", `Pexels image attached from query "${searchQuery}" -> ${thumbnail}`);
+      } else {
+        log("warn", `No Pexels image found for query "${searchQuery}". Using gradient fallback.`);
+      }
+    } catch (err) {
+      log("warn", `Pexels API failed (${(err as any)?.message || err}). Using gradient fallback.`);
+    }
+  } else if (!pexelsKey) {
+    log("warn", "PEXELS_API_KEY is missing; skipping Pexels lookup (gradient fallback).");
+  } else if (dryRun) {
+    log("info", "Dry run: skipping Pexels download.");
+  }
+
+  const frontmatter = fm(dateISO, title, fileSlug, excerpt, tagList, thumbnail);
   const final = frontmatter + content + "\n";
 
   if (dryRun) {

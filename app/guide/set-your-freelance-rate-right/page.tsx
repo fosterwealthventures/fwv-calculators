@@ -4,8 +4,7 @@ import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
 export const metadata: Metadata = {
-  title:
-    "Set Your Freelancer Rate Right—Use Our Calculator to Avoid Undervaluing Your Time",
+  title: "Freelance Rate Calculator Guide: How to Price Your Services",
   description:
     "Learn how to calculate the right hourly and project rates to meet income goals and cover expenses as a freelancer.",
 };
@@ -20,7 +19,7 @@ function Breadcrumb() {
       <Link href="/guide" className="text-brand-green hover:underline">
         Guides
       </Link>{" "}
-      &rsaquo; <span>Set Your Freelancer Rate Right</span>
+      &rsaquo; <span>Freelance Rate Calculator Guide: How to Price Your Services</span>
     </nav>
   );
 }
@@ -35,7 +34,7 @@ export default function GuidePage() {
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
       <Breadcrumb />
       <GuideHero
-        title="Set Your Freelancer Rate Right"
+        title="Freelance Rate Calculator Guide: How to Price Your Services"
         subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
         icon={null}
       />
@@ -98,7 +97,7 @@ export default function GuidePage() {
       <GuideNav
         prev={{
           href: "/guide/simple-vs-compound-interest",
-          title: "Simple vs Compound Interest",
+          title: "Compound Interest Calculator Guide: Simple vs. Compound",
         }}
         next={{
           href: "/guide/5-costly-calculator-mistakes",

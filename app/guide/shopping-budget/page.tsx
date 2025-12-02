@@ -16,7 +16,7 @@ import {
 } from "@/components/GuideTypography";
 
 export const metadata: Metadata = {
-    title: "Shopping Budget Calculator — Plan Your Cart, Stay Under Budget",
+    title: "Shopping Budget Calculator Guide: Plan and Track Spending",
     description:
         "A practical guide to planning your cart, including tax, and tracking what you have left. Add items, edit inline, and see remaining vs budget in real time.",
 };
@@ -89,10 +89,10 @@ export default function ShoppingBudgetGuide() {
     return (
         <main>
             {/* Navigation */}
-            <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/shopping-budget", label: "Shopping Budget" }]} />
+            <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/shopping-budget", label: "Shopping Budget Calculator Guide: Plan and Track Spending" }]} />
 
             {/* Page Title */}
-            <H1>Shopping Budget — Plan Your Cart & Stay Under Budget</H1>
+            <H1>Shopping Budget Calculator Guide: Plan and Track Spending</H1>
 
             {/* Reading time */}
             <p className="mt-2 text-sm text-gray-600">

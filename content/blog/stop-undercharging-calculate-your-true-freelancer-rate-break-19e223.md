@@ -1,9 +1,22 @@
 ---
-title: "Stop Undercharging: How to Calculate Your True Freelancer Rate & Break-Even Point — Complete Guide"
-date: "2025-10-18T22:39:54.826Z"
-excerpt: "A practical, step-by-step walkthrough of “Stop Undercharging: How to Calculate Your True Freelancer Rate & Break-Even Point”."
-category: "Finance"
-tags: ["stop", "undercharging", "how", "calculate", "your", "true", "freelancer", "rate"]
+title: >-
+  Stop Undercharging: How to Calculate Your True Freelancer Rate & Break-Even
+  Point — Complete Guide
+date: '2025-10-18T22:39:54.826Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Stop Undercharging: How to Calculate
+  Your True Freelancer Rate & Break-Even Point”.
+category: Finance
+tags:
+  - stop
+  - undercharging
+  - how
+  - calculate
+  - your
+  - 'true'
+  - freelancer
+  - rate
+thumbnail: /blog/stop-undercharging-calculate-your-true-freelancer-rate-break-19e223.jpg
 ---
 
 # Stop Undercharging: How to Calculate Your True Freelancer Rate & Break-Even Point

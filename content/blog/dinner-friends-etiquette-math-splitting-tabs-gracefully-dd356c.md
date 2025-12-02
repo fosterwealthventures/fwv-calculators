@@ -1,13 +1,34 @@
 ---
-title: "Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully — Complete Guide"
-date: "2025-10-21T19:38:21.365Z"
-excerpt: "A practical, step-by-step walkthrough of “Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully”."
-category: "Finance"
-tags: ["dinner", "with", "friends", "the", "etiquette", "and", "math", "splitting"]
-main_calculator: "Split-Order Calculator"
-intent: "Teach proper dining etiquette and simple math for fair tab splitting in groups."
-keywords: ["restaurant bill etiquette", "split tab calculator", "dining with friends bill", "fair check split"]
-meta_description: "Split restaurant bills without awkwardness — learn the rules of dining etiquette and use our Split-Order Calculator."
+title: >-
+  Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully —
+  Complete Guide
+date: '2025-10-21T19:38:21.365Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Dinner with Friends? The Etiquette
+  and Math of Splitting Tabs Gracefully”.
+category: Finance
+tags:
+  - dinner
+  - with
+  - friends
+  - the
+  - etiquette
+  - and
+  - math
+  - splitting
+main_calculator: Split-Order Calculator
+intent: >-
+  Teach proper dining etiquette and simple math for fair tab splitting in
+  groups.
+keywords:
+  - restaurant bill etiquette
+  - split tab calculator
+  - dining with friends bill
+  - fair check split
+meta_description: >-
+  Split restaurant bills without awkwardness — learn the rules of dining
+  etiquette and use our Split-Order Calculator.
+thumbnail: /blog/dinner-friends-etiquette-math-splitting-tabs-gracefully-dd356c.jpg
 ---
 
 # Dinner with Friends? The Etiquette and Math of Splitting Tabs Gracefully

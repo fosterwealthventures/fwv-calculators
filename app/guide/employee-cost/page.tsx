@@ -4,7 +4,7 @@ import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/componen
 import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
-  title: "Employee Cost Calculator — Guide | Foster Wealth Ventures",
+  title: "Employee Cost Calculator Guide: Total Cost per Employee",
   description:
     "See the true employer cost beyond salary—taxes, benefits, equipment, and overhead.",
 };
@@ -18,7 +18,7 @@ export default function EmployeeCostGuide() {
         </Link>
       </NavText>
 
-      <H1>Employee Cost — Guide</H1>
+      <H1>Employee Cost Calculator Guide: Total Cost per Employee</H1>
 
       <Quote variant="paid">
         "For which of you, desiring to build a tower, does not first sit down and count the cost…" <span className="font-semibold">Luke 14:28</span>

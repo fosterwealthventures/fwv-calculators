@@ -5,7 +5,7 @@ import { NavText, H1, H2, Quote, Section, CTAWrap, HelperText } from "@/componen
 import { CALC_TIERS } from "@/lib/calc-tiers";
 
 export const metadata = {
-  title: "Savings Growth Calculator — Guide | Foster Wealth Ventures",
+  title: "Savings Calculator Guide: How Your Money Grows Over Time",
   description:
     "How compounding grows your money and how to use the Savings Growth calculator the smart way.",
 };
@@ -19,7 +19,7 @@ export default function SavingsGrowthGuide() {
         </Link>
       </NavText>
 
-      <H1>Savings Growth — Guide</H1>
+      <H1>Savings Calculator Guide: How Your Money Grows Over Time</H1>
 
       <Quote variant="paid">
         "The plans of the diligent lead surely to abundance…" <span className="font-semibold">Proverbs 21:5</span>

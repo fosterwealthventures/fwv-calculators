@@ -8,6 +8,7 @@ export type PostMeta = {
   title: string;
   date: string;
   tags?: string[];
+  thumbnail?: string;
 };
 
 export type Post = PostMeta & { content: string };
@@ -29,6 +30,7 @@ export function getAllPosts(): PostMeta[] {
       title: String(data.title ?? slug),
       date: String(data.date ?? new Date().toISOString().slice(0, 10)),
       tags: Array.isArray(data.tags) ? data.tags : undefined,
+      thumbnail: typeof data.thumbnail === "string" ? data.thumbnail : undefined,
     } as PostMeta;
   });
 
@@ -49,6 +51,7 @@ export function getPostBySlug(slug: string): Post | null {
     title: String(data.title ?? slug),
     date: String(data.date ?? new Date().toISOString().slice(0, 10)),
     tags: Array.isArray(data.tags) ? data.tags : undefined,
+    thumbnail: typeof data.thumbnail === "string" ? data.thumbnail : undefined,
     content,
   };
 }

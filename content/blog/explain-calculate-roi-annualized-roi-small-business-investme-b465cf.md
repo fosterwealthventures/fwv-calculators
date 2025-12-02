@@ -1,10 +1,22 @@
 ---
-title: "Explain how to calculate ROI and annualized ROI for small business investments — Complete Guide"
-date: "2025-10-15T03:43:34.524Z"
-excerpt: "A practical, step-by-step walkthrough of “Explain how to calculate ROI and annualized ROI for small business investments”."
-category: "Investing"
-tags: ["explain", "how", "calculate", "roi", "and", "annualized", "for"]
-main_calculator: "ROI Calculator"
+title: >-
+  Explain how to calculate ROI and annualized ROI for small business investments
+  — Complete Guide
+date: '2025-10-15T03:43:34.524Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Explain how to calculate ROI and
+  annualized ROI for small business investments”.
+category: Investing
+tags:
+  - explain
+  - how
+  - calculate
+  - roi
+  - and
+  - annualized
+  - for
+main_calculator: ROI Calculator
+thumbnail: /blog/explain-calculate-roi-annualized-roi-small-business-investme-b465cf.jpg
 ---
 
 # Understanding ROI and Annualized ROI for Small Business Investments

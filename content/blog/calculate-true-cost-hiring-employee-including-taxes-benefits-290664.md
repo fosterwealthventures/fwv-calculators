@@ -1,9 +1,22 @@
 ---
-title: "Calculate the true cost of hiring an employee including taxes and benefits — Complete Guide"
-date: "2025-10-15T03:33:45.855Z"
-excerpt: "A practical, step-by-step walkthrough of “Calculate the true cost of hiring an employee including taxes and benefits”."
-category: "Finance"
-tags: ["calculate", "the", "true", "cost", "hiring", "employee", "including", "taxes"]
+title: >-
+  Calculate the true cost of hiring an employee including taxes and benefits —
+  Complete Guide
+date: '2025-10-15T03:33:45.855Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Calculate the true cost of hiring an
+  employee including taxes and benefits”.
+category: Finance
+tags:
+  - calculate
+  - the
+  - 'true'
+  - cost
+  - hiring
+  - employee
+  - including
+  - taxes
+thumbnail: /blog/calculate-true-cost-hiring-employee-including-taxes-benefits-290664.jpg
 ---
 
 # Calculate the True Cost of Hiring an Employee Including Taxes and Benefits

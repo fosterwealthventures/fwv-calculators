@@ -1,9 +1,20 @@
 ---
-title: "Show roommates how to divide household costs without conflict — Complete Guide"
-date: "2025-10-15T03:28:43.068Z"
-excerpt: "A practical, step-by-step walkthrough of “Show roommates how to divide household costs without conflict”."
-category: "Finance"
-tags: ["show", "roommates", "how", "divide", "household", "costs", "without", "conflict"]
+title: Show roommates how to divide household costs without conflict — Complete Guide
+date: '2025-10-15T03:28:43.068Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Show roommates how to divide
+  household costs without conflict”.
+category: Finance
+tags:
+  - show
+  - roommates
+  - how
+  - divide
+  - household
+  - costs
+  - without
+  - conflict
+thumbnail: /blog/show-roommates-divide-household-costs-without-conflict-9994b8.jpg
 ---
 
 # How to Divide Household Costs with Roommates Without Conflict

@@ -1,13 +1,34 @@
 ---
-title: "Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work — Complete Guide"
-date: "2025-10-21T17:49:48.182Z"
-excerpt: "A practical, step-by-step walkthrough of “Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work”."
-category: "Personal Finance"
-tags: ["smart", "grocery", "budgeting", "weekly", "monthly", "plans", "that", "actually"]
-main_calculator: "Shopping Budget Calculator"
-intent: "Teach families and individuals how to manage grocery spending with realistic weekly and monthly meal-plan budgeting."
-keywords: ["grocery budget calculator", "weekly food budget", "family meal plan savings", "grocery spending tips"]
-meta_description: "Cut grocery costs with practical weekly and monthly food budgeting strategies using our free shopping budget calculator."
+title: >-
+  Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work — Complete
+  Guide
+date: '2025-10-21T17:49:48.182Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Smart Grocery Budgeting: Weekly &
+  Monthly Plans That Actually Work”.
+category: Personal Finance
+tags:
+  - smart
+  - grocery
+  - budgeting
+  - weekly
+  - monthly
+  - plans
+  - that
+  - actually
+main_calculator: Shopping Budget Calculator
+intent: >-
+  Teach families and individuals how to manage grocery spending with realistic
+  weekly and monthly meal-plan budgeting.
+keywords:
+  - grocery budget calculator
+  - weekly food budget
+  - family meal plan savings
+  - grocery spending tips
+meta_description: >-
+  Cut grocery costs with practical weekly and monthly food budgeting strategies
+  using our free shopping budget calculator.
+thumbnail: /blog/smart-grocery-budgeting-weekly-monthly-plans-that-actually-w-60bcad.jpg
 ---
 
 # Smart Grocery Budgeting: Weekly & Monthly Plans That Actually Work

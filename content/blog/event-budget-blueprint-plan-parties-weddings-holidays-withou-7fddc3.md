@@ -1,13 +1,34 @@
 ---
-title: "The Event Budget Blueprint: Plan Parties, Weddings &  Holidays Without Debt — Complete Guide"
-date: "2025-10-21T18:06:30.677Z"
-excerpt: "A practical, step-by-step walkthrough of “The Event Budget Blueprint: Plan Parties, Weddings &  Holidays Without Debt”."
-category: "Personal Finance"
-tags: ["the", "event", "budget", "blueprint", "plan", "parties", "weddings", "holidays"]
-main_calculator: "Shopping Budget Calculator"
-intent: "Show users how to create and track realistic event budgets for weddings, parties, and family gatherings."
-keywords: ["event budget planner", "wedding budget calculator", "party budget checklist", "holiday event costs"]
-meta_description: "Plan your next celebration without debt using our step-by-step event budget blueprint and free calculator."
+title: >-
+  The Event Budget Blueprint: Plan Parties, Weddings &  Holidays Without Debt —
+  Complete Guide
+date: '2025-10-21T18:06:30.677Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “The Event Budget Blueprint: Plan
+  Parties, Weddings &  Holidays Without Debt”.
+category: Personal Finance
+tags:
+  - the
+  - event
+  - budget
+  - blueprint
+  - plan
+  - parties
+  - weddings
+  - holidays
+main_calculator: Shopping Budget Calculator
+intent: >-
+  Show users how to create and track realistic event budgets for weddings,
+  parties, and family gatherings.
+keywords:
+  - event budget planner
+  - wedding budget calculator
+  - party budget checklist
+  - holiday event costs
+meta_description: >-
+  Plan your next celebration without debt using our step-by-step event budget
+  blueprint and free calculator.
+thumbnail: /blog/event-budget-blueprint-plan-parties-weddings-holidays-withou-7fddc3.jpg
 ---
 
 # The Event Budget Blueprint: Plan Parties, Weddings & Holidays Without Debt

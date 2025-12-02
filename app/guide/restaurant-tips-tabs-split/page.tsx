@@ -15,7 +15,7 @@ import {
 } from "@/components/GuideTypography";
 
 export const metadata: Metadata = {
-  title: "Restaurant Tip & Tab Split—Discounts, Tax & Fair Splits",
+  title: "Tip Split Calculator Guide: Split Restaurant Bills & Tips",
   description:
     "A practical guide to tipping and splitting the bill with discounts and tax. Learn which amounts tip applies to and how to keep it fair per person.",
 };
@@ -25,7 +25,7 @@ function Breadcrumb() {
     <NavText>
       <Link href="/" className="text-brand-green hover:underline">Home</Link> &rsaquo;{" "}
       <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> &rsaquo;{" "}
-      <span>Restaurant Tip &amp; Tab Split</span>
+      <span>Tip Split Calculator Guide: Split Restaurant Bills &amp; Tips</span>
     </NavText>
   );
 }
@@ -85,7 +85,7 @@ export default function TipTabSplitGuide() {
       <Breadcrumb />
 
       {/* Page Title */}
-      <H1>Restaurant Tip &amp; Tab Split — How to Handle Discounts &amp; Tax</H1>
+      <H1>Tip Split Calculator Guide: Split Restaurant Bills &amp; Tips</H1>
 
       {/* Reading time */}
       <p className="mt-2 text-sm text-gray-600">Estimated reading time: 3–4 minutes</p>
@@ -144,9 +144,9 @@ export default function TipTabSplitGuide() {
       {/* Related */}
       <RelatedSection title="Related">
         <RelatedLink href="/guide/restaurant-split-by-order" tag="Guide">
-          Split by Order (+ Shared Appetizers)
+          Bill Split by Item Calculator Guide: Orders &amp; Shared Appetizers
         </RelatedLink>
-        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI vs Annualized ROI</RelatedLink>
+        <RelatedLink href="/guide/roi-vs-annualized-roi">ROI Calculator Guide: How to Calculate Return on Investment</RelatedLink>
       </RelatedSection>
 
       {/* Share */}

@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 import React from "react";
 
 export const metadata: Metadata = {
-  title:
-    "Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency",
+  title: "Compound Interest Calculator Guide: Simple vs. Compound",
   description:
     "Learn how our updated Simple vs Compound Interest calculator works: add monthly contributions, choose compounding frequency, view real-time totals, and see a year-by-year breakdown.",
 };
@@ -21,22 +20,20 @@ function Breadcrumb() {
       <Link href="/guide" className="text-brand-green hover:underline">
         Guides
       </Link>{" "}
-      &rsaquo; <span>Simple vs Compound Interest</span>
+      &rsaquo; <span>Compound Interest Calculator Guide: Simple vs. Compound</span>
     </nav>
   );
 }
 
 export default function GuidePage() {
-  const pageUrl =
-    "https://fosterwealthventures.store/guide/simple-vs-compound-interest";
+  const pageUrl = "https://fosterwealthventures.store/guide/simple-vs-compound-interest";
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline:
-      "Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency",
+    headline: "Compound Interest Calculator Guide: Simple vs. Compound",
     description:
-      "How to use our updated interest calculator: toggle Simple/Compound, add monthly contributions, pick compounding frequency (Annually→Daily), see real-time totals and a year-by-year table.",
+      "How to use our updated interest calculator: toggle Simple/Compound, add monthly contributions, pick compounding frequency (Annually to Daily), see real-time totals and a year-by-year table.",
     mainEntityOfPage: pageUrl,
     dateModified: "2025-10-05T12:00:00Z",
     publisher: { "@type": "Organization", name: "Foster Wealth Ventures" },
@@ -47,7 +44,7 @@ export default function GuidePage() {
       <Breadcrumb />
 
       <GuideHero
-        title="Simple vs Compound Interest"
+        title="Compound Interest Calculator Guide: Simple vs. Compound"
         subtitle="Now supports monthly contributions, flexible compounding frequency, and a clear year-by-year breakdown."
         icon={null}
       />
@@ -60,25 +57,23 @@ export default function GuidePage() {
       <section>
         <h2>What this calculator does</h2>
         <p>
-          It compares <strong>Simple</strong> vs <strong>Compound</strong> interest growth
-          using the same set of inputs. You can:
+          It compares <strong>Simple</strong> vs <strong>Compound</strong> interest growth using the same set of inputs. You can:
         </p>
         <ul>
-          <li><strong>Toggle modes</strong>: Simple or Compound.</li>
+          <li>
+            <strong>Toggle modes</strong>: Simple or Compound.
+          </li>
           <li>
             <strong>Add monthly contributions</strong> to see how regular deposits change the curve.
           </li>
           <li>
-            <strong>Pick a compounding frequency</strong> (Annually, Semi-Annually, Quarterly,
-            Monthly, or Daily) when in Compound mode.
+            <strong>Pick a compounding frequency</strong> (Annually, Semi-Annually, Quarterly, Monthly, or Daily) when in Compound mode.
           </li>
           <li>
-            See <strong>real-time totals</strong>: Final Amount, Total Interest, and
-            Total Contributed.
+            See <strong>real-time totals</strong>: Final Amount, Total Interest, and Total Contributed.
           </li>
           <li>
-            Review a <strong>year-by-year breakdown</strong> of starting balance, contributions,
-            interest, and ending balance.
+            Review a <strong>year-by-year breakdown</strong> of starting balance, contributions, interest, and ending balance.
           </li>
         </ul>
       </section>
@@ -90,24 +85,20 @@ export default function GuidePage() {
         <h2>How to use it</h2>
         <ol>
           <li>
-            Enter your <strong>Principal ($)</strong>, <strong>Annual Rate (%)</strong>, and{" "}
-            <strong>Years</strong>.
+            Enter your <strong>Principal ($)</strong>, <strong>Annual Rate (%)</strong>, and <strong>Years</strong>.
           </li>
           <li>
-            (Optional) Add a <strong>Monthly Contribution ($)</strong>. We assume contributions happen at the{" "}
-            <em>end of each month</em>.
+            (Optional) Add a <strong>Monthly Contribution ($)</strong>. We assume contributions happen at the <em>end of each month</em>.
           </li>
           <li>
-            Choose a <strong>Compounding Frequency</strong> if you’re in <em>Compound</em> mode:
-            Annually, Semi-Annually, Quarterly, Monthly, or Daily.
+            Choose a <strong>Compounding Frequency</strong> if you’re in <em>Compound</em> mode: Annually, Semi-Annually, Quarterly, Monthly, or Daily.
           </li>
           <li>
             Use the <strong>Simple / Compound</strong> toggle to compare outcomes instantly.
           </li>
         </ol>
         <p>
-          The <em>Results</em> panel updates immediately. Scroll down to the table to see how the balance
-          evolves year by year.
+          The <em>Results</em> panel updates immediately. Scroll down to the table to see how the balance evolves year by year.
         </p>
       </section>
 
@@ -126,8 +117,7 @@ export default function GuidePage() {
           </li>
         </ul>
         <p>
-          Over longer time horizons, <strong>Compound</strong> typically outpaces <strong>Simple</strong> because
-          interest earns interest. If the difference looks small, try increasing years, rate, or contribution size.
+          Over longer time horizons, <strong>Compound</strong> typically outpaces <strong>Simple</strong> because interest earns interest. If the difference looks small, try increasing years, rate, or contribution size.
         </p>
       </section>
 
@@ -135,14 +125,10 @@ export default function GuidePage() {
       <section>
         <h2>Year-by-year breakdown</h2>
         <p>
-          The table shows each year’s <strong>starting balance</strong>, <strong>contributions</strong>,
-          <strong> interest</strong>, and <strong>ending balance</strong>. Monthly contributions post at the end
-          of each month, so they begin earning growth the following month.
+          The table shows each year’s <strong>starting balance</strong>, <strong>contributions</strong>, <strong>interest</strong>, and <strong>ending balance</strong>. Monthly contributions post at the end of each month, so they begin earning growth the following month.
         </p>
         <p>
-          In <strong>Compound</strong> mode, interest compounds at the chosen frequency (converted internally to an
-          equivalent monthly rate). In <strong>Simple</strong> mode, interest accrues on principal-to-date only —
-          <em>interest itself doesn’t earn interest</em>.
+          In <strong>Compound</strong> mode, interest compounds at the chosen frequency (converted internally to an equivalent monthly rate). In <strong>Simple</strong> mode, interest accrues on principal-to-date only—<em>interest itself doesn’t earn interest</em>.
         </p>
       </section>
 
@@ -151,30 +137,23 @@ export default function GuidePage() {
         <h2>Under the hood (formulas)</h2>
         <ul>
           <li>
-            <strong>Compound with monthly contributions:</strong>{" "}
-            monthly rate r<sub>m</sub> = (1 + r/n)<sup>n/12</sup> − 1. Each month:
-            <em> balance = balance × (1 + r<sub>m</sub>) + PMT</em>.
+            <strong>Compound with monthly contributions:</strong> monthly rate r<sub>m</sub> = (1 + r/n)<sup>n/12</sup> − 1. Each month: <em>balance = balance × (1 + r<sub>m</sub>) + PMT</em>.
           </li>
           <li>
-            <strong>Simple with monthly contributions:</strong>{" "}
-            monthly interest = (principal to date) × (r/12). Contributions increase principal,
-            but interest does not compound.
+            <strong>Simple with monthly contributions:</strong> monthly interest = (principal to date) × (r/12). Contributions increase principal, but interest does not compound.
           </li>
           <li>
             <strong>Totals:</strong> “Total Contributed” = initial principal + all monthly deposits.
           </li>
         </ul>
         <p className="text-sm text-gray-600">
-          Assumptions: constant nominal rate; contributions at end of month; frequency choice affects
-          compounding only in Compound mode.
+          Assumptions: constant nominal rate; contributions at end of month; frequency choice affects compounding only in Compound mode.
         </p>
       </section>
 
       {/* CTA */}
       <section>
-        <CTAButton href="/?calc=interest">
-          Open the updated calculator (Simple / Compound Interest)
-        </CTAButton>
+        <CTAButton href="/?calc=interest">Open the updated calculator (Simple / Compound Interest)</CTAButton>
       </section>
 
       {/* Related */}
@@ -182,40 +161,31 @@ export default function GuidePage() {
         <h2>Related Guides</h2>
         <p>
           Keep building your plan with{" "}
-          <Link href="/guide/set-your-freelancer-rate-right">
-            Set Your Freelancer Rate Right
+          <Link href="/guide/set-your-freelance-rate-right">
+            Freelance Rate Calculator Guide: How to Price Your Services
           </Link>{" "}
           and fair bill sharing in{" "}
-          <Link href="/guide/restaurant-tips-tabs-split">
-            Restaurant Tip &amp; Tab Split
-          </Link>
-          . You can also browse every tool on the{" "}
+          <Link href="/guide/restaurant-tips-tabs-split">Tip Split Calculator Guide: Split Restaurant Bills &amp; Tips</Link>. You can also browse every tool on the{" "}
           <Link href="/dashboard">calculator dashboard</Link>.
         </p>
       </section>
 
       <div className="not-prose mt-6">
-        <SocialShare
-          url={pageUrl}
-          title="Simple vs Compound Interest — Updated Calculator with Monthly Contributions & Frequency"
-        />
+        <SocialShare url={pageUrl} title="Compound Interest Calculator Guide: Simple vs. Compound" />
       </div>
 
       <GuideNav
         prev={{
           href: "/guide/mortgage-payment-breakdown",
-          title: "Mortgage Payment Breakdown",
+          title: "Mortgage Payment Calculator Guide: Understand Your Monthly Payment",
         }}
         next={{
-          href: "/guide/set-your-freelancer-rate-right",
-          title: "Set Your Freelancer Rate Right",
+          href: "/guide/set-your-freelance-rate-right",
+          title: "Freelance Rate Calculator Guide: How to Price Your Services",
         }}
       />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </main>
   );
 }
@@ -226,19 +196,11 @@ export function NavText({ children }: { children: React.ReactNode }) {
 }
 
 export function H1({ children }: { children: React.ReactNode }) {
-  return (
-    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-      {children}
-    </h1>
-  );
+  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
 }
 
 export function Quote({ children }: { children: React.ReactNode }) {
-  return (
-    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-      {children}
-    </blockquote>
-  );
+  return <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">{children}</blockquote>;
 }
 
 export function QuoteRef({ children }: { children: React.ReactNode }) {

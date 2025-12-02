@@ -1,10 +1,25 @@
 ---
-title: "Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your True Labor Cost — Complete Guide"
-date: "2025-10-18T23:32:24.925Z"
-excerpt: "A practical, step-by-step walkthrough of “Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your True Labor Cost”."
-image_alt: "Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your True Labor Cost — Complete Guide"
-category: "Finance"
-tags: ["restaurant", "owners", "calculating", "your", "teams", "tip", "pool", "and"]
+title: >-
+  Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your
+  True Labor Cost — Complete Guide
+date: '2025-10-18T23:32:24.925Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Restaurant Owners: Calculating Your
+  Team's Tip Pool and Its Impact on Your True Labor Cost”.
+image_alt: >-
+  Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your
+  True Labor Cost — Complete Guide
+category: Finance
+tags:
+  - restaurant
+  - owners
+  - calculating
+  - your
+  - teams
+  - tip
+  - pool
+  - and
+thumbnail: /blog/restaurant-owners-calculating-your-teams-tip-pool-its-impact-b0bae3.jpg
 ---
 
 # Restaurant Owners: Calculating Your Team's Tip Pool and Its Impact on Your True Labor Cost

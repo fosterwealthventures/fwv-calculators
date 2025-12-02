@@ -1,15 +1,34 @@
 ---
-title: "2025 Holiday Budget Planner: Gift Caps, Per-Person Limits & Black Friday Strategy — Complete Guide"
-date: "2025-10-21T17:39:14.785Z"
-excerpt: "A practical, step-by-step walkthrough of “2025 Holiday Budget Planner: Gift Caps, Per-Person Limits & Black Friday Strategy”."
-category: "Personal Finance"
-tags: ["2025", "holiday", "budget", "planner", "gift", "caps", "per-person", "limits"]
-main_calculator: "Shopping Budget Calculator"
-intent: "Help users create a practical 2025 holiday shopping budget 
-and avoid overspending during Black Friday and Christmas gift season."
-keywords: ["holiday shopping budget", "Christmas budget per person", "Black Friday plan", "Thanksgiving budget"]
-meta_description: "Build your 2025 holiday budget with per-person gift limits, smart 
-Black Friday tactics, and a free shopping budget calculator."
+title: >-
+  2025 Holiday Budget Planner: Gift Caps, Per-Person Limits & Black Friday
+  Strategy — Complete Guide
+date: '2025-10-21T17:39:14.785Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “2025 Holiday Budget Planner: Gift
+  Caps, Per-Person Limits & Black Friday Strategy”.
+category: Personal Finance
+tags:
+  - '2025'
+  - holiday
+  - budget
+  - planner
+  - gift
+  - caps
+  - per-person
+  - limits
+main_calculator: Shopping Budget Calculator
+intent: >-
+  Help users create a practical 2025 holiday shopping budget  and avoid
+  overspending during Black Friday and Christmas gift season.
+keywords:
+  - holiday shopping budget
+  - Christmas budget per person
+  - Black Friday plan
+  - Thanksgiving budget
+meta_description: >-
+  Build your 2025 holiday budget with per-person gift limits, smart  Black
+  Friday tactics, and a free shopping budget calculator.
+thumbnail: /blog/2025-holiday-budget-planner-gift-caps-per-person-limits-blac-22a1a9.jpg
 ---
 
 # 2025 Holiday Budget Planner: Gift Caps, Per-Person Limits & Black Friday Strategy

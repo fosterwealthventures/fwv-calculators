@@ -1,4 +1,5 @@
 // components/BlogCard.tsx
+import Image from "next/image";
 import Link from "next/link";
 
 interface BlogCardProps {
@@ -8,20 +9,29 @@ interface BlogCardProps {
     excerpt?: string;
     tags?: string[];
     category?: string;
+    thumbnail?: string;
     image?: string;
 }
 
-export default function BlogCard({ slug, title, date, excerpt, tags, category, image }: BlogCardProps) {
+export default function BlogCard({ slug, title, date, excerpt, tags, category, thumbnail, image }: BlogCardProps) {
     const formattedDate = date ? new Date(date).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : undefined;
     const preview = excerpt ? excerpt.trim() : "";
-    const displayImage = image && !/fwv-logo/i.test(image) ? image : "";
+    const primaryImage = thumbnail || image;
+    const displayImage = primaryImage && !/fwv-logo/i.test(primaryImage) ? primaryImage : "";
 
     return (
         <div className="card-regal p-0 hover:shadow-regalGlow transition overflow-hidden">
             <Link href={`/blog/${slug}`} className="block">
                 {displayImage ? (
                     <div className="relative aspect-[16/9] overflow-hidden bg-plum-100 dark:bg-plum-900">
-                        <img src={displayImage} alt={title} className="h-full w-full object-cover" />
+                        <Image
+                            src={displayImage}
+                            alt={title}
+                            fill
+                            sizes="(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw"
+                            className="h-full w-full object-cover"
+                            priority={false}
+                        />
                     </div>
                 ) : (
                     <div className="aspect-[16/9] bg-gradient-to-br from-plum-50 via-white to-plum-100 dark:from-plum-900/40 dark:via-plum-900/20 dark:to-plum-800/40" />

@@ -1,9 +1,22 @@
 ---
-title: "The "Pro-Rata" Method: How Co-Parents Can Fairly Split Child Expenses by Income — Complete Guide"
-date: "2025-10-18T22:54:02.051Z"
-excerpt: "A practical, step-by-step walkthrough of “The "Pro-Rata" Method: How Co-Parents Can Fairly Split Child Expenses by Income”."
-category: "Personal Finance"
-tags: ["the", "pro-rata", "method", "how", "co-parents", "can", "fairly", "split"]
+title: >-
+  The "Pro-Rata" Method: How Co-Parents Can Fairly Split Child Expenses by
+  Income — Complete Guide
+date: '2025-10-18T22:54:02.051Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of "The Pro-Rata Method: How Co-Parents
+  Can Fairly Split Child Expenses by Income".
+category: Personal Finance
+tags:
+  - the
+  - pro-rata
+  - method
+  - how
+  - co-parents
+  - can
+  - fairly
+  - split
+thumbnail: /blog/pro-rata-method-co-parents-can-fairly-split-child-expenses-i-96e90a.jpg
 ---
 
 # The "Pro-Rata" Method: How Co-Parents Can Fairly Split Child Expenses by Income

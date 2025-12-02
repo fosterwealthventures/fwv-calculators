@@ -19,6 +19,7 @@ export type PostMeta = {
   tags?: string[];
   category?: string;
   meta_description?: string;
+  thumbnail?: string;
   image?: string;
   og_image?: string;
   image_alt?: string;
@@ -53,6 +54,7 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
           : undefined,
         category: data.category,
         meta_description: data.meta_description,
+        thumbnail: data.thumbnail,
         image: data.image,
         og_image: data.og_image,
         image_alt: data.image_alt,
@@ -84,6 +86,7 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
   const excerpt = pick(/excerpt:\s*"([\s\S]+?)"/m) || pick(/excerpt:\s*'([\s\S]+?)'/m) || pickLoose('excerpt');
   const meta_description = pick(/meta_description:\s*"([\s\S]+?)"/m) || pick(/meta_description:\s*'([\s\S]+?)'/m) || pickLoose('meta_description');
   const category = pick(/category:\s*"([\s\S]+?)"/m) || pick(/category:\s*'([\s\S]+?)'/m) || pickLoose('category');
+  const thumbnail = pick(/thumbnail:\s*"([\s\S]+?)"/m) || pick(/thumbnail:\s*'([\s\S]+?)'/m) || pickLoose('thumbnail');
   const image = pick(/image:\s*"([\s\S]+?)"/m) || pick(/image:\s*'([\s\S]+?)'/m) || pickLoose('image');
   const og_image = pick(/og_image:\s*"([\s\S]+?)"/m) || pick(/og_image:\s*'([\s\S]+?)'/m) || pickLoose('og_image');
   const image_alt = pick(/image_alt:\s*"([\s\S]+?)"/m) || pick(/image_alt:\s*'([\s\S]+?)'/m) || pickLoose('image_alt');
@@ -100,7 +103,7 @@ export function parseFrontmatter(raw: string): { meta: Partial<PostMeta>; body: 
     : undefined;
 
   return {
-    meta: { title, date, excerpt, draft, tags, category, meta_description, image, og_image, image_alt },
+    meta: { title, date, excerpt, draft, tags, category, meta_description, thumbnail, image, og_image, image_alt },
     body,
   };
 }
@@ -145,7 +148,8 @@ export function getAllPosts(): PostMeta[] {
         tags: meta.tags,
         category: meta.category,
         meta_description: meta.meta_description,
-        image: meta.image,
+        thumbnail: meta.thumbnail || meta.image,
+        image: meta.image || meta.thumbnail,
         og_image: meta.og_image,
         image_alt: meta.image_alt,
       };
@@ -184,7 +188,8 @@ export function getPostBySlug(slug: string): { meta: PostMeta; body: string } | 
     tags: meta.tags,
     category: meta.category,
     meta_description: meta.meta_description,
-    image: meta.image,
+    thumbnail: meta.thumbnail || meta.image,
+    image: meta.image || meta.thumbnail,
     og_image: meta.og_image,
     image_alt: meta.image_alt,
   };

@@ -1,9 +1,22 @@
 ---
-title: "What's the Real Return on Investment for a College Degree? (A Financial Deep Dive) — Complete Guide"
-date: "2025-10-18T23:31:19.450Z"
-excerpt: "A practical, step-by-step walkthrough of “What's the Real Return on Investment for a College Degree? (A Financial Deep Dive)”."
-category: "Investing"
-tags: ["whats", "the", "real", "return", "investment", "for", "college", "degree"]
+title: >-
+  What's the Real Return on Investment for a College Degree? (A Financial Deep
+  Dive) — Complete Guide
+date: '2025-10-18T23:31:19.450Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “What's the Real Return on Investment
+  for a College Degree? (A Financial Deep Dive)”.
+category: Investing
+tags:
+  - whats
+  - the
+  - real
+  - return
+  - investment
+  - for
+  - college
+  - degree
+thumbnail: /blog/whats-real-return-investment-college-degree-financial-deep-d-e9b4bb.jpg
 ---
 
 # What's the Real Return on Investment for a College Degree? (A Financial Deep Dive)

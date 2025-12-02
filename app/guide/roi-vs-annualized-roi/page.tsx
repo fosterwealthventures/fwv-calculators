@@ -5,8 +5,7 @@ import GuideNav from "@/components/GuideNav";
 import React from "react";
 
 export const metadata: Metadata = {
-  title:
-    "ROI vs Annualized ROI—How to Read Them & Boost Your Investment Strategy",
+  title: "ROI Calculator Guide: How to Calculate Return on Investment",
   description:
     "Learn the difference between ROI and annualized ROI and how to use both to evaluate investments effectively.",
 };
@@ -21,7 +20,7 @@ function Breadcrumb() {
       <Link href="/guide" className="text-brand-green hover:underline">
         Guides
       </Link>{" "}
-      &rsaquo; <span>ROI vs Annualized ROI</span>
+      &rsaquo; <span>ROI Calculator Guide: How to Calculate Return on Investment</span>
     </nav>
   );
 }
@@ -47,8 +46,8 @@ export default function GuidePage() {
       <Breadcrumb />
 
       <GuideHero
-        title="ROI vs Annualized ROI"
-        subtitle="Understand raw return vs time‑adjusted growth so you can compare investments fairly."
+        title="ROI Calculator Guide: How to Calculate Return on Investment"
+        subtitle="Understand raw return vs time-adjusted growth so you can compare investments fairly."
         icon={null}
       />
 
@@ -96,10 +95,10 @@ export default function GuidePage() {
         <h2>Related</h2>
         <p>
           Continue exploring with the{" "}
-          <Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link>{" "}
-          guide or see long‑term payment structure detail in{" "}
+          <Link href="/guide/break-even-made-simple">Break-Even Calculator Guide: How to Find Your Break-Even Point</Link>{" "}
+          guide or see long-term payment structure detail in{" "}
           <Link href="/guide/mortgage-payment-breakdown">
-            Mortgage Payment Breakdown
+            Mortgage Payment Calculator Guide: Understand Your Monthly Payment
           </Link>
           . You can also browse every tool on the{" "}
           <Link href="/dashboard">calculator dashboard</Link>.
@@ -113,7 +112,7 @@ export default function GuidePage() {
       <GuideNav
         next={{
           href: "/guide/break-even-made-simple",
-          title: "Break-Even Made Simple",
+          title: "Break-Even Calculator Guide: How to Find Your Break-Even Point",
         }}
       />
 

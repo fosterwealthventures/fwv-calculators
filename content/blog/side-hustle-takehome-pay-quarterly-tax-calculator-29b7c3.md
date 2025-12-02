@@ -1,17 +1,34 @@
 ---
-title: "Side Hustle Take‑Home Pay & Quarterly Tax Calculator — Complete Guide"
-date: "2025-10-30T19:49:07.455Z"
-excerpt: "A practical, step-by-step walkthrough of “Side Hustle Take‑Home Pay & Quarterly Tax Calculator”."
-category: "Real Estate"
-tags: ["side", "hustle", "takehome", "pay", "quarterly", "tax", "calculator"]
-main_calculator: "Freelance Rate Calculator"
-intent: "Calculate side‑hustle take‑home pay after expenses and self‑employment taxes; estimate how much to set aside for quarterly payments."
-keywords: ["side hustle take‑home pay calculator"]
-meta_description: "Estimate your side‑hustle take‑home pay after expenses and self‑employment taxes. See how much to set aside for quarterly tax payments and what you’ll actually"
-meta_title: "Side Hustle Take‑Home Pay & Quarterly Tax Calculator | Freel"
-canonical: "https://www.fosterwealthventures.store/blog/side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3"
+title: Side Hustle Take‑Home Pay & Quarterly Tax Calculator — Complete Guide
+date: '2025-10-30T19:49:07.455Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Side Hustle Take‑Home Pay &
+  Quarterly Tax Calculator”.
+category: Real Estate
+tags:
+  - side
+  - hustle
+  - takehome
+  - pay
+  - quarterly
+  - tax
+  - calculator
+main_calculator: Freelance Rate Calculator
+intent: >-
+  Calculate side‑hustle take‑home pay after expenses and self‑employment taxes;
+  estimate how much to set aside for quarterly payments.
+keywords:
+  - side hustle take‑home pay calculator
+meta_description: >-
+  Estimate your side‑hustle take‑home pay after expenses and self‑employment
+  taxes. See how much to set aside for quarterly tax payments and what you’ll
+  actually
+meta_title: Side Hustle Take‑Home Pay & Quarterly Tax Calculator | Freel
+canonical: >-
+  https://www.fosterwealthventures.store/blog/side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3
 reading_time: 5
 noindex: false
+thumbnail: /blog/side-hustle-takehome-pay-quarterly-tax-calculator-29b7c3.jpg
 ---
 
 # Maximizing Your Side Hustle: Understanding Take-Home Pay & Quarterly Tax Calculations

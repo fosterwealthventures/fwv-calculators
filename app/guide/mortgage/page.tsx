@@ -4,7 +4,7 @@ import { CTAButton, GuideHero, SocialShare } from "@/components/GuideParts";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mortgage Guide",
+  title: "Mortgage Calculator Basics: Rates, Amortization & Payoff",
   description: "Payment, interest, and amortization explained.",
 };
 
@@ -26,10 +26,10 @@ export default function GuidePage() {
 
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
-      <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/mortgage", label: "Mortgage" }]} />
+      <Breadcrumb trail={[{ href: "/guide", label: "Guides" }, { href: "/guide/mortgage", label: "Mortgage Calculator Basics: Rates, Amortization & Payoff" }]} />
 
       <GuideHero
-        title="Mortgage - Guide"
+        title="Mortgage Calculator Basics: Rates, Amortization & Payoff"
         subtitle="Payment, interest, and amortization breakdowns."
         icon={null}
       />
@@ -90,7 +90,7 @@ export default function GuidePage() {
       <GuideNav
         prev={{
           href: "/guide/break-even",
-          title: "Break-Even",
+          title: "Break-Even Calculator Guide: How to Find Your Break-Even Point",
         }}
         next={{
           href: "/guide/interest",

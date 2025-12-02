@@ -15,7 +15,7 @@ import {
 } from "@/components/GuideTypography";
 
 export const metadata: Metadata = {
-    title: "Split by Order (with Shared Appetizers) — Precise Bill Splitting",
+    title: "Bill Split by Item Calculator Guide: Orders & Shared Appetizers",
     description:
         "Learn to split a restaurant bill by each person’s actual order, including shared appetizers. Tax and tip are allocated fairly and proportionally. (Plus feature)",
 };
@@ -25,7 +25,7 @@ function Breadcrumb() {
         <NavText>
             <Link href="/" className="text-brand-green hover:underline">Home</Link> &rsaquo;{" "}
             <Link href="/guide" className="text-brand-green hover:underline">Guides</Link> &rsaquo;{" "}
-            <span>Split by Order (+ Shared Appetizers)</span>
+            <span>Bill Split by Item Calculator Guide: Orders &amp; Shared Appetizers</span>
         </NavText>
     );
 }
@@ -99,7 +99,7 @@ export default function SplitByOrderGuide() {
 
             {/* Title */}
             <H1>
-                Split by Order (+ Shared Appetizers)
+                Bill Split by Item Calculator Guide: Orders &amp; Shared Appetizers
                 <span className="ml-3 align-middle rounded-md border px-1.5 py-0.5 text-[11px]">Plus</span>
             </H1>
 
@@ -162,10 +162,10 @@ export default function SplitByOrderGuide() {
             {/* Related */}
             <RelatedSection title="Related">
                 <RelatedLink href="/guide/restaurant-tips-tabs-split" tag="Guide">
-                    Restaurant Tip & Tab Split (Free)
+                    Tip Split Calculator Guide: Split Restaurant Bills &amp; Tips
                 </RelatedLink>
                 <RelatedLink href="/guide/simple-vs-compound-interest" tag="Guide">
-                    Simple vs. Compound Interest
+                    Compound Interest Calculator Guide: Simple vs. Compound
                 </RelatedLink>
             </RelatedSection>
 

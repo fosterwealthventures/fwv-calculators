@@ -1,9 +1,22 @@
 ---
-title: "Help users estimate how much to save monthly to reach a financial goal — Complete Guide"
-date: "2025-10-15T03:33:25.877Z"
-excerpt: "A practical, step-by-step walkthrough of “Help users estimate how much to save monthly to reach a financial goal”."
-category: "Finance"
-tags: ["help", "users", "estimate", "how", "much", "save", "monthly", "reach"]
+title: >-
+  Help users estimate how much to save monthly to reach a financial goal —
+  Complete Guide
+date: '2025-10-15T03:33:25.877Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Help users estimate how much to save
+  monthly to reach a financial goal”.
+category: Finance
+tags:
+  - help
+  - users
+  - estimate
+  - how
+  - much
+  - save
+  - monthly
+  - reach
+thumbnail: /blog/help-users-estimate-much-save-monthly-reach-financial-goal-1e4e67.jpg
 ---
 
 # How to Estimate How Much to Save Monthly to Reach Your Financial Goal

@@ -1,13 +1,32 @@
 ---
-title: "Back-to-School Shopping Budget: Affordable Essentials by Grade — Complete Guide"
-date: "2025-10-21T17:54:58.695Z"
-excerpt: "A practical, step-by-step walkthrough of “Back-to-School Shopping Budget: Affordable Essentials by Grade”."
-category: "Personal Finance"
-tags: ["back-to-school", "shopping", "budget", "affordable", "essentials", "grade"]
-main_calculator: "Shopping Budget Calculator"
-intent: "Help parents set realistic back-to-school budgets by grade level and find savings on supplies and tech."
-keywords: ["back to school budget", "school supplies cost", "college dorm budget", "student shopping list"]
-meta_description: "Plan your 2025 back-to-school shopping budget with grade-based essentials, supply lists, and smart savings tips."
+title: >-
+  Back-to-School Shopping Budget: Affordable Essentials by Grade — Complete
+  Guide
+date: '2025-10-21T17:54:58.695Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Back-to-School Shopping Budget:
+  Affordable Essentials by Grade”.
+category: Personal Finance
+tags:
+  - back-to-school
+  - shopping
+  - budget
+  - affordable
+  - essentials
+  - grade
+main_calculator: Shopping Budget Calculator
+intent: >-
+  Help parents set realistic back-to-school budgets by grade level and find
+  savings on supplies and tech.
+keywords:
+  - back to school budget
+  - school supplies cost
+  - college dorm budget
+  - student shopping list
+meta_description: >-
+  Plan your 2025 back-to-school shopping budget with grade-based essentials,
+  supply lists, and smart savings tips.
+thumbnail: /blog/back-to-school-shopping-budget-affordable-essentials-grade-c04ba5.jpg
 ---
 
 # Back-to-School Shopping Budget: Affordable Essentials by Grade

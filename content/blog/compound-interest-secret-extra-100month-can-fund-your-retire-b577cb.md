@@ -1,9 +1,22 @@
 ---
-title: "The Compound Interest Secret: How an Extra $100/Month Can Fund Your Retirement — Complete Guide"
-date: "2025-10-18T22:39:55.247Z"
-excerpt: "A practical, step-by-step walkthrough of “The Compound Interest Secret: How an Extra $100/Month Can Fund Your Retirement”."
-category: "Finance"
-tags: ["the", "compound", "interest", "secret", "how", "extra", "100month", "can"]
+title: >-
+  The Compound Interest Secret: How an Extra $100/Month Can Fund Your Retirement
+  — Complete Guide
+date: '2025-10-18T22:39:55.247Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “The Compound Interest Secret: How an
+  Extra $100/Month Can Fund Your Retirement”.
+category: Finance
+tags:
+  - the
+  - compound
+  - interest
+  - secret
+  - how
+  - extra
+  - 100month
+  - can
+thumbnail: /blog/compound-interest-secret-extra-100month-can-fund-your-retire-b577cb.jpg
 ---
 
 # The Compound Interest Secret: How an Extra $100/Month Can Fund Your Retirement

@@ -1,13 +1,32 @@
 ---
-title: "Travel Together, Split Smarter: The Group Trip Expense Guide — Complete Guide"
-date: "2025-10-21T19:06:09.854Z"
-excerpt: "A practical, step-by-step walkthrough of “Travel Together, Split Smarter: The Group Trip Expense Guide”."
-category: "Personal Finance"
-tags: ["travel", "together", "split", "smarter", "the", "group", "trip", "expense"]
-main_calculator: "Expense Split Calculator"
-intent: "Help travelers fairly divide trip expenses for lodging, meals, and activities among friends."
-keywords: ["group trip expense split", "travel cost sharing", "vacation bill calculator", "road trip split"]
-meta_description: "Keep your next group trip fun and fair with easy expense splitting and a smart Split-Tabs Calculator."
+title: 'Travel Together, Split Smarter: The Group Trip Expense Guide — Complete Guide'
+date: '2025-10-21T19:06:09.854Z'
+excerpt: >-
+  A practical, step-by-step walkthrough of “Travel Together, Split Smarter: The
+  Group Trip Expense Guide”.
+category: Personal Finance
+tags:
+  - travel
+  - together
+  - split
+  - smarter
+  - the
+  - group
+  - trip
+  - expense
+main_calculator: Expense Split Calculator
+intent: >-
+  Help travelers fairly divide trip expenses for lodging, meals, and activities
+  among friends.
+keywords:
+  - group trip expense split
+  - travel cost sharing
+  - vacation bill calculator
+  - road trip split
+meta_description: >-
+  Keep your next group trip fun and fair with easy expense splitting and a smart
+  Split-Tabs Calculator.
+thumbnail: /blog/travel-together-split-smarter-group-trip-expense-guide-4e77df.jpg
 ---
 
 # Travel Together, Split Smarter: The Group Trip Expense Guide

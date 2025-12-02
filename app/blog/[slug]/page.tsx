@@ -26,7 +26,7 @@ export async function generateMetadata({
     const title = meta.title;
     const metaDescription =
       meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
-    const rawOg = meta.og_image || meta.image;
+    const rawOg = meta.og_image || meta.image || meta.thumbnail;
     const ogImage = rawOg && !/fwv-logo/i.test(String(rawOg)) ? rawOg : undefined;
 
     return {
@@ -64,7 +64,7 @@ export default async function BlogPostPage({
   const title = meta.title;
   const date = meta.date;
   const metaDescription = meta.meta_description || meta.excerpt || "A practical financial guide from Foster Wealth Ventures";
-  const rawOg = meta.og_image || meta.image;
+  const rawOg = meta.og_image || meta.image || meta.thumbnail;
   const ogImage = rawOg && !/fwv-logo/i.test(String(rawOg)) ? rawOg : undefined;
 
   // strip leading H1 if present to avoid duplicate titles
@@ -189,7 +189,7 @@ export default async function BlogPostPage({
             {title}
           </h1>
           {(() => {
-            const img = (meta.image || "").toString();
+            const img = (meta.image || meta.thumbnail || "").toString();
             const isLogo = /fwv-logo/i.test(img);
             const displayImage = img && !isLogo ? img : "";
             if (!displayImage) return null;
