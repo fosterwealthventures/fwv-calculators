@@ -6,9 +6,9 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: "Mortgage Payment Calculator Guide: Understand Your Monthly Payment",
+  title: "Mortgage Payment Calculator Guide | Calculate Your Monthly Mortgage Payment",
   description:
-    "Understand principal, interest, taxes, and insurance (PITI) and how rate, term, and down payment change your monthly.",
+    "Use the monthly mortgage payment calculator to see principal & interest plus taxes, insurance, PMI, and HOA. Learn how each input changes your payment with step-by-step instructions and examples.",
 };
 
 export default function MortgageGuide() {
@@ -21,7 +21,7 @@ export default function MortgageGuide() {
       </nav>
 
       <H1>
-        Mortgage Payment Calculator Guide: Understand Your Monthly Payment
+        Mortgage Payment Calculator Guide: Calculate Your Monthly Mortgage Payment
       </H1>
 
       <Quote>
@@ -31,27 +31,63 @@ export default function MortgageGuide() {
 
       <Section>
         <div>
-          <H2>What it does</H2>
+          <H2>What the mortgage payment calculator does</H2>
           <p>
-            Breaks your payment into principal &amp; interest plus taxes, insurance, PMI, and HOA so you see both P&amp;I and an estimated all-in monthly payment.
+            It estimates your monthly mortgage payment by combining principal &amp; interest with the common add-ons you enter: property taxes, homeowners insurance, PMI, and HOA dues. You get both the core P&amp;I and an estimated all-in payment so you know what to budget each month.
           </p>
         </div>
 
         <div>
-          <H2>Key inputs</H2>
+          <H2>Inputs you can control</H2>
           <List>
-            <li>Home price, down payment, loan term, interest rate</li>
-            <li>Property tax (annual or monthly), homeowners insurance (annual or monthly)</li>
-            <li>PMI (annual or monthly), HOA (monthly)</li>
+            <li>Home price and down payment (or loan amount)</li>
+            <li>Interest rate (annual) and loan term (years)</li>
+            <li>Property tax (annual or monthly)</li>
+            <li>Homeowners insurance (annual or monthly)</li>
+            <li>PMI (annual or monthly, if applicable)</li>
+            <li>HOA dues (monthly)</li>
           </List>
         </div>
 
         <div>
-          <H2>Tips</H2>
-          <p>
-            Toggle annual vs monthly for tax/insurance/PMI to match your statements. Longer term lowers payment but increases total
-            interest; try rate, term, and down-payment scenarios to find your comfort zone.
-          </p>
+          <H2>How to use the calculator (step by step)</H2>
+          <List>
+            <li>Enter the home price and down payment; or enter the loan amount directly.</li>
+            <li>Select the loan term (e.g., 30 years) and interest rate (e.g., 6.5%).</li>
+            <li>Add property tax and homeowners insurance (toggle annual/monthly to match your statements).</li>
+            <li>If you expect PMI, enter the annual PMI amount (toggle annual/monthly as needed).</li>
+            <li>Add monthly HOA dues if your property has them.</li>
+            <li>Review the outputs: core principal &amp; interest and the estimated total monthly payment (P&amp;I + taxes + insurance + PMI + HOA).</li>
+          </List>
+        </div>
+
+        <div>
+          <H2>Examples (realistic scenarios)</H2>
+          <p><strong>Example 1:</strong> $300,000 home, 20% down ($60,000), 30-year term, 6.5% rate, taxes $3,600/yr, insurance $1,200/yr, no PMI, HOA $0.</p>
+          <List>
+            <li>Loan amount: $240,000</li>
+            <li>Principal &amp; interest: ~$1,518/month</li>
+            <li>Taxes: ~$300/month; Insurance: ~$100/month</li>
+            <li>Estimated total payment: ~$1,918/month</li>
+          </List>
+          <p><strong>Example 2:</strong> $450,000 home, 10% down ($45,000), 30-year term, 6.75% rate, taxes $5,400/yr, insurance $1,500/yr, PMI $1,800/yr, HOA $85/month.</p>
+          <List>
+            <li>Loan amount: $405,000</li>
+            <li>Principal &amp; interest: ~$2,629/month</li>
+            <li>Taxes: ~$450/month; Insurance: ~$125/month; PMI: ~$150/month; HOA: $85/month</li>
+            <li>Estimated total payment: ~$3,439/month</li>
+          </List>
+          <p className="text-sm text-gray-600">These figures are illustrative; enter your own numbers for precise estimates.</p>
+        </div>
+
+        <div>
+          <H2>Tips to sanity-check results</H2>
+          <List>
+            <li>Toggle annual vs monthly for taxes/insurance/PMI to match your statements.</li>
+            <li>Raising the down payment often removes PMI and lowers both P&amp;I and total payment.</li>
+            <li>Longer terms lower the monthly payment but increase total interest paid.</li>
+            <li>If HOA applies, include it—small dues add up across the year.</li>
+          </List>
         </div>
       </Section>
 

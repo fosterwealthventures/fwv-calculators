@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideHero, CTAButton, SocialShare } from "@/components/GuideParts";
 import GuideNav from "@/components/GuideNav";
 
 export const metadata: Metadata = {
-  title: "Freelance Rate Calculator Guide: How to Price Your Services",
+  title: "Freelance Rate Calculator Guide: Price Hourly, Day Rates, and Retainers",
   description:
-    "Learn how to calculate the right hourly and project rates to meet income goals and cover expenses as a freelancer.",
+    "Set profitable freelance rates with taxes, overhead, and billable hours baked in. Get hourly, day-rate, and retainer pricing you can defend.",
 };
 
 function Breadcrumb() {
@@ -19,74 +19,63 @@ function Breadcrumb() {
       <Link href="/guide" className="text-brand-green hover:underline">
         Guides
       </Link>{" "}
-      &rsaquo; <span>Freelance Rate Calculator Guide: How to Price Your Services</span>
+      &rsaquo; <span>Freelance Rate Calculator Guide</span>
     </nav>
   );
 }
 
 export default function GuidePage() {
-  const pageUrl =
-    "https://fosterwealthventures.store/guide/set-your-freelance-rate-right";
+  const pageUrl = "https://fosterwealthventures.store/guide/set-your-freelance-rate-right";
   const shareTitle = String(metadata.title ?? "");
 
-  // (Schemas retained if previously used)
   return (
     <main className="prose prose-brand mx-auto max-w-3xl px-6 py-10">
       <Breadcrumb />
       <GuideHero
-        title="Freelance Rate Calculator Guide: How to Price Your Services"
-        subtitle="A concise walkthrough with examples, pitfalls, and the matching calculator."
+        title="Freelance Rate Calculator Guide"
+        subtitle="Price hourly, day-rate, and retainer work with taxes, overhead, and realistic billable hours."
         icon={null}
       />
-      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 2 minutes</p>
 
-      {/* (ad moved lower to avoid spacing under title) */}
+      <p className="mt-3 text-sm text-gray-600">Estimated reading time: 3-4 minutes</p>
 
       <section>
-        <h2>What it does</h2>
+        <h2>Why this calculator works</h2>
         <p>
-          Turns your income goal, weeks off, billable hours, and overhead into a minimum hourly rate. Prevents the common error of dividing income by 2,000 hours.
+          It gross-ups your desired take-home income for taxes, adds business overhead, and divides by realistic billable hours. You get hourly, day-rate, and monthly retainer pricing that protects your margins.
         </p>
       </section>
 
-      {/* In-content ad removed; footer banner handles ads */}
+      <section>
+        <h2>Quick setup</h2>
+        <ul>
+          <li>Desired annual take-home income</li>
+          <li>Tax rate (federal, state, self-employment)</li>
+          <li>Overhead % (software, insurance, marketing, gear, office)</li>
+          <li>Working hours per week + billable % to cover admin/marketing time</li>
+          <li>Weeks off for vacation and holidays</li>
+        </ul>
+        <p className="text-sm text-gray-600">
+          Example: $120k take-home, 30% tax, 20% overhead, 30 hrs/week, 4 weeks off, 65% billable → ~$150–$160/hr.
+        </p>
+      </section>
 
       <section>
-        <h2>How to use it</h2>
-        <p>Fill four inputs, then tweak:</p>
+        <h2>Tips to keep rates sustainable</h2>
         <ul>
-          <li>Target income (before personal taxes)</li>
-          <li>Weeks off for vacation, holidays, sick</li>
-          <li>Billable hours per week (real client time)</li>
-          <li>Overhead % (software, insurance, gear, marketing)</li>
-          <li>Example: 90000 goal, 4 weeks off, 25 hrs, 30% → higher rate than you guess</li>
+          <li>Billable hours over ~35/week are hard to sustain long-term.</li>
+          <li>Include benefits and equipment refresh in overhead.</li>
+          <li>Use retainers or packages to reduce scope creep and context switching.</li>
+          <li>Revisit quarterly as taxes, overhead, and demand change.</li>
         </ul>
       </section>
 
       <section>
-        <h2>When to use it</h2>
-        <p>
-          Use before quoting a new client or bidding a project. Helpful when raising rates or planning a shift to fewer hours.
-        </p>
-      </section>
-
-      <section>
-        <h2>Interpreting results</h2>
-        <p>
-          The rate shown is a floor, not a cap. If it feels too high, adjust overhead, add realistic billable time, or lower income target; if demand is strong, quote above it for rush or complex work.
-        </p>
-        <CTAButton href="/?calc=freelancer-rate">
-          Open the calculator (Freelancer Rate)
+        <CTAButton href="/freelancer-rate" data-testid="try-matching-calc">
+          Open the Freelancer Rate Calculator
         </CTAButton>
-      </section>
-
-      <section>
-        <h2>Related Guides</h2>
-        <p>
-          See cost structure in{" "}
-          <Link href="/guide/break-even-made-simple">Break-Even Made Simple</Link>, improve fairness in{" "}
-          <Link href="/guide/restaurant-tips-tabs-split">Restaurant Tip & Tab Split</Link>, or browse every tool on the{" "}
-          <Link href="/dashboard">calculator dashboard</Link>.
+        <p className="text-sm text-gray-600 mt-2">
+          No sign-up required. See hourly, day-rate, and retainer pricing instantly.
         </p>
       </section>
 
@@ -96,56 +85,14 @@ export default function GuidePage() {
 
       <GuideNav
         prev={{
-          href: "/guide/simple-vs-compound-interest",
-          title: "Compound Interest Calculator Guide: Simple vs. Compound",
+          href: "/guide/interest",
+          title: "Interest (Simple/Compound)",
         }}
         next={{
-          href: "/guide/5-costly-calculator-mistakes",
-          title: "5 Costly Calculator Mistakes",
+          href: "/guide/tip-and-tab-split",
+          title: "Tip Split Calculator Guide",
         }}
       />
     </main>
   );
-}
-
-import React from 'react';
-
-export function NavText({ children }: { children: React.ReactNode }) {
-  return <p className="mb-4 text-sm">{children}</p>;
-}
-
-export function H1({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{children}</h1>;
-}
-
-export function Quote({ children }: { children: React.ReactNode }) {
-  return (
-    <blockquote className="mt-3 rounded-xl bg-brand-gold/10 p-4 text-sm leading-relaxed text-brand-green">
-      {children}
-    </blockquote>
-  );
-}
-
-export function QuoteRef({ children }: { children: React.ReactNode }) {
-  return <span className="font-semibold">{children}</span>;
-}
-
-export function Section({ children }: { children: React.ReactNode }) {
-  return <section className="mt-8 space-y-8">{children}</section>;
-}
-
-export function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-2xl font-semibold">{children}</h2>;
-}
-
-export function List({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-6">{children}</ul>;
-}
-
-export function CTAWrap({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6">{children}</div>;
-}
-
-export function HelperText({ children }: { children: React.ReactNode }) {
-  return <p className="mt-2 text-base text-gray-600">{children}</p>;
 }

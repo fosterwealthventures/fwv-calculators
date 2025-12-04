@@ -20,6 +20,7 @@ import PremiumResultCard from "@/components/ui/PremiumResultCard";
 import ProfessionalCard from "@/components/ui/ProfessionalCard";
 import ProfessionalInput from "@/components/ui/ProfessionalInput";
 import { Gate, useEntitlements } from "@/lib/entitlements-client";
+import FreelancerRateCalculator from "./FreelancerRateCalculator";
 
 /** ----------------------------------------------------------------------------------------------
  *  Lazy-loaded paid calculators
@@ -145,12 +146,6 @@ const INT_DEFAULTS = {
   years: "10",
   monthlyContribution: "0",
   frequency: "monthly" as CompoundValue,
-};
-const FR_DEFAULTS = {
-  annualIncome: "120000",
-  weeksOff: "4",
-  hoursPerWeek: "30",
-  overheadPct: "10",
 };
 const TIP_DEFAULTS = {
   bill: "120.00",
@@ -715,24 +710,6 @@ export default function FosterWealthCalculators({
     return { amount: balance, interest: totalInterest, contributed, breakdown: rows };
   }, [intInputs, interestMode]);
 
-  /* --------------- Freelancer Rate --------------- */
-  const [frInputs, setFrInputs] = useState({ ...FR_DEFAULTS });
-  const freelancer = useMemo(() => {
-    const income = parseFloat(frInputs.annualIncome) || 0;
-    const weeksOff = parseFloat(frInputs.weeksOff) || 0;
-    const hoursPerWeek = parseFloat(frInputs.hoursPerWeek) || 0;
-    const overhead = (parseFloat(frInputs.overheadPct) || 0) / 100;
-    const weeksWorked = Math.max(52 - weeksOff, 1);
-    const billableHours = Math.max(weeksWorked * hoursPerWeek, 1);
-    const target = income * (1 + overhead);
-    return {
-      hourly: target / billableHours,
-      weeksWorked,
-      billableHours,
-      target,
-    };
-  }, [frInputs]);
-
   /* ---------------- Tip & Tab Split ---------------- */
   const [tipInputs, setTipInputs] = useState({ ...TIP_DEFAULTS });
 
@@ -869,7 +846,6 @@ export default function FosterWealthCalculators({
     setInterestMode("compound");
     setIntInputs({ ...INT_DEFAULTS });
   };
-  const resetFreelancer = () => setFrInputs({ ...FR_DEFAULTS });
   const resetTipSplit = () => {
     setTipInputs({ ...TIP_DEFAULTS });
     setOrderYour(ORDER_DEFAULTS.yours);
@@ -2032,90 +2008,7 @@ export default function FosterWealthCalculators({
         )}
 
         {/* Freelancer Rate */}
-        {activeCalc === "freelancer-rate" && (
-          <section className="mt-4">
-            <ProfessionalCard>
-              <Header title="Freelancer Rate Calculator" />
-              <div className="flex justify-end px-4 pt-3">
-                <ClearButton onClick={resetFreelancer} />
-              </div>
-              <div className="grid gap-4 p-4 md:grid-cols-2">
-                <InputsPanel title="Inputs">
-                  <Input
-                    id="fr_income"
-                    label="Desired Annual Income ($)"
-                    value={frInputs.annualIncome}
-                    onChange={(v) =>
-                      setFrInputs((s) => ({ ...s, annualIncome: v }))
-                    }
-                  />
-                  <Input
-                    id="fr_weeks"
-                    label="Weeks Off"
-                    value={frInputs.weeksOff}
-                    onChange={(v) => setFrInputs((s) => ({ ...s, weeksOff: v }))}
-                  />
-                  <Input
-                    id="fr_hours"
-                    label="Billable Hours / Week"
-                    value={frInputs.hoursPerWeek}
-                    onChange={(v) =>
-                      setFrInputs((s) => ({ ...s, hoursPerWeek: v }))
-                    }
-                  />
-                  <Input
-                    id="fr_oh"
-                    label="Overhead (%)"
-                    value={frInputs.overheadPct}
-                    onChange={(v) =>
-                      setFrInputs((s) => ({ ...s, overheadPct: v }))
-                    }
-                  />
-                </InputsPanel>
-                <ResultsPanel title="Results">
-                  <KV
-                    label="Weeks Worked"
-                    value={
-                      frInputs.weeksOff
-                        ? `${freelancer.weeksWorked}`
-                        : freelancer.weeksWorked
-                    }
-                  />
-                  <KV
-                    label="Billable Hours"
-                    value={freelancer.billableHours.toFixed(0)}
-                  />
-                  <KV label="Target Gross" value={fmtUSD(freelancer.target)} />
-                  <KV
-                    label="Required Hourly Rate"
-                    value={fmtUSD(freelancer.hourly)}
-                  />
-                </ResultsPanel>
-              </div>
-              <div className="px-6 pb-6">
-                <ExplanationPanel title="How this works">
-                  <ul className="ml-5 list-disc">
-                    <li>Hourly = (Income × (1 + overhead)) ÷ billable hours.</li>
-                    <li>Consider buffer for admin, marketing, revisions.</li>
-                    <li>
-                      Account for vacations, holidays, and non-billable time.
-                    </li>
-                  </ul>
-                  <p className="mt-2">
-                    Learn more:{" "}
-                    <Link
-                      className="text-brand-600 underline hover:text-brand-700 transition-colors"
-                      href="/guide/set-your-freelancer-rate-right"
-                    >
-                      Set Your Freelancer Rate Right—Use Our Calculator to Avoid
-                      Undervaluing Your Time
-                    </Link>
-                  </p>
-                </ExplanationPanel>
-              </div>
-            </ProfessionalCard>
-          </section>
-        )}
+        {activeCalc === "freelancer-rate" && <FreelancerRateCalculator />}
 
         {/* ===== Paid calculators (Plus & Pro/Premium) via unified <Gate /> ===== */}
 
