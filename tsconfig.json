@@ -1,0 +1,41 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
+    "types": [
+      "node",
+      "next-auth"
+    ]
+  },
+  "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    ".next",
+    "node_modules",
+    "dist",
+    "scripts/**",
+    "tests",
+    "e2e",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}

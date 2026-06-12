@@ -1,0 +1,244 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------ Base & Brand ------------------ */
+@layer base {
+  :root {
+    --brand-green: #10b981; /* Emerald green */
+    --brand-gold: #d4af37; /* Gold */
+    --brand-purple-900: #3B1663; /* Dark purple for titles */
+    --header-h: 72px; /* keep header height reference */
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    /* If you're using next/font with Inter in layout, it sets --font-sans.
+       This line uses it when present, with sensible fallbacks. */
+    font-family:
+      var(--font-sans, ui-sans-serif),
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol";
+  }
+
+  a {
+    @apply text-slate-700 hover:text-brand-700 transition-colors;
+  }
+}
+
+/* ------------------ Utilities (shared across pages) ------------------ */
+@layer utilities {
+  /* Unified containers (keep legacy .fwv-container for now) */
+  .container-page,
+  .fwv-container {
+    width: 100%;
+    max-width: 72rem; /* max-w-6xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem;
+  }
+
+  /* Responsive container for wider layouts */
+  @media (min-width: 1024px) {
+    .container-page,
+    .fwv-container {
+      max-width: 80rem; /* lg:max-w-7xl */
+      padding-left: 2rem; /* lg:px-8 */
+      padding-right: 2rem;
+    }
+  }
+
+  /* Consistent top rhythm for page content */
+  .page {
+    @apply pt-6 md:pt-8;
+  }
+
+  /* Brand typography helpers */
+  .heading-hero {
+    @apply text-3xl md:text-4xl font-bold tracking-tight text-brand-700;
+  }
+  .heading-section {
+    @apply text-2xl md:text-3xl font-semibold tracking-tight text-brand-700;
+  }
+  .lead {
+    @apply text-base md:text-lg text-slate-600;
+  }
+
+  /* Soft elevation used on cards */
+  .shadow-soft {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Quote/notice card (used for scripture blocks) */
+  .quote-card {
+    @apply rounded-2xl border bg-white p-4 md:p-5;
+  }
+
+  /* Compact, CLS-safe ad slot (keeps layout tidy) */
+  .ad-slot {
+    min-height: 10rem;
+    border-radius: 0.75rem;
+  }
+  
+  /* Responsive adjustment for ad slot height */
+  @media (min-width: 768px) {
+    .ad-slot {
+      min-height: 12rem;
+    }
+  }
+}
+
+/* Responsive adjustment for ad slot height */
+@media (min-width: 768px) {
+  .ad-slot {
+    min-height: 12rem;
+  }
+}
+
+/* ------------------ Regal Theme Component Classes ------------------ */
+@layer components {
+  .header-regal {
+    @apply bg-plum-900 text-white border-b border-plum-700;
+  /* Make article headings purple like the guide titles, and darken body text */
+.article h1, .article h2, .article h3 { @apply text-purple-title; }
+.article p, .article li { @apply text-slate-900 dark:text-slate-200; }
+}
+/* Option A — Medium H1 scale (keeps the same look, just smaller) */
+.article h1 { @apply font-extrabold tracking-tight text-purple-title text-3xl; }
+
+@screen sm {
+  .article h1 { @apply text-4xl; }
+}
+
+/* Tailwind @apply can be fussy with arbitrary line-heights,
+   so set the lg step with raw CSS for reliability. */
+@screen lg {
+  .article h1 {
+    font-size: 2.75rem;   /* ≈ 44px */
+    line-height: 1.1;
+  }
+}
+
+  .nav-link-regal {
+    @apply text-white/90 hover:text-aure-300 transition;
+  }
+  .logo-ring-regal {
+    @apply ring-2 ring-transparent hover:ring-aure-400/40 rounded-lg transition;
+  }
+
+  .card-regal {
+    @apply bg-white/80 dark:bg-plum-900/35 border border-plum-200/60 dark:border-plum-700 rounded-2xl shadow-sm backdrop-blur;
+  }
+
+  .btn-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-plum-600 hover:bg-plum-700 text-white shadow-sm hover:shadow-regalGlow transition;
+  }
+  .btn-ghost-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium border border-plum-300/60 text-plum-800 dark:text-plum-100 hover:bg-plum-50/60 dark:hover:bg-plum-900/40 transition;
+  }
+  .btn-accent-regal {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-aure-500 hover:bg-aure-600 text-plum-900 shadow-sm transition;
+  }
+
+  .focus-regal {
+    @apply ring-2 ring-aure-400/60 ring-offset-2 ring-offset-white dark:ring-offset-plum-900 outline-none;
+  }
+
+  .chip-regal {
+    @apply inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm border-aure-300/70 text-plum-800 dark:text-aure-100 bg-white/70 dark:bg-plum-900/40;
+  }
+
+  .link-regal {
+    @apply text-aure-500 hover:text-aure-400 underline decoration-aure-300/60 underline-offset-4 transition;
+  }
+  .article > * + * { @apply mt-5 md:mt-6; }
+  .article h1 { @apply mt-10 font-extrabold tracking-tight; }
+  .article h2 { @apply mt-9 font-bold; }
+  .article h3 { @apply mt-7 font-semibold; }
+
+  .article img, .article video { @apply my-6 rounded-xl; }
+  .article figure { @apply my-6; }
+  .article figcaption { @apply mt-2 text-sm opacity-80; }
+
+  .article table { @apply w-full my-6 rounded-lg overflow-hidden; }
+  .article thead th { @apply bg-plum-900/20 p-3 text-left; }
+  .article tbody td { @apply border-t border-white/10 p-3; }
+
+  .article blockquote { @apply my-6 pl-4 border-l-4 border-aure-400/60; }
+  .article ul, .article ol { @apply pl-6; }
+  .article a { @apply underline underline-offset-4 text-aure-400 hover:text-aure-300; }
+}
+
+@layer utilities {
+  .page-bg-regal {
+    @apply bg-regal-tint dark:bg-regal-tint-dark;
+  }
+
+  /* Gradient gold for header title */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #f4e4a8 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Dark purple titles for light mode */
+  .text-purple-title {
+    color: var(--brand-purple-900);
+  }
+
+  /* Dark mode purple titles (keep readable) */
+  .dark .text-purple-title {
+    color: #f3e8ff; /* Light purple for dark mode */
+  }
+}
+
+/* Blog spacing normalization */
+.prose h1, .prose h2, .prose h3 { margin-top: 0.75rem; margin-bottom: 0.5rem; }
+.prose p { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.prose ul, .prose ol { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.prose blockquote { margin-top: 0.75rem; margin-bottom: 0.75rem; padding-left: 0.85rem; }
+
+/* Optional blog hero tighten (if present) */
+.blog-hero { padding-top: 1rem; padding-bottom: 0.75rem; }
+
+/* Enhanced TOC styling for better visibility */
+.toc-enhanced {
+  @apply bg-white/95 backdrop-blur-sm border border-plum-200/50 rounded-xl shadow-sm;
+}
+
+.toc-enhanced h3 {
+  @apply text-plum-900 font-bold text-sm mb-3 pb-2 border-b border-plum-200/50;
+}
+
+.toc-enhanced ul {
+  @apply space-y-1 max-h-[65vh] overflow-y-auto;
+}
+
+.toc-enhanced li {
+  @apply list-none;
+}
+
+.toc-enhanced a {
+  @apply block py-2 px-3 rounded-lg text-plum-700 hover:text-plum-900 hover:bg-plum-50/90 transition-all duration-200 text-sm leading-relaxed no-underline;
+}
+
+.toc-enhanced a:hover {
+  @apply bg-plum-100/60;
+}

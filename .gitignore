@@ -1,0 +1,34 @@
+# dependencies
+/node_modules
+
+# builds
+/.next
+/out
+
+# env files
+.env
+.env.local
+.env.production
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# system files
+.DS_Store
+EOF
+node_modules
+.next
+.env*
+.vercel
+at > .gitignore <<'EOF'
+
+node_modules
+.next
+.env*
+.vercel
+.DS_Store
+
+# TypeScript build cache
+*.tsbuildinfo

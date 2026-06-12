@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="36" viewBox="0 0 160 36">
+  <rect rx="8" width="160" height="36" fill="#0f5132"/>
+  <g transform="translate(10,8)">
+    <path d="M16 6a4 4 0 0 1 8 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H15a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1V6zm2 2V6a2 2 0 1 1 4 0v2h-4z" fill="#d4af37"/>
+  </g>
+  <text x="50" y="23" fill="#f9f9f9" font-size="14" font-family="Inter, system-ui, Arial">SSL Secured</text>
+</svg>
